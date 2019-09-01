@@ -1,0 +1,11 @@
+{
+	Filter = {
+		Bundles = (
+			"com.apple.CoreFoundation",
+			"com.apple.MobileCoreServices",
+		);
+		Executables = (
+			sharingd,
+		);
+	};
+}

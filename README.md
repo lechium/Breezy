@@ -161,10 +161,15 @@ typedef enum : NSUInteger {
 - (void)airDropReceived:(NSNotification *)n {
     
     NSDictionary *userInfo = [n userInfo];
-    NSString *path = userInfo[@"Path"];
+    NSArray <NSString*> *paths = userInfo[@"Items"];
     
-    NSString *fileName = path.lastPathComponent;
-    //do your thing with the file
+    [items enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    
+        //do your thing with the file - ideally with a serial queue if you are going to present a UI to do anything
+    
+        
+    }];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -192,12 +197,11 @@ typedef enum : NSUInteger {
     NSURL *url = [NSURL fileURLWithPath:file];    
     SFAirDropSharingViewControllerTV *sharingView = [[SFAirDropSharingViewControllerTV alloc] initWithSharingItems:@[url]];
     [sharingView setCompletionHandler:^(NSError *error) {
-   	 [self dismissViewControllerAnimated:true completion:nil];
+   	    [self dismissViewControllerAnimated:true completion:nil];
     }];
     [self presentViewController:sharingView animated:true completion:nil];
     
 }
-
 
 ```
 

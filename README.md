@@ -15,7 +15,7 @@ tl;dr the transfer needs a "handler" to determine what to do with the file once 
 - (id)determineHandlerForTransfer:(id)transfer
 ```
 
-Is where this handler is determined, so I target [here](../blob/master/Breezy.xm#L32) first 
+Is where this handler is determined, so I target [here](../master/Breezy.xm#L32) first 
 
 There's an issue with consent to receive files to your AppleTV from other AirDropped devices, this is handled by a read only properties in **SFAirDropTransferMetaData**
 

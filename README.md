@@ -32,6 +32,7 @@ If we are getting a nil handler in ***- (id)determineHandlerForTransfer:(id)tran
 ```Objective-C
     id genericHandler = [[NSClassFromString(@"SDAirDropHandlerGenericFiles") alloc] initWithTransfer:transfer bundleIdentifier:@"com.nito.nitoTV4"];
     [genericHandler activate];
+    return genericHandler;
 ```
 Once the transfer is initiated it repeatedly calls ***-(void)updateWithInformation:(NSDictionary*)info*** on the transfer ***SFAirDropTransfer***
 

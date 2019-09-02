@@ -1,10 +1,10 @@
-Package: com.h4x.exceptioncatcher
-Name: exception catcher
+Package: com.nito.breezy
+Name: Breezy
 Pre-Depends: cy+model.appletv
 Depends: mobilesubstrate
-Version: 0.0.1
+Version: 1.0
 Architecture: appletvos-arm64
-Description: Caught uncaught exceptions, helpeful for backporting apps
+Description: Enable AirDrop server in your tvOS Applications
 Maintainer: Kevin Bradley
 Author: Kevin Bradley
-Section: Library
+Section: Tweak

@@ -1,9 +1,9 @@
 # Breezy
 Jailbreak implementation &amp; research for AirDrop on tvOS
 
-'''On 12+ you need a special entitlement added to your application for it to appear as an airdrop server: com.apple.private.airdrop.settings'''
+**On 12+ you need a special entitlement added to your application for it to appear as an airdrop server: com.apple.private.airdrop.settings**
 
-Calling the AirDrop server view
+## Calling the AirDrop server view
 
 ```Objective-C
 
@@ -27,7 +27,7 @@ Calling the AirDrop server view
 }
 ```
 
-Receiving a notification about the AirDrop files being received:
+### Receiving a notification about the AirDrop files being received:
 
 
 ```Objective-C
@@ -50,7 +50,9 @@ Receiving a notification about the AirDrop files being received:
 }
 ```
 
-Sending a file to another AirDrop capable device
+**On 12+ you need a special entitlement added to your application for it to discover other airdrop devices: com.apple.private.airdrop.discovery**
+
+## Sending a file to another AirDrop capable device
 
 ```Objective-C
 

@@ -11,11 +11,15 @@
 %hook SFAirDropTransfer
 -(void)updateWithInformation:(id)arg {
 	%log;
-	NSArray *items = arg[@"Items"];
+	NSArray <NSURL *> *items = arg[@"Items"];
 	if (items.count > 0){
-		NSURL *url = items[0];
+		//SURL *url = items[0];
+		NSMutableArray *paths = [NSMutableArray new];
+		[items enumerateObjectsUsingBlock:^(NSURL * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    		   [paths addObject:[obj path]];
+    	}];
 		NSString *notificationName = @"com.nito.AirDropper/airDropFileReceived";
-		NSDictionary *userInfo = @{@"Path": [url path]};
+		NSDictionary *userInfo = @{@"Items": paths};
 		NSLog(@"sending user info: %@", userInfo);
 		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:userInfo];
 	}	

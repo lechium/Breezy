@@ -3,6 +3,28 @@ Jailbreak implementation &amp; research for AirDrop on tvOS
 
 **On 12+ you need a special entitlement added to your application for it to appear as an airdrop server: com.apple.private.airdrop.settings**
 
+## Discovering AirDrop in the background
+
+```Objective-C
+
+//not ideal to alloc it each time, just an example of how to do it.
+
+- (void)startListeningForAirDrop {
+
+    SFAirDropDiscoveryController *discoveryController = [[SFAirDropDiscoveryController alloc] init] ;
+    [discoveryController setDiscoverableMode:2];
+}
+
+- (void)stopListeningForAirDrop {
+
+    SFAirDropDiscoveryController *discoveryController = [[SFAirDropDiscoveryController alloc] init] ;
+    [discoveryController setDiscoverableMode:0];
+}
+
+
+
+```
+
 ## Calling the AirDrop server view
 
 ```Objective-C

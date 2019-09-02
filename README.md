@@ -7,21 +7,53 @@ Jailbreak implementation &amp; research for AirDrop on tvOS
 
 ```Objective-C
 
-//not ideal to alloc it each time, just an example of how to do it.
+typedef enum : NSUInteger {
+SDAirDropDiscoverableModeOff,
+SDAirDropDiscoverableModeContactsOnly,
+SDAirDropDiscoverableModeEveryone,
+} SDAirDropDiscoverableMode;
 
-- (void)startListeningForAirDrop {
+@interface SFAirDropDiscoveryController: UIViewController
+- (void)setDiscoverableMode:(long long)mode;
+- (long long)discoverableMode;
+- (id)discoverableModeToString:(long long)mode;
+@end
 
-    SFAirDropDiscoveryController *discoveryController = [[SFAirDropDiscoveryController alloc] init] ;
-    [discoveryController setDiscoverableMode:2];
+@interface AirDropListener ()
+@property (nonatomic, strong) SFAirDropDiscoveryController *discoveryController;
+@end
+
+@interface AirDropListener: NSObject
+- (void)disableAirDrop;
+- (void)setupAirDrop;
+@end
+
+@implementation AirDropListener
+
+//in case you want to display this anywhere
+- (NSString *)displayNameForAirDropMode {
+
+long long mode = [self.discoveryController discoverableMode];
+return [self.discoveryController discoverableModeToString:mode];
+
 }
 
-- (void)stopListeningForAirDrop {
+- (void)disableAirDrop {
 
-    SFAirDropDiscoveryController *discoveryController = [[SFAirDropDiscoveryController alloc] init] ;
-    [discoveryController setDiscoverableMode:0];
+[[NSDistributedNotificationCenter defaultCenter] removeObserver:self name:@"com.nito.AirDropper/airDropFileReceived" object:nil];
+[self.discoveryController setDiscoverableMode:SDAirDropDiscoverableModeOff];
+
 }
 
+- (void)setupAirDrop {
 
+[[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(airDropReceived:) name:@"com.nito.AirDropper/airDropFileReceived" object:nil];
+self.discoveryController = [[SFAirDropDiscoveryController alloc] init] ;
+[self.discoveryController setDiscoverableMode:SDAirDropDiscoverableModeEveryone];
+
+}
+
+@end
 
 ```
 

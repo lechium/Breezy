@@ -7,13 +7,15 @@ Jailbreak implementation &amp; research for AirDrop on tvOS
 
 Most of this functionality is used without tweak or modification on the UI end of things (to get AIrDrop advertising). However, when it comes to accepting the file and processing it, sharingd throws and exception and dies resulting in a failure to even receive the files to acheive any further processing. The file linked below is where the exception is thrown in sharingd, a partial reconstruction of the method that throws the exception.
 
-[SDAirDropTransferManager.m](../blob/master/Research/sharingd%20daemon/SDAirDropTransferManager.m)
+[SDAirDropTransferManager.m](../master/Research/sharingd%20daemon/SDAirDropTransferManager.m)
 
 tl;dr the transfer needs a "handler" to determine what to do with the file once the transfer is complete. if this handler is nil, it throws an exception and the transfer is killed.
 
-```Objective-C- (id)determineHandlerForTransfer:(id)transfer```
+```Objective-C
+- (id)determineHandlerForTransfer:(id)transfer
+```
 
-Is where this handler is determined, so I target [here] (../blob/master/Breezy.xm#L32) first 
+Is where this handler is determined, so I target [here](../blob/master/Breezy.xm#L32) first 
 
 There's an issue with consent to receive files to your AppleTV from other AirDropped devices, this is handled by a read only properties in **SFAirDropTransferMetaData**
 

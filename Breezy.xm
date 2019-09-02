@@ -20,7 +20,7 @@
     	}];
 		NSString *notificationName = @"com.nito.AirDropper/airDropFileReceived";
 		NSDictionary *userInfo = @{@"Items": paths};
-		NSLog(@"sending user info: %@", userInfo);
+		HBLogDebug(@"Breezy: sending user info: %@", userInfo);
 		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:userInfo];
 	}	
 	%orig;
@@ -29,13 +29,20 @@
 
 %hook SDAirDropTransferManager
 
-- (id)determineHandlerForTransfer:(id)arg1 { 
+- (id)determineHandlerForTransfer:(id)transfer { 
 	%log; 
 	id  r = %orig;  
 	if (!r){
-		id genericHandler = [[NSClassFromString(@"SDAirDropHandlerGenericFiles") alloc] initWithTransfer:arg1 bundleIdentifier:@"com.nito.nitoTV4"];
+		//For now, force all transfers to be acceptable.
+	    id meta = [transfer metaData];
+	    [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_verifiableIdentity"];
+	    [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_canAutoAccept"];
+	    HBLogDebug(@"Breezy: meta: %@", meta);
+		id genericHandler = [[NSClassFromString(@"SDAirDropHandlerGenericFiles") alloc] initWithTransfer:transfer bundleIdentifier:@"com.nito.nitoTV4"];
 		[genericHandler activate];
 		return genericHandler;
+	} else {
+		HBLogDebug(@"Breezy: %@ created for transfer: %@", r, transfer);
 	}
 	return r; 
 	}

@@ -6,7 +6,7 @@ DEBUG=0
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Breezy
-Breezy_FILES = Breezy.xm
+Breezy_FILES = Breezy.xm FindProcess.m
 Breezy_LIBRARIES = substrate
 Breezy_FRAMEWORKS = Foundation UIKit CoreGraphics MobileCoreServices
 Breezy_LDFLAGS = -undefined dynamic_lookup

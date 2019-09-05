@@ -101,7 +101,11 @@ static int process_buffer_size = 4096;
                                methodArray, @"methods",
                                nil];
     
+    NSString *outputFile = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/output.plist"];
+    HBLogDebug(@"outputFile: %@", outputFile);
+    
     HBLogDebug(@"%@", classDump);
+    [classDump writeToFile:outputFile atomically:true];
 }
 
 + (int)pidFromItemDescription:(NSString *)desc {

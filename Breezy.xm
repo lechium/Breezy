@@ -11,6 +11,19 @@
 - (void)activate;
 @end
 
+@interface SFAirDropTransfer: NSObject
+
+-(NSProgress *)transferProgress;
+
+@end
+
+@interface SFAirDropTransferMetaData : NSObject
+
+-(NSArray *)rawFiles;
+-(NSDictionary *)itemsDescriptionAdvanced;
+
+@end
+
 %hook SharingDaemon
 
 - (_Bool)canAccessAirDropSettings:(id)arg1 {
@@ -31,19 +44,53 @@
 %end
 
 %hook SFAirDropTransfer
+
+
+
 -(void)updateWithInformation:(id)arg {
 	%log;
+
+	NSProgress *prog = [self transferProgress];
+	HBLogDebug(@"progress: %@", prog);
+
 	NSArray <NSURL *> *items = arg[@"Items"];
-	if (items.count > 0){
+	if (items.count > 0 && [prog isFinished]){
+
 		//SURL *url = items[0];
 		NSMutableArray *paths = [NSMutableArray new];
+		NSMutableArray *URLS = [NSMutableArray new];
 		[items enumerateObjectsUsingBlock:^(NSURL * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-    		   [paths addObject:[obj path]];
+			if ([obj respondsToSelector:(@selector(isFileURL))]){
+				if ([obj isFileURL]){
+					[paths addObject:[obj path]];
+				} else {
+					HBLogDebug(@"obj isnt a file path: %@", obj);
+					[URLS addObject:[obj absoluteString]];
+				}
+				
+			} else {
+
+				HBLogDebug(@"doesnt respond to isFileURL: %@", obj);
+				[paths addObject:[obj path]];
+			}
+			    
+    		    
     	}];
-		NSString *notificationName = @"com.nito.AirDropper/airDropFileReceived";
-		NSDictionary *userInfo = @{@"Items": paths};
-		HBLogDebug(@"Breezy: sending user info: %@", userInfo);
-		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:userInfo];
+		if (paths.count > 0){
+			NSString *notificationName = @"com.nito.AirDropper/airDropFileReceived";
+			NSDictionary *userInfo = @{@"Items": paths};
+			HBLogDebug(@"Breezy: sending user info: %@", userInfo);
+			[[NSDistributedNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:userInfo];
+		}
+
+		if (URLS.count > 0){
+			NSString *notificationName = @"com.nito.AirDropper/airDropFileReceived";
+			NSDictionary *userInfo = @{@"URLS": URLS};
+			HBLogDebug(@"Breezy: sending user info: %@", userInfo);
+			[[NSDistributedNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:userInfo];
+		}
+
+		
 	}	
 	%orig;
 }
@@ -59,7 +106,9 @@
 	    id meta = [transfer metaData];
 	    [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_verifiableIdentity"];
 	    [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_canAutoAccept"];
-	    HBLogDebug(@"Breezy: meta: %@", meta);
+	    //[FindProcess classDumpObject:meta];
+		//HBLogDebug(@"meta rawFiles: %@", [meta rawFiles]);
+		//HBLogDebug(@"meta rawFiles: %@", [meta itemsDescriptionAdvanced]);
 		id genericHandler = [[NSClassFromString(@"SDAirDropHandlerGenericFiles") alloc] initWithTransfer:transfer bundleIdentifier:@"com.nito.nitoTV4"];
 		[genericHandler activate];
 		return genericHandler;

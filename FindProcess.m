@@ -162,12 +162,17 @@ static int process_buffer_size = 4096;
                 printf("(%s:%d) proc_pidinfo() call failed.\n", __FILE__, __LINE__);
                 continue;
             }
-            
-            if(strstr(path_buffer, name)) {
+            if (strncmp(path_buffer, name, strlen(path_buffer)) == 0){
                 res = TRUE;
                 ppid_ret = ppid;
                 break;
             }
+            /*
+            if(strstr(path_buffer, name)) {
+                res = TRUE;
+                ppid_ret = ppid;
+                break;
+            }*/
         }
     }
     

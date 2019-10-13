@@ -1,6 +1,84 @@
 # Breezy
 Jailbreak implementation &amp; research for AirDrop on tvOS
 
+## AirDropHelper
+
+There is a new addition to the latest version of Breezy [here](../master/AirDropHelper) AirDropHelper
+This will allow you to add AirDrop support to your application (OR any application you tweak) with a 2-3 lines of code
+
+```Objective-C
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"airdropper://%@", @"/path/to/file"]];
+    [[UIApplication sharedApplication] openURL:url];
+```
+
+Thats it! 
+
+As long as you add 
+```com.nito.breezy (>=1.4-1)
+``` 
+to your dependencies, this will open an AirDrop sharing dialog with whatever file you feed it with the call to 
+
+```Objective-C 
+[[UIApplication sharedApplication] openURL:url]
+```
+
+This insanely simple application is explained below.
+
+AirDropHelper is a headless application (full fledged Application with a view controller heirarchy, just no visible icon on the home screen)
+
+This is achieved by adding the following to the Info.plist file: 
+
+[Info.plist](../master/AirDropHelper/AirDropHelper/Info.plist#L54-L57)
+
+```<key>SBAppTags</key>
+<array>
+<string>hidden</string>
+</array>
+```
+
+I absuse the same URL scheme system that determines where https://mywebsite.com is open in your default browser. 
+
+[Info.plist](../master/AirDropHelper/AirDropHelper/Info.plist#L31-L49)
+
+airdropper:// is the custom scheme AirDropHelper listens for. From there its as implementing the standard methods in AppDelegate.m to handle URL's opening and calling a custom method to display the standard UIViewController for sharing via AirDrop from the private sharing framework. 
+
+```Objective-C
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
+{
+    NSLog(@"url: %@ app identifier: %@", url.host, url.path.lastPathComponent);
+    NSString *filePath = [url path];
+    [self showAirDropSharingView:filePath];
+    return TRUE;
+}
+
+- (void)showAirDropSharingView:(NSString *)filePath {
+
+    NSBundle *bundle = [NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/Sharing.framework"];
+    [bundle load];
+    UIViewController *rvc = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+    NSURL *url = [NSURL fileURLWithPath:filePath];
+    NSLog(@"url: %@", url);
+
+    id sharingView = [[NSClassFromString(@"SFAirDropSharingViewControllerTV") alloc] initWithSharingItems:@[url]];
+    [sharingView setCompletionHandler:^(NSError *error) {
+
+        NSLog(@"complete with error: %@", error);
+        //quit the application when we are done.
+        [[UIApplication sharedApplication] terminateWithSuccess];
+    }];
+
+    [rvc presentViewController:sharingView animated:true completion:nil];
+
+}
+
+```
+illustrated in [AppDelegate.m](../master/AirDropHelper/AirDropHelper/AppDelegate.m#L56-L84)
+
+The only other missing piece of the puzzle is signing the application with our own special entitlements specifically
+"com.apple.private.airdrop.discovery"
+
+## Abusing sharingd
+
 **On 12+ you need a special entitlement added to your application for it to appear as an airdrop server: com.apple.private.airdrop.settings**
 
 ## How this works
@@ -15,7 +93,7 @@ tl;dr the transfer needs a "handler" to determine what to do with the file once 
 - (id)determineHandlerForTransfer:(id)transfer
 ```
 
-Is where this handler is determined, so I target [here](../master/Breezy.xm#L32) first 
+Is where this handler is determined, so I target [here](../master/Breezy.xm#L101) first 
 
 There's an issue with consent to receive files to your AppleTV from other AirDropped devices, this is handled by a read only properties in **SFAirDropTransferMetaData**
 

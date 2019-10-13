@@ -14,7 +14,8 @@ This will allow you to add AirDrop support to your application (OR any applicati
 Thats it! 
 
 As long as you add 
-```com.nito.breezy (>=1.4-1)
+```
+com.nito.breezy (>=1.4-1)
 ``` 
 to your dependencies, this will open an AirDrop sharing dialog with whatever file you feed it with the call to 
 

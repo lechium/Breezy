@@ -6,16 +6,47 @@ Jailbreak implementation &amp; research for AirDrop on tvOS
 There is a new addition to the latest version of Breezy [here](../master/AirDropHelper) AirDropHelper
 This will allow you to add AirDrop support to your application (OR any application you tweak) with a 2-3 lines of code
 
+### Calling from an application (whether original or tweaked)
+
 ```Objective-C
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"airdropper://%@", @"/path/to/file"]];
+
+    NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"airdropper://%@?sender=%@", @"/path/to/file", bundleID]];
     [[UIApplication sharedApplication] openURL:url];
 ```
+
+### Calling from a CLI tool or Daemon (anything without a user interface)
+
+```Objective-C
+
+#import <objc/runtime.h>
+
+@interface LSApplicationWorkspace: NSObject
+- (BOOL)openURL:(id)string;
++ (id)defaultWorkspace;
+
+@end
+
+- (BOOL)sendFileToBreezy:(NSString *)theFile {
+
+//create URL
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"airdropper://%@", theFile]];
+
+//load Mobile Core Services framework 
+    [[NSBundle bundleWithPath:@"/System/Library/Frameworks/MobileCoreServices.framework"] load];
+//load URL
+    [[objc_getClass("LSApplicationWorkspace") defaultWorkspace] openURL:url];
+
+}
+
+```
+
 
 Thats it! 
 
 As long as you add 
 ```
-com.nito.breezy (>=1.4-1)
+com.nito.breezy (>=1.4-9)
 ``` 
 to your dependencies, this will open an AirDrop sharing dialog with whatever file you feed it with the call to 
 
@@ -31,7 +62,8 @@ This is achieved by adding the following to the Info.plist file:
 
 [Info.plist](../master/AirDropHelper/AirDropHelper/Info.plist#L54-L57)
 
-```<key>SBAppTags</key>
+```
+<key>SBAppTags</key>
 <array>
 <string>hidden</string>
 </array>
@@ -84,7 +116,11 @@ The only other missing piece of the puzzle is signing the application with our o
 
 ## How this works
 
-Most of this functionality is used without tweak or modification on the UI end of things (to get AIrDrop advertising). However, when it comes to accepting the file and processing it, sharingd throws and exception and dies resulting in a failure to even receive the files to acheive any further processing. The file linked below is where the exception is thrown in sharingd, a partial reconstruction of the method that throws the exception.
+The core functionality of Breezy is mostly achieved through stock features in Sharing.framework (including the sharing UI and toggling  AirDrop sharing state) 
+
+With vanilla / stock implementation sharingd will throw an exception when AirDropped files are received, halting the process in its tracks.
+
+The file linked below is where the exception is thrown in sharingd, a partial reconstruction of the method that throws the exception.
 
 [SDAirDropTransferManager.m](../master/Research/sharingd%20daemon/SDAirDropTransferManager.m)
 

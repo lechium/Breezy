@@ -8,7 +8,7 @@ APPS="$LAYOUT"/Applications
 mkdir -p $APPS
 
 pushd AirDropHelper
-#rm -rf build
+rm -rf build
 /usr/bin/xcodebuild BUILD_ROOT=../build | xcpretty
 ldid2 -Sent.plist build/Release-appletvos/AirDropHelper.app/AirDropHelper
 rm -rf build/Release-appletvos/AirDropHelper.app/embedded.mobileprovision

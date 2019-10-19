@@ -69,11 +69,11 @@ This is achieved by adding the following to the Info.plist file:
 </array>
 ```
 
-I absuse the same URL scheme system that determines where https://mywebsite.com is open in your default browser. 
+I abuse the same URL scheme system that determines where https://mywebsite.com is open in your default browser. 
 
 [Info.plist](../master/AirDropHelper/AirDropHelper/Info.plist#L31-L49)
 
-airdropper:// is the custom scheme AirDropHelper listens for. From there its as implementing the standard methods in AppDelegate.m to handle URL's opening and calling a custom method to display the standard UIViewController for sharing via AirDrop from the private sharing framework. 
+airdropper:// is the custom scheme AirDropHelper listens for. From there its as simple as implementing the standard methods in AppDelegate.m to handle URL's opening and calling a custom method to display the standard UIViewController for sharing via AirDrop from the private sharing framework. 
 
 ```Objective-C
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options

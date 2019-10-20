@@ -1,6 +1,8 @@
 {
 	Filter = {
-		Bundles = ();
+		Bundles = (
+			"com.apple.PineBoard",
+		);
 		Executables = (
 			sharingd,
 		);

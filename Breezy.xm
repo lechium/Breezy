@@ -1,40 +1,39 @@
 #import "FindProcess.h"
 #import <UIKit/UIKit.h>
 
-@interface PBWindowManager: NSObject
+@interface LSApplicationWorkspace: NSObject
 
++(id)defaultWorkspace;
+-(BOOL)openApplicationWithBundleID:(id)arg1;
+-(id)operationToOpenResource:(id)arg1 usingApplication:(id)arg2 uniqueDocumentIdentifier:(id)arg3 isContentManaged:(BOOL)arg4 sourceAuditToken:(id)arg5 userInfo:(id)arg6 options:(id)arg7 delegate:(id)arg8;
+@end
+@interface NSProgress (science)
+- (BOOL)isFinished;
+@end
+@interface PBWindowManager: NSObject
 + (id)sharedInstance;
 - (void)presentDialogViewController:(id)dialog;
 - (void)dismissDialogViewController:(id)view;
-
 @end
-
 @interface PBUserNotificationViewControllerAlert: UIViewController
-
 -(id)initWithTitle:(id)arg1 text:(id)arg2;
 -(void)addButtonWithTitle:(id)arg1 type:(unsigned long long)arg2 handler:(void (^)(void))handler;
-
 @end
-
 @interface LSDocumentProxy: NSObject
 +(id)documentProxyForName:(id)arg1 type:(id)arg2 MIMEType:(id)arg3 ;
 -(id)applicationsAvailableForOpeningWithTypeDeclarer:(BOOL)arg1 style:(unsigned char)arg2 XPCConnection:(id)arg3 error:(id*)arg4;
 @end
-
 @interface NSDistributedNotificationCenter : NSNotificationCenter
 + (id)defaultCenter;
 - (void)postNotificationName:(id)arg1 object:(id)arg2 userInfo:(id)arg3;
 @end
-
 @interface SDAirDropHandlerGenericFiles: NSObject //its not but its fine.
 - (id)initWithTransfer:(id)arg1 bundleIdentifier:(id)arg2;
 - (void)activate;
 @end
-
 @interface SFAirDropTransfer: NSObject
-
 -(NSProgress *)transferProgress;
-
+-(id)metaData;
 @end
 
 @interface SFAirDropTransferMetaData : NSObject
@@ -109,12 +108,8 @@
 	NSArray <NSURL *> *items = arg[@"Items"];
 	if (items.count > 0 && [prog isFinished]){
 
-		//id meta = [self metaData];
-		//NSLog(@"###### meta items: %@", [meta items]);
 		HBLogDebug(@"info: %@", arg);
-		HBLogDebug(@"science bro");
-	
-		NSMutableDictionary *bro = [arg mutableCopy];
+		
 		NSMutableArray *paths = [NSMutableArray new];
 		NSMutableArray *URLS = [NSMutableArray new];
 		[items enumerateObjectsUsingBlock:^(NSURL * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -134,33 +129,22 @@
 			    
     		    
     	}];
-		[bro removeObjectForKey:@"Items"];
-		HBLogDebug(@"Down here bro: %@, ", bro);
-		if (paths.count > 0){
-
-			HBLogDebug(@"we got paths ese");
-			//NSString *notificationName = @"com.nito.AirDropper/airDropFileReceived";
-			//NSDictionary *userInfo = @{@"Items": paths};
-			//HBLogDebug(@"Breezy: sending user info: %@", userInfo);
-			//[[NSDistributedNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:userInfo];
-			[bro setObject:paths forKey:@"LocalFiles"];
-		}
-
-		if (URLS.count > 0){
-			//NSString *notificationName = @"com.nito.AirDropper/airDropFileReceived";
-			//NSDictionary *userInfo = @{@"URLS": URLS};
-			//HBLogDebug(@"Breezy: sending user info: %@", userInfo);
-			//[[NSDistributedNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:userInfo];
-			[bro setObject:URLS forKey:@"URLS"];
-		}
+	
 		if (paths.count > 0 || URLS.count > 0){
-			
-			HBLogDebug(@"Breezy: sending user info: %@", bro);
+		
 			NSMutableDictionary *sent = [NSMutableDictionary new];
-			sent[@"Files"] = bro[@"Files"];
-			sent[@"LocalFiles"] = bro[@"LocalFiles"];
-			sent[@"URLS"] = bro[@"URLS"];
-			sent[@"SenderCompositeName"] = bro[@"SenderCompositeName"];
+			sent[@"Files"] = arg[@"Files"];
+			sent[@"LocalFiles"] = paths;
+			sent[@"URLS"] = URLS;
+			sent[@"SenderCompositeName"] = arg[@"SenderCompositeName"];
+			sent[@"SenderComputerName"] = arg[@"SenderComputerName"];
+			HBLogDebug(@"Breezy: sending user info: %@", sent);
+			NSData *imageData = arg[@"SenderIcon"];
+			HBLogDebug(@"writing image data: %@", imageData);
+			NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+			NSString *filePath = [@"/private/var/tmp" stringByAppendingPathComponent:@"SenderIcon.png"];
+			HBLogDebug(@"filePath: %@", filePath);
+			[imageData writeToFile:filePath atomically:TRUE];
 			[[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"com.breezy.kludgeh4x" object:nil userInfo:sent];
 		}
 	}	
@@ -202,6 +186,7 @@
 
 %hook PBAppDelegate
 
+
 %new - (void)showSystemAlertFromAlert:(id)alert {
 
 	%log;
@@ -211,32 +196,47 @@
 	NSDictionary *userInfo = [alert userInfo];
 	//NSString *name = userInfo[@"SenderCompositeName"];
 	//NSString *text = [NSString stringWithFormat:@"%@ is sending a file, where would you like to open it?", name];
-	id applicationAlert = [[NSClassFromString(@"PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:@"Open with..."];
+	
 	NSArray <NSDictionary *> *files = userInfo[@"Files"];
 	NSArray <NSString *> *localFiles = userInfo[@"LocalFiles"];
 	NSDictionary *fileOne = files[0];
 	NSString *fileName = fileOne[@"FileName"];
 	NSString *fileType = fileOne[@"FileType"];
 	id doxy = [NSClassFromString(@"LSDocumentProxy") documentProxyForName:fileName type:fileType MIMEType:nil];
+	id applicationAlert = [[NSClassFromString(@"PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", fileName]];
 	NSArray *applications = [doxy applicationsAvailableForOpeningWithTypeDeclarer: 1 style: 0 XPCConnection: nil error: nil];
-	[applications enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-		 [applicationAlert addButtonWithTitle:[obj localizedName] type:0 handler:^{
-                       
-					   NSLog(@"selected this guy: %@", obj);
-					   NSURL *url = [NSURL fileURLWithPath:localFiles[0]];
-					   NSLog(@"selected this guy: %@", url);
-					   [windowManager dismissDialogViewController:applicationAlert];
-					   id ws = [NSClassFromString(@"LSApplicationWorkspace") defaultWorkspace];
-					   id operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": @1} options:nil delegate:nil];
-					   
-					    dispatch_async(dispatch_get_main_queue(), ^{
-							NSLog(@"operation brother: %@", operation);
-							   [operation start];
+	if (applications.count == 1){
+		 NSString *file = localFiles[0];
+		 NSURL *url = [NSURL fileURLWithPath:file];
+		 id obj = applications[0];
+		  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+						    id ws = [NSClassFromString(@"LSApplicationWorkspace") defaultWorkspace];
+				
+						   	 NSOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:nil];
+					  		 [operation start];
 
     					});
+				return;
+	} else {
+		[applications enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		 [applicationAlert addButtonWithTitle:[obj localizedName] type:0 handler:^{
+                       
+					   //NSLog(@"selected this guy: %@", obj);
+					   NSString *file = localFiles[0];
+					   NSURL *url = [NSURL fileURLWithPath:file];
+					   //NSLog(@"url: %@", url);
+					   [windowManager dismissDialogViewController:applicationAlert];
+					   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+						    id ws = [NSClassFromString(@"LSApplicationWorkspace") defaultWorkspace];
+				
+						   	 NSOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:nil];
+					  		 [operation start];
+
+    					});
+					 
 				    }];
 	}];
-
+	}
 	[applicationAlert addButtonWithTitle:@"Cancel" type:0 handler:^{
                        
 					   [windowManager dismissDialogViewController:applicationAlert];

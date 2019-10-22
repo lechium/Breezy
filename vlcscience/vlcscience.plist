@@ -1,0 +1,7 @@
+{
+	Filter = {
+		Bundles = (
+			"org.videolan.vlc-ios",
+		);
+	};
+}

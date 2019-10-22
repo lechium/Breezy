@@ -57,8 +57,8 @@
 	if (matches){
 		return true;
 	}
-	return true;
-	//return %orig;
+	//return true;
+	return %orig;
 }
 
 %end
@@ -139,12 +139,14 @@
 			sent[@"SenderCompositeName"] = arg[@"SenderCompositeName"];
 			sent[@"SenderComputerName"] = arg[@"SenderComputerName"];
 			HBLogDebug(@"Breezy: sending user info: %@", sent);
-			NSData *imageData = arg[@"SenderIcon"];
+			/*
+            NSData *imageData = arg[@"SenderIcon"];
 			HBLogDebug(@"writing image data: %@", imageData);
 			NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 			NSString *filePath = [@"/private/var/tmp" stringByAppendingPathComponent:@"SenderIcon.png"];
 			HBLogDebug(@"filePath: %@", filePath);
 			[imageData writeToFile:filePath atomically:TRUE];
+             */
 			[[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"com.breezy.kludgeh4x" object:nil userInfo:sent];
 		}
 	}	
@@ -152,13 +154,6 @@
 }
 %end
 
-/*
-
-###### meta items: {(
-    <SFAirDropTransferItem 0x9BD2, type: public.c-header, count: 1, isFile: yes>
-)}
-
-*/
 
 %hook SDAirDropTransferManager
 
@@ -199,6 +194,18 @@
 	
 	NSArray <NSDictionary *> *files = userInfo[@"Files"];
 	NSArray <NSString *> *localFiles = userInfo[@"LocalFiles"];
+    NSMutableString *names = [NSMutableString new];
+    id doxy = nil;
+    [localFiles enumerateObjectsUsingBlock:^(NSDictionary  *_Nonnull localFile, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        NSString *fileName = localFile[@"FileName"];
+        NSString *fileType = localFile[@"FileType"];
+        if (!doxy) {
+            
+        }
+        
+    }];
+    
 	NSDictionary *fileOne = files[0];
 	NSString *fileName = fileOne[@"FileName"];
 	NSString *fileType = fileOne[@"FileType"];
@@ -212,7 +219,7 @@
 		  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
 						    id ws = [NSClassFromString(@"LSApplicationWorkspace") defaultWorkspace];
 				
-						   	 NSOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:nil];
+						   	 NSOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:FALSE]} options:nil delegate:nil];
 					  		 [operation start];
 
     					});

@@ -37,6 +37,7 @@ static int process_buffer_size = 4096;
 
 + (void)classDumpObject:(id)obj
 {
+    
     HBLogDebug(@"weouchea?");
     Class clazz = [obj class];
     u_int count;

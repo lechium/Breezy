@@ -62,15 +62,11 @@
 
 -(void)updateWithInformation:(id)arg {
     %log;
-    
     NSProgress *prog = [self transferProgress];
     HBLogDebug(@"progress: %@", prog);
-    
     NSArray <NSURL *> *items = arg[@"Items"];
     if (items.count > 0 && [prog isFinished]){
-        
         HBLogDebug(@"info: %@", arg);
-        
         NSMutableArray *paths = [NSMutableArray new];
         NSMutableArray *URLS = [NSMutableArray new];
         [items enumerateObjectsUsingBlock:^(NSURL * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -81,16 +77,11 @@
                     HBLogDebug(@"obj isnt a file path: %@", obj);
                     [URLS addObject:[obj absoluteString]];
                 }
-                
             } else {
-                
                 HBLogDebug(@"doesnt respond to isFileURL: %@", obj);
                 [paths addObject:[obj path]];
             }
-            
-            
         }];
-        
         if (paths.count > 0 || URLS.count > 0){
             
             NSMutableDictionary *sent = [NSMutableDictionary new];
@@ -152,18 +143,12 @@
     }
     NSOperation *firstObject = [[self operationArray] firstObject];
     HBLogDebug(@"firstObject: %@", firstObject);
-   // if ([firstObject isFinished]){
         [[self operationArray] removeObject:firstObject];
         if ([[self operationArray] count] > 0){
             firstObject = [[self operationArray] firstObject];
             HBLogDebug(@"object: %@", firstObject);
             [firstObject start];
         }
-    //} else {
-      //  HBLogDebug(@"Isnt finished: %@", firstObject);
-       // [firstObject main];
-    //}
-    
 }
 
 %new - (NSMutableArray *)operationArray {
@@ -185,19 +170,13 @@
     return ooq;
 }
 
-
- 
 %new -(void)contentPresenting:(id)arg1 willDismissContentWithResult:(id)arg2 error:(id)arg3 {
-
     %log;
-    
- }
+}
 
- %new -(void)contentPresentingDidDismissContent:(id)arg1 {
-     %log;
- }
- 
- 
+%new -(void)contentPresentingDidDismissContent:(id)arg1 {
+    %log;
+}
 
 %new - (void)showSystemAlertFromAlert:(id)alert {
     
@@ -210,7 +189,6 @@
     NSDictionary *userInfo = [alert userInfo];
     //NSString *name = userInfo[@"SenderCompositeName"];
     //NSString *text = [NSString stringWithFormat:@"%@ is sending a file, where would you like to open it?", name];
-    
     NSArray <NSDictionary *> *files = userInfo[@"Files"];
     NSArray <NSString *> *localFiles = userInfo[@"LocalFiles"];
     __block NSMutableString *names = [NSMutableString new];
@@ -225,32 +203,25 @@
         [names appendFormat:@"%@, ", fileName];
         
     }];
-    /*
-     NSDictionary *fileOne = files[0];
-     NSString *fileName = fileOne[@"FileName"];
-     NSString *fileType = fileOne[@"FileType"];
-     id doxy = [NSClassFromString(@"LSDocumentProxy") documentProxyForName:fileName type:fileType MIMEType:nil];
-     */
+
     id applicationAlert = [[objc_getClass("PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", names]];
     NSArray  *applications = nil;
     BOOL thirteenPlus = FALSE;
     if ([doxy respondsToSelector:@selector(applicationsAvailableForOpeningWithStyle:limit:XPCConnection:error:)]){
-        applications = [doxy applicationsAvailableForOpeningWithStyle: 0 limit: 1 XPCConnection: nil error: nil];
+        applications = [doxy applicationsAvailableForOpeningWithStyle:0 limit:1 XPCConnection:nil error:nil];
         thirteenPlus = true;
         dialogManager = [objc_getClass("PBDialogManager") sharedInstance];
-
     } else {
         applications = [doxy applicationsAvailableForOpeningWithTypeDeclarer: 1 style: 0 XPCConnection: nil error: nil];
     }
 
-    
     NSMutableArray <NSOperation *>*opArray = [self operationArray];
     HBLogDebug(@"opArray: %@", opArray);
     //NSOperationQueue *opQueue = [self openOperationQueue];
     //opQueue.maxConcurrentOperationCount = 1;
     //HBLogDebug(@"opQueue: %@", opQueue);
     HBLogDebug(@"applications: %@", applications);
-    if (applications.count == 5){
+    if (applications.count == 1){
         //NSString *file = localFiles[0];
         //NSURL *url = [NSURL fileURLWithPath:file];
         id launchApp = applications[0];
@@ -279,11 +250,8 @@
         });
         return;
     } else {
-            HBLogDebug(@"operation: %@", operation);
         [applications enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [applicationAlert addButtonWithTitle:[obj localizedName] type:0 handler:^{
-                
-                HBLogDebug(@"this far?");
                 
                 if (thirteenPlus) {
                     [dialogManager dismissDialogWithContext:context options:nil completion:nil];
@@ -297,17 +265,14 @@
                         NSURL *url = [NSURL fileURLWithPath:localFile];
                         NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:nil];
                       
-                        HBLogDebug(@"this far?2");
                        // if (idx == 0){
                          //   [operation start];
                         //} else {
                         //[operation start];
                         [opArray addObject:operation];
                         [operation addExecutionBlock: ^{
-                            HBLogDebug(@"this far?3");
                             [self runNextOperation];
                         }];
-                        HBLogDebug(@"this far?4");
                         if (idx == 0){
                             [operation start];
                         }
@@ -317,15 +282,7 @@
                         
                     }];
                 });
-                /*
-                 NSString *file = localFiles[0];
-                 NSURL *url = [NSURL fileURLWithPath:file];
-                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                 NSOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:nil];
-                 [operation start];
-                 
-                 });
-                 */
+     
             }];
         }];
     }
@@ -364,22 +321,4 @@
     
 }
 
-%end
-
-%hook PBContentPresentingContainmentViewController
-
--(id)initWithChildViewController:(id)arg1 allowsInteraction:(BOOL)arg2 expectsEventForwarding:(BOOL)arg3 {
-    %log;
-    return %orig;
-}
-/*
--(void)presentContentAnimated:(BOOL)arg1 clientOptions:(id)arg2 withCompletion:(id)arg3
-{
-    %log;
-    if(arg3 != nil){
-        NSMethodSignature *signature = [[[CTBlockDescription alloc] initWithBlock:arg3] blockSignature];
-        HBLogDebug(@"signature %@", [signature debugDescription]);
-    }
-    return %orig;
-}*/
 %end

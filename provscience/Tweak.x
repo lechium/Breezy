@@ -17,9 +17,21 @@
 
     NSString *newPath = [cache stringByAppendingPathComponent:url.path.lastPathComponent];
     NSString *originalPath = url.path;
-    NSError *error = nil;
+    NSString *airdropFolder = [originalPath stringByDeletingLastPathComponent];
+    HBLogDebug(@"[Provenance] airdropFolder: %@", airdropFolder);
+    __block NSError *error = nil;
+    NSArray *contents = [man contentsOfDirectoryAtPath:airdropFolder error:nil];
+    HBLogDebug(@"[Provenance] airdropFolder contents: %@", contents);
     [man copyItemAtPath:originalPath toPath:newPath error:&error];
     HBLogDebug(@"error: %@", error);
+    [contents enumerateObjectsUsingBlock:^(NSString  * file, NSUInteger idx, BOOL * _Nonnull stop) {
+
+        NSString *fullPath = [airdropFolder stringByAppendingPathComponent:file];
+        NSString *newPaths = [cache stringByAppendingPathComponent:file];
+        HBLogDebug(@"fullPath: %@ to %@", fullPath, newPaths);
+        [man copyItemAtPath:originalPath toPath:newPaths error:&error];
+        HBLogDebug(@"copy error: %@", error);
+    }];
 
     return YES;
 }

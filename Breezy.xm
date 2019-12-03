@@ -4,6 +4,12 @@
 #import "breezy.h"
 #import "CTBlockDescription.h"
 
+@protocol LSOpenResourceOperationDelegate <NSObject>
+@optional
+-(void)openResourceOperation:(id)arg1 didFailWithError:(id)arg2;
+-(void)openResourceOperationDidComplete:(id)arg1;
+-(void)openResourceOperation:(id)arg1 didFinishCopyingResource:(id)arg2;
+@end
 %hook SharingDaemon
 
 - (_Bool)canAccessAirDropSettings:(id)arg1 {
@@ -133,10 +139,23 @@
 
 %hook PBAppDelegate
 
+%new -(void)openResourceOperation:(id)arg1 didFailWithError:(id)arg2 {
+    %log;
+    //TODO: should probably do some error handling here
+}
+
+%new - (void)openResourceOperationDidComplete:(id)arg1 {
+    %log;
+    [self runNextOperation];
+}
+
+%new - (void)openResourceOperation:(id)arg1 didFinishCopyingResource:(id)arg2 {
+    
+    %log;
+}
 %new - (void)runNextOperation {
     
     HBLogDebug(@"runNextOp: %@", [self operationArray]);
-    //NSMutableArray *opArray = [self operationArray];
     if ([[self operationArray] count] == 0){
         HBLogDebug(@"no operations left!");
         return;
@@ -158,24 +177,6 @@
         objc_setAssociatedObject(self, @selector(operationArray), ooq, OBJC_ASSOCIATION_RETAIN);
     }
     return ooq;
-}
-
-%new - (NSOperationQueue *)openOperationQueue {
-    
-    id ooq = objc_getAssociatedObject(self, @selector(openOperationQueue));
-    if (ooq == nil){
-        ooq = [NSOperationQueue currentQueue];
-        objc_setAssociatedObject(self, @selector(openOperationQueue), ooq, OBJC_ASSOCIATION_RETAIN);
-    }
-    return ooq;
-}
-
-%new -(void)contentPresenting:(id)arg1 willDismissContentWithResult:(id)arg2 error:(id)arg3 {
-    %log;
-}
-
-%new -(void)contentPresentingDidDismissContent:(id)arg1 {
-    %log;
 }
 
 %new - (void)showSystemAlertFromAlert:(id)alert {
@@ -207,49 +208,36 @@
     id applicationAlert = [[objc_getClass("PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", names]];
     NSArray  *applications = nil;
     BOOL thirteenPlus = FALSE;
+    //check to see if we are on 13 based on which LSDocumentProxy application function exists
     if ([doxy respondsToSelector:@selector(applicationsAvailableForOpeningWithStyle:limit:XPCConnection:error:)]){
-        applications = [doxy applicationsAvailableForOpeningWithStyle:0 limit:1 XPCConnection:nil error:nil];
+        applications = [doxy applicationsAvailableForOpeningWithStyle:0 limit:5 XPCConnection:nil error:nil];
         thirteenPlus = true;
         dialogManager = [objc_getClass("PBDialogManager") sharedInstance];
     } else {
-        applications = [doxy applicationsAvailableForOpeningWithTypeDeclarer: 1 style: 0 XPCConnection: nil error: nil];
+        applications = [doxy applicationsAvailableForOpeningWithTypeDeclarer:1 style:0 XPCConnection:nil error:nil];
     }
 
     NSMutableArray <NSOperation *>*opArray = [self operationArray];
-    HBLogDebug(@"opArray: %@", opArray);
-    //NSOperationQueue *opQueue = [self openOperationQueue];
-    //opQueue.maxConcurrentOperationCount = 1;
-    //HBLogDebug(@"opQueue: %@", opQueue);
-    HBLogDebug(@"applications: %@", applications);
-    if (applications.count == 1){
-        //NSString *file = localFiles[0];
-        //NSURL *url = [NSURL fileURLWithPath:file];
+    HBLogDebug(@"available applications: %@", applications);
+    if (applications.count == 1){ //Theres only one application, just open it automatically
         id launchApp = applications[0];
-        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             
             [localFiles enumerateObjectsUsingBlock:^(NSString  * localFile, NSUInteger idx, BOOL * _Nonnull stop) {
                 
                 NSURL *url = [NSURL fileURLWithPath:localFile];
-                NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:nil];
-                //[operation start];
+                NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
                
                 HBLogDebug(@"operation: %@", operation);
                 [opArray addObject:operation];
-                [operation addExecutionBlock: ^{
-                    
-                    [self runNextOperation];
-                }];
-                if (idx == 0){
-                  //  [operation start];
-                }
             }];
-            
               [[opArray firstObject] start];
             
         });
         return;
-    } else {
+        
+    } else { //multiple applications available, build up the menu
+        
         [applications enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [applicationAlert addButtonWithTitle:[obj localizedName] type:0 handler:^{
                 
@@ -263,22 +251,11 @@
                     
                     [localFiles enumerateObjectsUsingBlock:^(NSString  * localFile, NSUInteger idx, BOOL * _Nonnull stop) {
                         NSURL *url = [NSURL fileURLWithPath:localFile];
-                        NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:nil];
-                      
-                       // if (idx == 0){
-                         //   [operation start];
-                        //} else {
-                        //[operation start];
+                        NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
                         [opArray addObject:operation];
-                        [operation addExecutionBlock: ^{
-                            [self runNextOperation];
-                        }];
                         if (idx == 0){
                             [operation start];
                         }
-                           // [opQueue addOperation:operation];
-                            
-                       // }
                         
                     }];
                 });
@@ -294,7 +271,6 @@
 
         }
     }];
-
     dispatch_async(dispatch_get_main_queue(), ^{
        if (thirteenPlus){
            context = [objc_getClass("PBDialogContext") contextWithViewController:applicationAlert];

@@ -8,7 +8,7 @@
     %log;
     NSFileManager *man = [NSFileManager defaultManager];
     HBLogDebug(@"[Provenance] host: %@ path: %@", url.host, url.path);
-    BOOL orig = %orig;
+    //BOOL orig = %orig;
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *cache = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Imports"];
     NSDictionary *attrs = [man attributesOfItemAtPath:cache error:nil];
@@ -20,10 +20,11 @@
     NSString *airdropFolder = [originalPath stringByDeletingLastPathComponent];
     HBLogDebug(@"[Provenance] airdropFolder: %@", airdropFolder);
     __block NSError *error = nil;
-    NSArray *contents = [man contentsOfDirectoryAtPath:airdropFolder error:nil];
-    HBLogDebug(@"[Provenance] airdropFolder contents: %@", contents);
+    //NSArray *contents = [man contentsOfDirectoryAtPath:airdropFolder error:nil];
+    //HBLogDebug(@"[Provenance] airdropFolder contents: %@", contents);
     [man copyItemAtPath:originalPath toPath:newPath error:&error];
     HBLogDebug(@"error: %@", error);
+/*
     [contents enumerateObjectsUsingBlock:^(NSString  * file, NSUInteger idx, BOOL * _Nonnull stop) {
 
         NSString *fullPath = [airdropFolder stringByAppendingPathComponent:file];
@@ -32,7 +33,7 @@
         [man copyItemAtPath:originalPath toPath:newPaths error:&error];
         HBLogDebug(@"copy error: %@", error);
     }];
-
+*/
     return YES;
 }
 

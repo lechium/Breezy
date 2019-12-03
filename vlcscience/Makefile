@@ -2,7 +2,8 @@ INSTALL_TARGET_PROCESSES = VLC-tvOS
 ARCHS = arm64
 target ?= appletv:clang:10.2.2:10.0
 export GO_EASY_ON_ME=1
-THEOS_DEVICE_IP=4k.local
+export DEBUG=1
+THEOS_DEVICE_IP=guest-room.local
 
 include $(THEOS)/makefiles/common.mk
 

@@ -142,10 +142,14 @@
 %new -(void)openResourceOperation:(id)arg1 didFailWithError:(id)arg2 {
     %log;
     //TODO: should probably do some error handling here
+    HBLogDebug(@"failed with error: %@", arg2);
+    [[self operationArray] removeObject:arg1];
+    [self runNextOperation];
 }
 
 %new - (void)openResourceOperationDidComplete:(id)arg1 {
     %log;
+    [[self operationArray] removeObject:arg1];
     [self runNextOperation];
 }
 
@@ -155,19 +159,15 @@
 }
 %new - (void)runNextOperation {
     
-    HBLogDebug(@"runNextOp: %@", [self operationArray]);
+    HBLogDebug(@"runNextOp operations: %@", [self operationArray]);
     if ([[self operationArray] count] == 0){
         HBLogDebug(@"no operations left!");
-        return;
+    } else {
+        NSOperation *firstObject = [[self operationArray] firstObject];
+        HBLogDebug(@"next operation: %@", firstObject);
+        [firstObject start];
     }
-    NSOperation *firstObject = [[self operationArray] firstObject];
-    HBLogDebug(@"firstObject: %@", firstObject);
-        [[self operationArray] removeObject:firstObject];
-        if ([[self operationArray] count] > 0){
-            firstObject = [[self operationArray] firstObject];
-            HBLogDebug(@"object: %@", firstObject);
-            [firstObject start];
-        }
+    
 }
 
 %new - (NSMutableArray *)operationArray {

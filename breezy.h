@@ -1,3 +1,27 @@
+
+@interface _LSLazyPropertyList : NSObject
+
+@property (readonly) NSDictionary * propertyList;
++(BOOL)supportsSecureCoding;
++(id)lazyPropertyListWithPropertyListData:(id)arg1 ;
++(id)lazyPropertyList;
++(id)lazyPropertyListWithPropertyListURL:(id)arg1 ;
++(id)lazyPropertyListWithPropertyList:(id)arg1 ;
++(id)lazyPropertyListWithContext:(id)arg1 unit:(unsigned)arg2 ;
++(id)lazyPropertyListWithLazyPropertyLists:(id)arg1 ;
+-(id)copyWithZone:(NSZone*)arg1 ;
+-(id)init;
+-(void)encodeWithCoder:(id)arg1 ;
+-(id)initWithCoder:(id)arg1 ;
+-(NSDictionary *)propertyList;
+-(id)objectForPropertyListKey:(id)arg1 ofClass:(Class)arg2 ;
+-(BOOL)_getPropertyList:(id*)arg1 ;
+-(BOOL)_getValue:(id*)arg1 forPropertyListKey:(id)arg2 ;
+-(id)_filterValueFromPropertyList:(id)arg1 ofClass:(Class)arg2 valuesOfClass:(Class)arg3 ;
+-(id)objectsForPropertyListKeys:(id)arg1 ;
+-(id)objectForPropertyListKey:(id)arg1 ofClass:(Class)arg2 valuesOfClass:(Class)arg3 ;
+@end
+
 @interface PBDialogContext : NSObject
 @property (nonatomic,readonly) id provider;              //@synthesize provider=_provider - In the implementation block
 @property (nonatomic,readonly) NSString * identifier;                               //@synthesize identifier=_identifier - In the implementation block
@@ -45,6 +69,8 @@
 
 @interface PBAppDelegate: NSObject
 - (void)showSystemAlertFromAlert:(id)alert;
+- (void)postBulletinForFile:(NSString *)file;
+- (void)sendBulletinWithMessage:(NSString *)message title:(NSString *)title;
 @end
 
 @interface PBAppDelegate (science)

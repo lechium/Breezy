@@ -141,7 +141,6 @@
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
 {
     self.airDropDictionary  = [url airdropDictionary];
-    NSLog(@"#### FR FR WEOUCHEA");
     NSLog(@"url: %@ app identifier: %@", self.airDropDictionary[@"path"], self.airDropDictionary[@"sender"]);
     NSString *filePath = self.airDropDictionary[@"path"];
     [self showAirDropSharingView:filePath];

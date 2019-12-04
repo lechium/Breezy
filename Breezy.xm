@@ -10,6 +10,22 @@
 -(void)openResourceOperationDidComplete:(id)arg1;
 -(void)openResourceOperation:(id)arg1 didFinishCopyingResource:(id)arg2;
 @end
+
+%hook _LSCompoundLazyPropertyList
+
+- (id)propertyList {
+    
+    %log;
+    id orig = %orig;
+    NSString *bundleId = [orig valueForKey:@"CFBundleIdentifier"];
+    if ([bundleId isEqualToString:@"com.libretro.nito.tvos.RetroArch"]){
+        HBLogDebug(@"BROOOOOOO WE GOT IM: %@", orig);
+    }
+    return orig;
+}
+
+%end
+
 %hook SharingDaemon
 
 - (_Bool)canAccessAirDropSettings:(id)arg1 {
@@ -156,6 +172,7 @@
 %new - (void)openResourceOperation:(id)arg1 didFinishCopyingResource:(id)arg2 {
     
     %log;
+    [self postBulletinForFile:[arg2 lastPathComponent]];
 }
 %new - (void)runNextOperation {
     
@@ -177,6 +194,36 @@
         objc_setAssociatedObject(self, @selector(operationArray), ooq, OBJC_ASSOCIATION_RETAIN);
     }
     return ooq;
+}
+
+%new - (void)postBulletinForFile:(NSString *)fileName {
+    NSString *message = [NSString stringWithFormat:@"Imported '%@' successfully!",fileName];
+    NSString *title = @"Import Successful";
+    [self sendBulletinWithMessage:message title:title];
+}
+
+%new - (void)sendBulletinWithMessage:(NSString *)message title:(NSString *)title {
+    
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    dict[@"message"] = message;
+    dict[@"title"] = title;
+    dict[@"timeout"] = @2;
+    NSString *imageName = @"AirDrop-large.png";
+    NSString *privateFrameworks = @"/System/Library/PrivateFrameworks/";
+    NSString *sharingFW = [privateFrameworks stringByAppendingPathComponent:@"SharingUI.framework"];
+    NSFileManager *man = [NSFileManager defaultManager];
+    if (![man fileExistsAtPath:sharingFW]){
+        sharingFW = [privateFrameworks stringByAppendingPathComponent:@"Sharing.framework"];
+    }
+    NSString *imagePath = [sharingFW stringByAppendingPathComponent:imageName];
+    UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
+    NSData *imageData = UIImagePNGRepresentation(image);
+    if (imageData){
+        dict[@"imageData"] = imageData;
+    }
+    //dict[@"imageID"] = @"PBSSystemBulletinImageIDTV";
+    [[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"com.nito.bulletinh4x/displayBulletin" object:nil userInfo:dict];
+    
 }
 
 %new - (void)showSystemAlertFromAlert:(id)alert {
@@ -252,12 +299,12 @@
                     [localFiles enumerateObjectsUsingBlock:^(NSString  * localFile, NSUInteger idx, BOOL * _Nonnull stop) {
                         NSURL *url = [NSURL fileURLWithPath:localFile];
                         NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
+                        HBLogDebug(@"operation: %@", operation);
                         [opArray addObject:operation];
-                        if (idx == 0){
-                            [operation start];
-                        }
+                       
                         
                     }];
+                    [[opArray firstObject] start];
                 });
      
             }];

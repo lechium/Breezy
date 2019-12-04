@@ -5,6 +5,7 @@
 		);
 		Executables = (
 			sharingd,
+			lsd,
 		);
 	};
 }

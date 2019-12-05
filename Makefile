@@ -22,4 +22,5 @@ after-install::
 	install.exec "killall -9 sharingd lsd"
 SUBPROJECTS += provscience
 SUBPROJECTS += vlcscience
+SUBPROJECTS += bundle
 include $(THEOS_MAKE_PATH)/aggregate.mk

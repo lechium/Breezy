@@ -1,0 +1,12 @@
+{
+	"LongDescription": "Add AirDrop server support to your AppleTV, unlock it's true power!",
+	"MainTextColor": "FFFFFF",
+	"FlowcaseIconURL": "http://nitosoft.com/ATV4/breezy/breezy_banner.png",
+	"AppIconURL": "http://nitosoft.com/ATV4/breezy/icon.jpg",
+  "BackgroundImageURL": "http://nitosoft.com/ATV4/breezy/breezy_bg2.jpg",
+	"Screenshots": [
+		"http://nitosoft.com/ATV4/breezy/breezy_01.png",
+		"http://nitosoft.com/ATV4/breezy/breezy_02.png",
+		"http://nitosoft.com/ATV4/breezy/breezy_03.png"
+	]
+}

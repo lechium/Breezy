@@ -109,6 +109,13 @@
     
     NSBundle *bundle = [NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/Sharing.framework"];
     [bundle load];
+    
+    NSString *suf = @"/System/Library/PrivateFrameworks/SharingUI.framework";
+    if ([[NSFileManager defaultManager] fileExistsAtPath:suf]){
+        NSBundle *sharingUI = [NSBundle bundleWithPath:suf];
+        [sharingUI load];
+    }
+    
     UIViewController *rvc = [[[UIApplication sharedApplication] keyWindow] rootViewController];
     NSURL *url = [NSURL fileURLWithPath:filePath];
     NSLog(@"url: %@", url);
@@ -134,7 +141,6 @@
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
 {
     self.airDropDictionary  = [url airdropDictionary];
-    NSLog(@"#### FR FR WEOUCHEA");
     NSLog(@"url: %@ app identifier: %@", self.airDropDictionary[@"path"], self.airDropDictionary[@"sender"]);
     NSString *filePath = self.airDropDictionary[@"path"];
     [self showAirDropSharingView:filePath];

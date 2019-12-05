@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>platform-application</key>
+	<true/>
+	<key>com.apple.private.skip-library-validation</key>
+	<true/>
+	<key>com.apple.private.security.no-container</key>
+	<true/>
+	<key>get-task-allow</key>
+	<true/>
+	<key>task_for_pid-allow</key>
+	<true/>
+	<key>com.apple.system-task-ports</key>
+	<true/>
+	<key>dynamic-codesigning</key>
+	<true/>
+	<key>com.apple.private.security.no-sandbox</key>
+	<true/>
+	<key>com.apple.frontboard.launchapplications</key>
+	<true/>
+	<key>com.apple.backboardd.launchapplications</key>
+	<true/>
+	<key>com.apple.springboard.launchapplications</key>
+	<true/>
+	<key>com.apple.springboard.launchapplicationswithoptions</key>
+	<true/>
+	<key>application-identifier</key>
+	<string>BBBBBBBBBB.com.nito.breezyd</string>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.nito.Breezy</string>
+	</array>
+	<key>com.apple.developer.team-identifier</key>
+	<string>BBBBBBBBBB</string>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>com.nito.Breezy</string>
+		<string>BBBBBBBBBB.com.nito.Breezy</string>
+		<string>nito</string>
+	</array>
+	<key>com.apple.private.airdrop.settings</key>
+	<true/>
+</dict>
+</plist>

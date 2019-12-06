@@ -22,6 +22,15 @@
 -(id)objectForPropertyListKey:(id)arg1 ofClass:(Class)arg2 valuesOfClass:(Class)arg3 ;
 @end
 
+@interface LSBundleProxy: NSObject
+-(NSString *)bundleIdentifier;
+@end
+@interface LSApplicationProxy: LSBundleProxy
++(id)applicationProxyForIdentifier:(id)arg1;
+-(BOOL)isContainerized;
+-(NSURL *)dataContainerURL;
+@end
+
 @interface PBDialogContext : NSObject
 @property (nonatomic,readonly) id provider;              //@synthesize provider=_provider - In the implementation block
 @property (nonatomic,readonly) NSString * identifier;                               //@synthesize identifier=_identifier - In the implementation block

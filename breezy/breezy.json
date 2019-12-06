@@ -1,12 +1,13 @@
 {
-	"LongDescription": "Add AirDrop server support to your AppleTV, unlock it's true power!",
+	"LongDescription": "Add AirDrop server support to your AppleTV. This project covers a lot of ground and does more than unlock AirDrop server functionality on your AppleTV it allows anyone to add AirDrop exporting to their applications / tweaks / command line utilities and more. It is open source and exhaustively documented. Unlock the true power of your AppleTV, more to come!!! Enjoy. https://github.com/lechium/Breezy",
 	"MainTextColor": "FFFFFF",
-	"FlowcaseIconURL": "http://nitosoft.com/ATV4/breezy/breezy_banner.png",
-	"AppIconURL": "http://nitosoft.com/ATV4/breezy/icon.jpg",
-  "BackgroundImageURL": "http://nitosoft.com/ATV4/breezy/breezy_bg2.jpg",
+	"FlowcaseIconURL": "https://nitosoft.com/ATV4/breezy/breezy_banner.png",
+	"AppIconURL": "https://nitosoft.com/ATV4/breezy/icon.jpg",
+  "BackgroundImageURL": "https://nitosoft.com/ATV4/breezy/breezy_bg2.jpg",
+  "VideoPreviewURL": "https://nitosoft.com/ATV4/breezy/preview.mp4",
 	"Screenshots": [
-		"http://nitosoft.com/ATV4/breezy/breezy_01.png",
-		"http://nitosoft.com/ATV4/breezy/breezy_02.png",
-		"http://nitosoft.com/ATV4/breezy/breezy_03.png"
+		"https://nitosoft.com/ATV4/breezy/breezy_01.png",
+		"https://nitosoft.com/ATV4/breezy/breezy_02.png",
+		"https://nitosoft.com/ATV4/breezy/breezy_03.png"
 	]
 }

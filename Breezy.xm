@@ -4,6 +4,8 @@
 #import "breezy.h"
 #import "CTBlockDescription.h"
 
+@class BindingEvaluator, LSContext, LSBundleData;
+
 @protocol LSOpenResourceOperationDelegate <NSObject>
 @optional
 -(void)openResourceOperation:(id)arg1 didFailWithError:(id)arg2;
@@ -11,15 +13,67 @@
 -(void)openResourceOperation:(id)arg1 didFinishCopyingResource:(id)arg2;
 @end
 
+/**
+ 
+ Some failed experiments to programatically add airdrop support so Info.plist doesn't need to be edited, no paydirt yet.
+ 
+ */
+/*
+%hook LSBundleProxy
+
+- (id)_infoDictionary {
+    %log;
+    id orig = %orig;
+    NSString *bundleId = [self bundleIdentifier];
+    HBLogDebug(@"%@: %@", bundleId, [[orig valueForKey:@"propertyList"] valueForKey:@"allKeys"]);
+    return orig;
+}
+
+%end
+
+%hook LSApplicationProxy
+
+- (NSSet *)claimedDocumentContentTypes {
+    
+    id orig = %orig;
+    NSString *bundleId = [self bundleIdentifier];
+    NSLog(@"Breezy.xm 41: LSApplicationProxy:claimedDocumentContenTypes: %@", orig);
+    NSLog(@"Breezy.xm 42: bundleId: %@", bundleId);
+    if ([bundleId isEqualToString:@"com.firecore.infuse.pro.5"]){
+            NSLog(@"Breezy.xm 45: Infuse test run!");
+        return [NSSet setWithArray:@[@"org.xiph.oga",@"public.mpeg",@"org.videolan.mxf",@"public.audio",@"org.videolan.webm",@"org.videolan.mxg",@"public.movie",@"public.aifc-audio",@"public.avi",@"public.mpeg-4",@"com.microsoft.windows-\xe2\x80\x8bmedia-wma",@"org.videolan.idx",@"org.videolan.jss",@"com.apple.quicktime-movie",@"public.aiff-audio",@"com.real.realmedia",@"com.microsoft.windows-media-wmv",@"org.videolan.caf",@"org.videolan.w64",@"org.videolan.opus",@"public.audiovisual-content",@"org.videolan.srt",@"public.utf",@"org.videolan.smi",@"org.matroska.mkv",@"com.divx.divx",@"com.microsoft.advanced-systems-format",@"com.real.smil",@"public.3gpp2",@"org.videolan.ass",@"org.videolan.oma",@"org.videolan.aqt",@"org.videolan.psb",@"org.videolan.smil",@"org.videolan.flac",@"public.ulaw-audio",@"com.microsoft.waveform-audio",@"org.videolan.vlc",@"org.videolan.ssa",@"com.real.realaudio",@"org.xiph.ogv",@"public.mp3",@"org.videolan.sub",@"org.videolan.cdg",@"org.videolan.rt",@"public.mpeg4",@"public.video",@"public.3gpp",@"com.microsoft.windows-media-wm",@"public.mpeg-4-audio"]];
+    }
+    return orig;
+    
+}
+
+
+%end
+
+%hook _LSLazyPropertyList
+
+-(BOOL)_getValue:(id*)arg1 forPropertyListKey:(id)arg2 {
+    
+    %log;
+    return %orig;
+}
+
+%end
+
 %hook _LSCompoundLazyPropertyList
 
+-(BOOL)_getValue:(id*)arg1 forPropertyListKey:(id)arg2 {
+    
+    %log;
+    return %orig;
+}
 - (id)propertyList {
     
     %log;
     id orig = %orig;
     NSString *bundleId = [orig valueForKey:@"CFBundleIdentifier"];
-    if ([bundleId isEqualToString:@"com.libretro.nito.tvos.RetroArch"]){
-        HBLogDebug(@"BROOOOOOO WE GOT IM: %@", orig);
+    if ([bundleId isEqualToString:@"target"]){
+ 
     }
     return orig;
 }
@@ -45,6 +99,9 @@
 }
 
 %end
+*/
+
+//start actual code
 
 %hook SFAirDropTransfer
 
@@ -81,6 +138,7 @@
  )}
  */
 
+//all of this code is thoroughly documented in the README if you are having trouble understanding it.
 
 -(void)updateWithInformation:(id)arg {
     %log;
@@ -155,6 +213,9 @@
 
 %hook PBAppDelegate
 
+
+//add these delegate methods to handle when operations are complete, this is the proper way to do it. nothing else works.
+
 %new -(void)openResourceOperation:(id)arg1 didFailWithError:(id)arg2 {
     %log;
     //TODO: should probably do some error handling here
@@ -196,6 +257,7 @@
     return ooq;
 }
 
+//a bit misleading, reports can come here and the import MIGHT have failed FIXME:
 %new - (void)postBulletinForFile:(NSString *)fileName {
     NSString *message = [NSString stringWithFormat:@"Imported '%@' successfully!",fileName];
     NSString *title = @"Import Successful";
@@ -210,6 +272,7 @@
     dict[@"timeout"] = @2;
     NSString *imageName = @"AirDrop-large.png";
     NSString *privateFrameworks = @"/System/Library/PrivateFrameworks/";
+    //different frameworks for different versions 13+ is SharingUI.framework
     NSString *sharingFW = [privateFrameworks stringByAppendingPathComponent:@"SharingUI.framework"];
     NSFileManager *man = [NSFileManager defaultManager];
     if (![man fileExistsAtPath:sharingFW]){
@@ -241,6 +304,10 @@
     NSArray <NSString *> *localFiles = userInfo[@"LocalFiles"];
     __block NSMutableString *names = [NSMutableString new];
     __block id doxy = nil;
+    
+    //TODO: this could smarter, its possible the files selected dont all work in one app, need to accomodate that
+    //TODO: also, the file name list should have a limit so it gets truncated at a certain point, the wall of text can get MASSIVE.
+    
     [files enumerateObjectsUsingBlock:^(NSDictionary  * adFile, NSUInteger idx, BOOL * _Nonnull stop) {
         
         NSString *fileName = adFile[@"FileName"];
@@ -255,6 +322,8 @@
     id applicationAlert = [[objc_getClass("PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", names]];
     NSArray  *applications = nil;
     BOOL thirteenPlus = FALSE;
+
+    //TODO: do a smarter 13+ check, also apparently you can call LSApplicationWorkspace functions universally here instead.
     //check to see if we are on 13 based on which LSDocumentProxy application function exists
     if ([doxy respondsToSelector:@selector(applicationsAvailableForOpeningWithStyle:limit:XPCConnection:error:)]){
         applications = [doxy applicationsAvailableForOpeningWithStyle:0 limit:5 XPCConnection:nil error:nil];
@@ -263,7 +332,7 @@
     } else {
         applications = [doxy applicationsAvailableForOpeningWithTypeDeclarer:1 style:0 XPCConnection:nil error:nil];
     }
-
+    //get the operation array here because its a mutable array we will continue to add on to.
     NSMutableArray <NSOperation *>*opArray = [self operationArray];
     HBLogDebug(@"available applications: %@", applications);
     if (applications.count == 1){ //Theres only one application, just open it automatically
@@ -322,7 +391,7 @@
        if (thirteenPlus){
            context = [objc_getClass("PBDialogContext") contextWithViewController:applicationAlert];
            dispatch_async(dispatch_get_main_queue(), ^{
-               [dialogManager presentDialogWithContext:context options:@{@"PBDialogOptionPresentForcedKey": [NSNumber numberWithInteger:0], @"PBDialogOptionPresentWhileScreenSaverActiveKey": [NSNumber numberWithInteger:0]} completion:nil];
+               [dialogManager presentDialogWithContext:context options:@{@"PBDialogOptionPresentForcedKey": [NSNumber numberWithInteger:1], @"PBDialogOptionPresentWhileScreenSaverActiveKey": [NSNumber numberWithInteger:1]} completion:nil];
            });
            
        } else {

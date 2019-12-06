@@ -1,5 +1,52 @@
 # Breezy
-Jailbreak implementation &amp; research for AirDrop on tvOS
+Jailbreak implementation &amp; research for AirDrop on tvOS. 
+
+NOTE: Some of these notes might be slightly outdated, will be revising them as i hate time.
+
+## Unified implementation
+
+In the latest updated the implementation has been improved and standardized to be more consistent with what you expect / experience on iOS and macOS when adding AirDrop support. Utilizing UTI types and Document types to enable users to discern what application (if there are multiple) will open / import the files.
+
+tldr: it is no longer necessary to listen for distributed notifications to get AirDrop server support added to your application! 
+
+Below you will find some resources on how to edit your Info.plist file to add AirDrop receiver support to your app.
+
+It is also necessary to handle opening file URL's (done the same way it is in iOS) to handle the files being fed to your through launch services.
+
+Will use my changes to RetroArch here as the implementation example:
+
+```Objective-C
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary *)options {
+    
+    NSFileManager *man = [NSFileManager defaultManager];
+    NSLog(@"[RetroArchTV] host: %@ path: %@", url.host, url.path);
+    NSString *filename = (NSString*)url.path.lastPathComponent;
+    NSError     *error = nil;
+    
+    NSString *newDocs = [self outputPathForFile:filename];
+    if (![man fileExistsAtPath:newDocs]){
+        NSLog(@"[RetroArchTV] %@ does not exist! attempting to create it", newDocs);
+        [man createDirectoryAtPath:newDocs withIntermediateDirectories:TRUE attributes:nil error:nil];
+    }
+    [man moveItemAtPath:[url path] toPath:[newDocs stringByAppendingPathComponent:filename] error:&error];
+
+    if (error) { //this will error out on chimera
+        NSLog(@"[RetroArchTV] move file error error: %@", [error description]);
+            printf("%s\n", [[error description] UTF8String]);
+                [man copyItemAtPath:[url path] toPath:[newDocs stringByAppendingPathComponent:filename] error:&error];
+    }
+    return true;
+}
+
+```
+The Info.plist linked here will give you the info necessary to see how "all documents" support was added (not recommended) 
+
+https://github.com/lechium/RetroArch/blob/master/pkg/apple/tvOS/Info.plist#L9 
+
+You can also reference the file in this repo:  VLC-tvOS-Info.plist to see how I took the Info.plist from VLC for iOS and grabbed the necessary keys and added them to the tvOS version. Just replaced the old Info.plist inside the original with this one, ran uicache and was good to go!
+
+In the future I would like to make it possible to add support without manually modifying these files, haven't gotten that far yet!
 
 ## AirDropHelper
 
@@ -124,7 +171,7 @@ The file linked below is where the exception is thrown in sharingd, a partial re
 
 [SDAirDropTransferManager.m](../master/Research/sharingd%20daemon/SDAirDropTransferManager.m)
 
-tl;dr the transfer needs a "handler" to determine what to do with the file once the transfer is complete. if this handler is nil, it throws an exception and the transfer is killed.
+tl;dr the transfer needs a "handler" to determine what to do with the file once the transfer is complete. if this handler is nil, it throws an exception and the transfer is killed. (this exception is only thrown on versions < 13, just mentioned for posterity, not incredibly relevant)
 
 ```Objective-C
 - (id)determineHandlerForTransfer:(id)transfer
@@ -181,11 +228,7 @@ Said dictionary looks like this
     });
 ```
 
-From there we cycle through the items and convert them to NSString's (URL's can't be sent in a NSDistributedNotification) And then post the notification that you listen for in your application.
-
-From there you can move/copy the file to a new location and process it however you would like.
-
-***I know this process is a hack, it was the quickest way to get this implemented in a short period of time, I do plan to make it more proper in the future as time permits. PR's welcome! :)**
+From there we cycle through the items and convert them to NSString's (URL's can't be sent in a NSDistributedNotification) And then post a notification that is listened for inside of hooks into PineBoard (this is currently necessary to get access to the dialog/windowing classes we need to use to show the user an alert with options to choose from)
 
 
 ## Discovering AirDrop in the background
@@ -265,34 +308,6 @@ typedef enum : NSUInteger {
     [rec startAdvertising]; //this is how we show we are available to AirDrop clients
 
     
-}
-```
-
-### Receiving a notification about the AirDrop files being received:
-
-
-```Objective-C
-
-- (void)airDropReceived:(NSNotification *)n {
-    
-    NSDictionary *userInfo = [n userInfo];
-    NSArray <NSString*> *paths = userInfo[@"Items"];
-    
-    [items enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-    
-        //do your thing with the file - ideally with a serial queue if you are going to present a UI to do anything
-    
-        
-    }];
-    
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-	
-     //this could go in other places, just an example..
-
-    [super viewDidAppear:animated];
-    [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(airDropReceived:) name:@"com.nito.AirDropper/airDropFileReceived" object:nil];
 }
 ```
 

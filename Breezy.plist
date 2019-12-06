@@ -2,6 +2,7 @@
 	Filter = {
 		Bundles = (
 			"com.apple.PineBoard",
+			"com.apple.CoreServices",
 		);
 		Executables = (
 			sharingd,

@@ -10,6 +10,7 @@
 @interface LSApplicationProxy (More)
 +(id)applicationProxyForIdentifier:(id)arg1;
 -(BOOL)isContainerized;
+-(NSString *)bundleIdentifier;
 -(NSURL *)dataContainerURL;
 @end
 

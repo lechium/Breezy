@@ -5,7 +5,7 @@ NOTE: Some of these notes might be slightly outdated, will be revising them as i
 
 ## Unified implementation
 
-In the latest updated the implementation has been improved and standardized to be more consistent with what you expect / experience on iOS and macOS when adding AirDrop support. Utilizing UTI types and Document types to enable users to discern what application (if there are multiple) will open / import the files.
+In the latest updated the implementation has been improved and standardized to be more consistent with what you expect / experience on iOS and macOS when adding AirDrop support. Utilizing [UTI types](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/understanding_utis/understand_utis_intro/understand_utis_intro.html#//apple_ref/doc/uid/TP40001319-CH201-SW1) and Document types to enable users to discern what application (if there are multiple) will open / import the files.
 
 tldr: it is no longer necessary to listen for distributed notifications to get AirDrop server support added to your application! 
 
@@ -40,11 +40,9 @@ Will use my changes to RetroArch here as the implementation example:
 }
 
 ```
-The Info.plist linked here will give you the info necessary to see how "all documents" support was added (not recommended) 
+This [Info.plist](https://github.com/lechium/RetroArch/blob/master/pkg/apple/tvOS/Info.plist#L9) will give you the info necessary to see how "all documents" support was added (not recommended to add ALL documents) 
 
-https://github.com/lechium/RetroArch/blob/master/pkg/apple/tvOS/Info.plist#L9 
-
-You can also reference the file in this repo:  VLC-tvOS-Info.plist to see how I took the Info.plist from VLC for iOS and grabbed the necessary keys and added them to the tvOS version. Just replaced the old Info.plist inside the original with this one, ran uicache and was good to go!
+You can also reference the file in this repo: [VLC-tvOS-Info.plist](../master/VLC-tvOS-Info.plist) to see how I took the Info.plist from VLC for iOS and grabbed the necessary keys and added them to the tvOS version. Just replaced the old Info.plist inside the original with this one, ran uicache and was good to go!
 
 In the future I would like to make it possible to add support without manually modifying these files, haven't gotten that far yet!
 

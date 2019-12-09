@@ -3,6 +3,7 @@
 		Bundles = (
 			"com.apple.PineBoard",
 			"com.apple.CoreServices",
+			"com.apple.Foundation",
 		);
 		Executables = (
 			sharingd,

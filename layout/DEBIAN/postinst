@@ -6,5 +6,4 @@ launchctl unload /Library/LaunchDaemons/com.nito.breezy.plist
 launchctl load /Library/LaunchDaemons/com.nito.breezy.plist
 launchctl unload /System/Library/LaunchDaemons/com.apple.sharingd.plist
 launchctl load /System/Library/LaunchDaemons/com.apple.sharingd.plist
-
 echo 'finish:restart'

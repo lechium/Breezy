@@ -13,6 +13,38 @@
 -(void)openResourceOperation:(id)arg1 didFinishCopyingResource:(id)arg2;
 @end
 
+%hook NSBundle
+
+- (id)infoDictionary {
+    
+    //%log;
+    id orig = %orig;
+    NSString *bundleId = [orig valueForKey:@"CFBundleIdentifier"];
+    if (bundleId){
+        if([[orig allKeys] containsObject:@"CFBundleDocumentTypes"]){
+            HBLogDebug(@"GOT THE GAS AND THE %@ I DONT SELL MOLLY NO MO", bundleId);
+        }
+    }
+    return orig;
+}
+
+%end
+
+%hook _LSDModifyClient
+
+-(void)removeHandlerForContentType:(id)arg1 roles:(unsigned)arg2 completionHandler:(/*^block*/id)arg3 {
+    %log;
+    %orig;
+}
+
+-(void)setHandler:(id)arg1 version:(id)arg2 roles:(unsigned)arg3 forContentType:(id)arg4 completionHandler:(/*^block*/id)arg5 {
+
+    %log;
+    %orig;
+    
+}
+%end
+
 /**
  
  Some failed experiments to programatically add airdrop support so Info.plist doesn't need to be edited, no paydirt yet.

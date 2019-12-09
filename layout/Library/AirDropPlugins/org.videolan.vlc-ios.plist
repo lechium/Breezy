@@ -2,23 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>BuildMachineOSBuild</key>
-	<string>18D109</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
-	<key>CFBundleDisplayName</key>
-	<string>VLC</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeIconFiles</key>
-			<array/>
 			<key>CFBundleTypeName</key>
 			<string>Video Files</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.audiovisual-content</string>
@@ -43,16 +35,16 @@
 				<string>com.divx.divx</string>
 				<string>org.xiph.ogv</string>
 			</array>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeIconFiles</key>
-			<array/>
 			<key>CFBundleTypeName</key>
 			<string>Audio Files</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.audio</string>
@@ -72,16 +64,16 @@
 				<string>org.videolan.flac</string>
 				<string>org.xiph.oga</string>
 			</array>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeIconFiles</key>
-			<array/>
 			<key>CFBundleTypeName</key>
 			<string>Subtitles Files</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>org.videolan.srt</string>
@@ -99,523 +91,421 @@
 				<string>org.videolan.smil</string>
 				<string>com.real.smil</string>
 			</array>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
 		</dict>
 	</array>
-	<key>CFBundleExecutable</key>
-	<string>VLC-tvOS</string>
-	<key>CFBundleIcons</key>
-	<dict>
-		<key>CFBundlePrimaryIcon</key>
-		<string>App Icon - Small</string>
-	</dict>
-	<key>CFBundleIdentifier</key>
-	<string>org.videolan.vlc-ios</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>VLC-tvOS</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>3.0.6</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleSupportedPlatforms</key>
-	<array>
-		<string>AppleTVOS</string>
-	</array>
-	<key>CFBundleVersion</key>
-	<string>309</string>
-	<key>DTAppStoreToolsBuild</key>
-	<string>11A1002b</string>
-	<key>DTCompiler</key>
-	<string>com.apple.compilers.llvm.clang.1_0</string>
-	<key>DTPlatformBuild</key>
-	<string>16L225</string>
-	<key>DTPlatformName</key>
-	<string>appletvos</string>
-	<key>DTPlatformVersion</key>
-	<string>12.2</string>
-	<key>DTSDKBuild</key>
-	<string>16L225</string>
-	<key>DTSDKName</key>
-	<string>appletvos12.2</string>
-	<key>DTXcode</key>
-	<string>1020</string>
-	<key>DTXcodeBuild</key>
-	<string>10E125</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
-	<key>ITSDRMScheme</key>
-	<string>v2</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>MinimumOSVersion</key>
-	<string>13.0</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
-	<key>TVTopShelfImage</key>
-	<dict>
-		<key>TVTopShelfPrimaryImage</key>
-		<string>Top Shelf Image</string>
-		<key>TVTopShelfPrimaryImageWide</key>
-		<string>Top Shelf Image Wide-1</string>
-	</dict>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>audio</string>
-	</array>
-	<key>UIDeviceFamily</key>
-	<array>
-		<integer>3</integer>
-	</array>
-	<key>UILaunchImages</key>
-	<array>
-		<dict>
-			<key>UILaunchImageMinimumOSVersion</key>
-			<string>11.0</string>
-			<key>UILaunchImageName</key>
-			<string>LaunchImage</string>
-			<key>UILaunchImageOrientation</key>
-			<string>Landscape</string>
-			<key>UILaunchImageSize</key>
-			<string>{1920, 1080}</string>
-		</dict>
-		<dict>
-			<key>UILaunchImageMinimumOSVersion</key>
-			<string>9.0</string>
-			<key>UILaunchImageName</key>
-			<string>LaunchImage</string>
-			<key>UILaunchImageOrientation</key>
-			<string>Landscape</string>
-			<key>UILaunchImageSize</key>
-			<string>{1920, 1080}</string>
-		</dict>
-	</array>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>arm64</string>
-	</array>
-	<key>UISupportedDevices</key>
-	<array>
-		<string>AppleTV5,3</string>
-	</array>
-	<key>UIUserInterfaceStyle</key>
-	<string>Automatic</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.xiph.ogv</string>
+			<key>UTTypeDescription</key>
+			<string>Ogg Video</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.movie</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>Ogg Video</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.xiph.ogv</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
-				<string>ogv</string>
 				<key>public.mime-type</key>
 				<string>video/ogg</string>
+				<key>public.filename-extension</key>
+				<string>ogv</string>
 			</dict>
 		</dict>
 		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.xiph.oga</string>
+			<key>UTTypeDescription</key>
+			<string>Ogg Audio</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.audio</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>Ogg Audio</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.xiph.oga</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>public.mime-type</key>
+				<string>audio/ogg</string>
 				<key>public.filename-extension</key>
 				<array>
 					<string>ogg</string>
 					<string>oga</string>
 				</array>
-				<key>public.mime-type</key>
-				<string>audio/ogg</string>
 			</dict>
 		</dict>
 		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.divx.divx</string>
+			<key>UTTypeDescription</key>
+			<string>DivX</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.avi</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>DivX</string>
-			<key>UTTypeIdentifier</key>
-			<string>com.divx.divx</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
-				<string>divx</string>
 				<key>public.mime-type</key>
 				<string>application/octet-stream</string>
+				<key>public.filename-extension</key>
+				<string>divx</string>
 			</dict>
 		</dict>
 		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.matroska.mkv</string>
+			<key>UTTypeDescription</key>
+			<string>Matroska</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.movie</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>Matroska</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.matroska.mkv</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
-				<string>mkv</string>
 				<key>public.mime-type</key>
 				<string>video/x-matroska</string>
+				<key>public.filename-extension</key>
+				<string>mkv</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.audio</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>Flac</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.flac</string>
+			<key>UTTypeDescription</key>
+			<string>Flac</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.audio</string>
+			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
-				<string>flac</string>
 				<key>public.mime-type</key>
 				<string>audio/x-flac</string>
+				<key>public.filename-extension</key>
+				<string>flac</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.audio</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>OPUS</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.opus</string>
+			<key>UTTypeDescription</key>
+			<string>OPUS</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.audio</string>
+			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
-				<string>opus</string>
 				<key>public.mime-type</key>
 				<string>audio/opus</string>
+				<key>public.filename-extension</key>
+				<string>opus</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.video</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>MXF</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.mxf</string>
+			<key>UTTypeDescription</key>
+			<string>MXF</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.video</string>
+			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
-				<string>mxf</string>
 				<key>public.mime-type</key>
 				<string>application/mxf</string>
+				<key>public.filename-extension</key>
+				<string>mxf</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.video</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>WebM</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.webm</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<string>webm</string>
-				<key>public.mime-type</key>
-				<string>video/webm</string>
-			</dict>
-		</dict>
-		<dict>
+			<key>UTTypeDescription</key>
+			<string>WebM</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.video</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>MXG</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.mime-type</key>
+				<string>video/webm</string>
+				<key>public.filename-extension</key>
+				<string>webm</string>
+			</dict>
+		</dict>
+		<dict>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.mxg</string>
+			<key>UTTypeDescription</key>
+			<string>MXG</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.video</string>
+			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>public.mime-type</key>
+				<string>application/octet-stream</string>
 				<key>public.filename-extension</key>
 				<string>mxg</string>
-				<key>public.mime-type</key>
-				<string>application/octet-stream</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.audio</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>CAF</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.caf</string>
+			<key>UTTypeDescription</key>
+			<string>CAF</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.audio</string>
+			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>public.mime-type</key>
+				<string>application/octet-stream</string>
 				<key>public.filename-extension</key>
 				<string>caf</string>
-				<key>public.mime-type</key>
-				<string>application/octet-stream</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.audio</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>OMA</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.oma</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<string>oma</string>
-				<key>public.mime-type</key>
-				<string>application/octet-stream</string>
-			</dict>
-		</dict>
-		<dict>
+			<key>UTTypeDescription</key>
+			<string>OMA</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.audio</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>w64</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.videolan.w64</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
-				<string>w64</string>
 				<key>public.mime-type</key>
 				<string>application/octet-stream</string>
+				<key>public.filename-extension</key>
+				<string>oma</string>
 			</dict>
 		</dict>
 		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.videolan.w64</string>
+			<key>UTTypeDescription</key>
+			<string>w64</string>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.plain-text</string>
+				<string>public.audio</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>srt</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.mime-type</key>
+				<string>application/octet-stream</string>
+				<key>public.filename-extension</key>
+				<string>w64</string>
+			</dict>
+		</dict>
+		<dict>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.srt</string>
+			<key>UTTypeDescription</key>
+			<string>srt</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>public.mime-type</key>
+				<string>text/plain</string>
 				<key>public.filename-extension</key>
 				<string>srt</string>
-				<key>public.mime-type</key>
-				<string>text/plain</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>sub</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.sub</string>
+			<key>UTTypeDescription</key>
+			<string>sub</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>public.mime-type</key>
+				<string>text/plain</string>
 				<key>public.filename-extension</key>
 				<string>sub</string>
-				<key>public.mime-type</key>
-				<string>text/plain</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>cdg</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.cdg</string>
+			<key>UTTypeDescription</key>
+			<string>cdg</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>public.mime-type</key>
+				<string>text/plain</string>
 				<key>public.filename-extension</key>
 				<string>cdg</string>
-				<key>public.mime-type</key>
-				<string>text/plain</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>idx</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.idx</string>
+			<key>UTTypeDescription</key>
+			<string>idx</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>public.mime-type</key>
+				<string>text/plain</string>
 				<key>public.filename-extension</key>
 				<string>idx</string>
-				<key>public.mime-type</key>
-				<string>text/plain</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>ass</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.ass</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<string>ass</string>
-				<key>public.mime-type</key>
-				<string>text/plain</string>
-			</dict>
-		</dict>
-		<dict>
+			<key>UTTypeDescription</key>
+			<string>ass</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.plain-text</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>ssa</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.videolan.ssa</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
-				<string>ssa</string>
 				<key>public.mime-type</key>
 				<string>text/plain</string>
+				<key>public.filename-extension</key>
+				<string>ass</string>
 			</dict>
 		</dict>
 		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.videolan.ssa</string>
+			<key>UTTypeDescription</key>
+			<string>ssa</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.mime-type</key>
+				<string>text/plain</string>
+				<key>public.filename-extension</key>
+				<string>ssa</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.videolan.aqt</string>
+			<key>UTTypeDescription</key>
+			<string>aqt</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>publiic.plain-text</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>aqt</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.videolan.aqt</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>public.mime-type</key>
+				<string>text/plain</string>
 				<key>public.filename-extension</key>
 				<string>aqt</string>
-				<key>public.mime-type</key>
-				<string>text/plain</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>jss</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.jss</string>
+			<key>UTTypeDescription</key>
+			<string>jss</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>public.mime-type</key>
+				<string>text/plain</string>
 				<key>public.filename-extension</key>
 				<string>jss</string>
-				<key>public.mime-type</key>
-				<string>text/plain</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>psb</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.psb</string>
+			<key>UTTypeDescription</key>
+			<string>psb</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>public.mime-type</key>
+				<string>text/plain</string>
 				<key>public.filename-extension</key>
 				<string>psb</string>
-				<key>public.mime-type</key>
-				<string>text/plain</string>
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>rt</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.videolan.rt</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<string>rt</string>
-				<key>public.mime-type</key>
-				<string>text/plain</string>
-			</dict>
-		</dict>
-		<dict>
+			<key>UTTypeDescription</key>
+			<string>rt</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.plain-text</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>smi</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.videolan.smi</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
-				<string>smi</string>
 				<key>public.mime-type</key>
 				<string>text/plain</string>
+				<key>public.filename-extension</key>
+				<string>rt</string>
 			</dict>
 		</dict>
 		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.videolan.smi</string>
+			<key>UTTypeDescription</key>
+			<string>smi</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.mime-type</key>
+				<string>text/plain</string>
+				<key>public.filename-extension</key>
+				<string>smi</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.videolan.vlc</string>
+			<key>UTTypeDescription</key>
+			<string>vlc fake file</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.movie</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>vlc fake file</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.videolan.vlc</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
-				<string>vlc</string>
 				<key>public.mime-type</key>
 				<string>application/octet-stream</string>
+				<key>public.filename-extension</key>
+				<string>vlc</string>
 			</dict>
 		</dict>
 	</array>

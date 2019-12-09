@@ -13,6 +13,13 @@
 -(void)openResourceOperation:(id)arg1 didFinishCopyingResource:(id)arg2;
 @end
 
+/**
+ 
+ Some failed experiments to programatically add airdrop support so Info.plist doesn't need to be edited, no paydirt yet.
+ 
+ */
+
+/*
 %hook NSBundle
 
 - (id)infoDictionary {
@@ -22,7 +29,7 @@
     NSString *bundleId = [orig valueForKey:@"CFBundleIdentifier"];
     if (bundleId){
         if([[orig allKeys] containsObject:@"CFBundleDocumentTypes"]){
-            HBLogDebug(@"GOT THE GAS AND THE %@ I DONT SELL MOLLY NO MO", bundleId);
+            HBLogDebug(@"### found bundle id", bundleId);
         }
     }
     return orig;
@@ -32,12 +39,12 @@
 
 %hook _LSDModifyClient
 
--(void)removeHandlerForContentType:(id)arg1 roles:(unsigned)arg2 completionHandler:(/*^block*/id)arg3 {
+-(void)removeHandlerForContentType:(id)arg1 roles:(unsigned)arg2 completionHandler:(id)arg3 {
     %log;
     %orig;
 }
 
--(void)setHandler:(id)arg1 version:(id)arg2 roles:(unsigned)arg3 forContentType:(id)arg4 completionHandler:(/*^block*/id)arg5 {
+-(void)setHandler:(id)arg1 version:(id)arg2 roles:(unsigned)arg3 forContentType:(id)arg4 completionHandler:(id)arg5 {
 
     %log;
     %orig;
@@ -45,12 +52,8 @@
 }
 %end
 
-/**
- 
- Some failed experiments to programatically add airdrop support so Info.plist doesn't need to be edited, no paydirt yet.
- 
- */
-/*
+
+
 %hook LSBundleProxy
 
 - (id)_infoDictionary {
@@ -111,6 +114,9 @@
 }
 
 %end
+*/
+
+//start actual code
 
 %hook SharingDaemon
 
@@ -131,9 +137,9 @@
 }
 
 %end
-*/
 
-//start actual code
+
+
 
 %hook SFAirDropTransfer
 

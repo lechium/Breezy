@@ -3,6 +3,7 @@
 #import <objc/runtime.h>
 #import "breezy.h"
 #import "CTBlockDescription.h"
+#include <CoreFoundation/CoreFoundation.h>
 
 @class BindingEvaluator, LSContext, LSBundleData;
 
@@ -53,14 +54,14 @@
 %end
 
 
-
 %hook LSBundleProxy
 
 - (id)_infoDictionary {
     %log;
     id orig = %orig;
     NSString *bundleId = [self bundleIdentifier];
-    HBLogDebug(@"%@: %@", bundleId, [[orig valueForKey:@"propertyList"] valueForKey:@"allKeys"]);
+    id propertyList = [orig valueForKey:@"propertyList"];
+    NSLog(@"%@: %@", bundleId, propertyList);
     return orig;
 }
 
@@ -330,16 +331,23 @@
 %new - (void)showSystemAlertFromAlert:(id)alert {
     
     %log;
-    NSLog(@"showSystemAlertFromAlert: %@", alert);
+    BOOL thirteenPlus = (kCFCoreFoundationVersionNumber > 1575.17);
+    __block id dialogManager; //13+ only
+    if (thirteenPlus){
+        dialogManager = [objc_getClass("PBDialogManager") sharedInstance]; //get this out of the way
+    }
+    NSLog(@"[Breezy] CFVersion %.2f\n", kCFCoreFoundationVersionNumber);
+    NSLog(@"[Breezy] showSystemAlertFromAlert: %@", alert);
     id windowManager = [objc_getClass("PBWindowManager") sharedInstance];
     id ws = [objc_getClass("LSApplicationWorkspace") defaultWorkspace];
     __block id context; //13+ only
-    __block id dialogManager; //13+ only
+    
     NSDictionary *userInfo = [alert userInfo];
     //NSString *name = userInfo[@"SenderCompositeName"];
     //NSString *text = [NSString stringWithFormat:@"%@ is sending a file, where would you like to open it?", name];
     NSArray <NSDictionary *> *files = userInfo[@"Files"];
     NSArray <NSString *> *localFiles = userInfo[@"LocalFiles"];
+    NSArray <NSString *> *URLS = userInfo[@"URLS"];
     __block NSMutableString *names = [NSMutableString new];
     __block id doxy = nil;
     
@@ -356,20 +364,21 @@
         [names appendFormat:@"%@, ", fileName];
         
     }];
-
-    id applicationAlert = [[objc_getClass("PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", names]];
-    NSArray  *applications = nil;
-    BOOL thirteenPlus = FALSE;
-
-    //TODO: do a smarter 13+ check, also apparently you can call LSApplicationWorkspace functions universally here instead.
-    //check to see if we are on 13 based on which LSDocumentProxy application function exists
-    if ([doxy respondsToSelector:@selector(applicationsAvailableForOpeningWithStyle:limit:XPCConnection:error:)]){
-        applications = [doxy applicationsAvailableForOpeningWithStyle:0 limit:5 XPCConnection:nil error:nil];
-        thirteenPlus = true;
-        dialogManager = [objc_getClass("PBDialogManager") sharedInstance];
-    } else {
-        applications = [doxy applicationsAvailableForOpeningWithTypeDeclarer:1 style:0 XPCConnection:nil error:nil];
+    
+    NSArray  *applications = [ws applicationsAvailableForOpeningDocument:doxy];
+    
+    if (URLS.count > 0){ //we take a different path here entirely
+        NSString *firstURL = URLS[0];
+        [names appendString:firstURL];
+        applications = [ws applicationsAvailableForHandlingURLScheme:[[NSURL URLWithString:firstURL] scheme]];
+        //PBLinkHandler is useless and we dont want to list it as an option.
+        NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.apple.PBLinkHandler'"];
+        applications = [applications filteredArrayUsingPredicate: pred];
     }
+    
+    NSLog(@"[Breezy] names length: %lu", names.length);
+    id applicationAlert = [[objc_getClass("PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", names]];
+    
     //get the operation array here because its a mutable array we will continue to add on to.
     NSMutableArray <NSOperation *>*opArray = [self operationArray];
     HBLogDebug(@"available applications: %@", applications);
@@ -377,14 +386,26 @@
         id launchApp = applications[0];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             
-            [localFiles enumerateObjectsUsingBlock:^(NSString  * localFile, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                NSURL *url = [NSURL fileURLWithPath:localFile];
-                NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
-               
-                HBLogDebug(@"operation: %@", operation);
-                [opArray addObject:operation];
-            }];
+            if (URLS.count > 0){
+                [URLS enumerateObjectsUsingBlock:^(NSString  * fileURL, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    //NSURL *url = [NSURL fileURLWithPath:localFile];
+                    NSURL *url = [NSURL URLWithString:fileURL];
+                    NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
+                    
+                    HBLogDebug(@"operation: %@", operation);
+                    [opArray addObject:operation];
+                }];
+            } else {
+                [localFiles enumerateObjectsUsingBlock:^(NSString  * localFile, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    NSURL *url = [NSURL fileURLWithPath:localFile];
+                    NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
+                    
+                    HBLogDebug(@"operation: %@", operation);
+                    [opArray addObject:operation];
+                }];
+            }
               [[opArray firstObject] start];
             
         });
@@ -402,15 +423,26 @@
                     
                 }
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                    
-                    [localFiles enumerateObjectsUsingBlock:^(NSString  * localFile, NSUInteger idx, BOOL * _Nonnull stop) {
-                        NSURL *url = [NSURL fileURLWithPath:localFile];
-                        NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
-                        HBLogDebug(@"operation: %@", operation);
-                        [opArray addObject:operation];
-                       
-                        
-                    }];
+                    if (URLS.count > 0){
+                        [URLS enumerateObjectsUsingBlock:^(NSString  * fileURL, NSUInteger idx, BOOL * _Nonnull stop) {
+                            
+                            //NSURL *url = [NSURL fileURLWithPath:localFile];
+                            NSURL *url = [NSURL URLWithString:fileURL];
+                            NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
+                            
+                            HBLogDebug(@"operation: %@", operation);
+                            [opArray addObject:operation];
+                        }];
+                    } else {
+                        [localFiles enumerateObjectsUsingBlock:^(NSString  * localFile, NSUInteger idx, BOOL * _Nonnull stop) {
+                            NSURL *url = [NSURL fileURLWithPath:localFile];
+                            NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
+                            HBLogDebug(@"operation: %@", operation);
+                            [opArray addObject:operation];
+                            
+                            
+                        }];
+                    }
                     [[opArray firstObject] start];
                 });
      

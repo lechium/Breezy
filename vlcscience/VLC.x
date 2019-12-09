@@ -12,7 +12,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     %log;
-    NSLog(@"BROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
     NSURL *url = (NSURL *)[launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
     HBLogDebug(@"MY NAME IS URL: %@", url);
     if (url != nil){
@@ -80,5 +79,6 @@
 %end
 
 %ctor {
-//%init(AppDelegate = objc_getClass("Provenance.PVAppDelegate"));
+
+    //was going to try and introspect the class to hook here but doesnt seem to work properly.
 }

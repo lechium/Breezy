@@ -92,6 +92,8 @@
 @interface LSApplicationWorkspace: NSObject
 
 +(id)defaultWorkspace;
+- (NSArray *)applicationsAvailableForHandlingURLScheme:(id)scheme;
+- (NSArray *)applicationsAvailableForOpeningDocument:(id)documentProxy;
 -(BOOL)openApplicationWithBundleID:(id)arg1;
 -(id)operationToOpenResource:(id)arg1 usingApplication:(id)arg2 uniqueDocumentIdentifier:(id)arg3 isContentManaged:(BOOL)arg4 sourceAuditToken:(id)arg5 userInfo:(id)arg6 options:(id)arg7 delegate:(id)arg8;
 @end

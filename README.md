@@ -1,8 +1,6 @@
 # Breezy
 Jailbreak implementation &amp; research for AirDrop on tvOS. 
 
-NOTE: Some of these notes might be slightly outdated, will be revising them as i hate time.
-
 ## Unified implementation
 
 In the latest updated the implementation has been improved and standardized to be more consistent with what you expect / experience on iOS and macOS when adding AirDrop support. Utilizing [UTI types](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/understanding_utis/understand_utis_intro/understand_utis_intro.html#//apple_ref/doc/uid/TP40001319-CH201-SW1) and Document types to enable users to discern what application (if there are multiple) will open / import the files.
@@ -46,10 +44,11 @@ You can also reference the file in this repo: [VLC-tvOS-Info.plist](../master/VL
 
 In the future I would like to make it possible to add support without manually modifying these files, haven't gotten that far yet!
 
-## AirDropHelper
+## Exporting files using AirDrop
 
-There is a new addition to the latest version of Breezy [here](../master/AirDropHelper) AirDropHelper
-This will allow you to add AirDrop support to your application (OR any application you tweak) with a 2-3 lines of code
+### AirDropHelper
+
+AirDropHelper is a headerless application uses a URL scheme (airdropper://) to receive files from any other application / tweak or command line utility on the device and will handle presenting the standard AirDrop sharing UI
 
 ### Calling from an application (whether original or tweaked)
 
@@ -86,12 +85,11 @@ This will allow you to add AirDrop support to your application (OR any applicati
 
 ```
 
-
 Thats it! 
 
 As long as you add 
 ```
-com.nito.breezy (>=1.4-9)
+com.nito.breezy (>=2.1)
 ``` 
 to your dependencies, this will open an AirDrop sharing dialog with whatever file you feed it with the call to 
 
@@ -101,7 +99,7 @@ to your dependencies, this will open an AirDrop sharing dialog with whatever fil
 
 This insanely simple application is explained below.
 
-AirDropHelper is a headless application (full fledged Application with a view controller heirarchy, just no visible icon on the home screen)
+as previously mentioned AirDropHelper is a headless application (full fledged Application with a view controller heirarchy, just no visible icon on the home screen)
 
 This is achieved by adding the following to the Info.plist file: 
 
@@ -109,8 +107,8 @@ This is achieved by adding the following to the Info.plist file:
 
 ```
 <key>SBAppTags</key>
-<array>
-<string>hidden</string>
+    <array>
+    <string>hidden</string>
 </array>
 ```
 
@@ -118,7 +116,7 @@ I abuse the same URL scheme system that determines where https://mywebsite.com i
 
 [Info.plist](../master/AirDropHelper/AirDropHelper/Info.plist#L31-L49)
 
-airdropper:// is the custom scheme AirDropHelper listens for. From there its as simple as implementing the standard methods in AppDelegate.m to handle URL's opening and calling a custom method to display the standard UIViewController for sharing via AirDrop from the private sharing framework. 
+airdropper:// is the custom scheme AirDropHelper listens for. From there its as simple as implementing the standard methods in AppDelegate.m to handle URL's opening and calling a custom method to display the standard UIViewController for sharing via AirDrop from the private Sharing (or SharingUI) framework. 
 
 ```Objective-C
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
@@ -161,7 +159,7 @@ The only other missing piece of the puzzle is signing the application with our o
 
 ## How this works
 
-The core functionality of Breezy is mostly achieved through stock features in Sharing.framework (including the sharing UI and toggling  AirDrop sharing state) 
+The core functionality of Breezy is mostly achieved through stock features in Sharing[UI].framework (including the sharing UI and toggling  AirDrop sharing state) 
 
 With vanilla / stock implementation sharingd will throw an exception when AirDropped files are received, halting the process in its tracks.
 
@@ -228,8 +226,47 @@ Said dictionary looks like this
 
 From there we cycle through the items and convert them to NSString's (URL's can't be sent in a NSDistributedNotification) And then post a notification that is listened for inside of hooks into PineBoard (this is currently necessary to get access to the dialog/windowing classes we need to use to show the user an alert with options to choose from)
 
+## Preference loader bundle
 
-## Discovering AirDrop in the background
+Handles whether or not AirDrop sharing is turned on or off, and gives ability to restart sharingd in case injection didn't happen properly during installation. (bundle/BreezySettngs.m)
+
+Preferences are synced using a DistributedSynchronizationHandler, this is done as follows:
+
+```Objective-C
+    id facade = [[NSClassFromString(@"TVSettingsPreferenceFacade") alloc] initWithDomain:@"com.nito.Breezy" notifyChanges:TRUE];
+   ...
+   TSKSettingItem *settingsItem = [TSKSettingItem toggleItemWithTitle:@"Toggle AirDrop Server" description:@"Turn on AirDrop to receive files through AirDrop from supported devices" representedObject:facade keyPath:@"airdropServerState" onTitle:nil offTitle:nil];
+
+```
+TVSettingsPreferenceFacade registers a domain and specifies to notify changes, then a TSKSettingsItem 'toggleItem' handles the on off state and sending the notification through. The Daemon explained below handles receives a notification and changes the settings accordingly.
+
+
+## Daemon
+
+The daemon (breezyd) has a 2 responsibilities:
+
+1. Toggle whether or not AirDrop is available on/off based on a DistributedSynchronizationHandler
+2. Setting up said DistributedSynchronizationHandler to sync preferences between breezy preference bundle and its daemon
+
+### Toggle AirDrop state 
+
+To toggle the AirDrop state an instace of SFAirDropDiscoveryController from the Sharing[UI] framework is created & saved as a property. To toggle AirDrop 'discoverable mode' I call setDiscoverableMode: on 'discoveryController' (our property for SFAirDropDiscoveryController) to SDAirDropDiscoverableModeOff or SDAirDropDiscoverableModeEveryone respectively.
+
+### DistributedSynchronizationHandler
+
+This is how to listen for changes from a preferenceloader bundle
+```Objective-C
+- (void)setupListener {
+    [TVSPreferences addObserverForDomain:@"com.nito.Breezy" withDistributedSynchronizationHandler:^(id object) {
+    [self preferencesUpdated];
+}];
+}
+```
+and preferenceUpdates tracks what the discovery mode is set to and either turns AirDrop on or off and updates the preferences accordingly.
+
+**The information listed below is for posterity / explaining how the daemon works, you don't need to listen for this manually at all.**
+
+### Discovering AirDrop in the background
 
 ```Objective-C
 
@@ -285,6 +322,8 @@ typedef enum : NSUInteger {
 
 ```
 
+**This information is for posterity only, you no longer need to do this**
+
 ## Calling the AirDrop server view
 
 ```Objective-C
@@ -308,6 +347,7 @@ typedef enum : NSUInteger {
     
 }
 ```
+**This information is for posterity only, use the helper with airdropper:// url scheme to 'export' files**
 
 **On 12+ you need a special entitlement added to your application for it to discover other airdrop devices: com.apple.private.airdrop.discovery**
 

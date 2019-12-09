@@ -2,7 +2,7 @@ Package: com.nito.breezy
 Name: Breezy
 Pre-Depends: cy+model.appletv
 Depends: mobilesubstrate, preferenceloader 
-Version: 2.0
+Version: 2.1
 Architecture: appletvos-arm64
 Description: Enable AirDrop server in your tvOS Applications
 Maintainer: Kevin Bradley

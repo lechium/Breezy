@@ -295,7 +295,7 @@
     }
     return ooq;
 }
-
+//__UTTypeAddWithDeclarationDictionary
 //a bit misleading, reports can come here and the import MIGHT have failed FIXME:
 %new - (void)postBulletinForFile:(NSString *)fileName {
     NSString *message = [NSString stringWithFormat:@"Imported '%@' successfully!",fileName];
@@ -327,6 +327,16 @@
     [[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"com.nito.bulletinh4x/displayBulletin" object:nil userInfo:dict];
     
 }
+
+/*
+ 
+ notes on stringing files together to open them up, our operation creation call eventually ends up in
+ _LSDOpenClient calling
+ -(void)performOpenOperationWithURL:(id)arg1 applicationIdentifier:(id)arg2 documentIdentifier:(id)arg3 isContentManaged:(BOOL)arg4 sourceAuditToken:(const SCD_Struct_LS10*)arg5 userInfo:(id)arg6 options:(id)arg7 delegate:(id)arg8 completionHandler:(id)arg9
+ 
+ can't decipher enough about how it works internally yet to try to augment or even replicate it into another function that accepts multiple files.
+ 
+ */
 
 %new - (void)showSystemAlertFromAlert:(id)alert {
     
@@ -370,6 +380,8 @@
     if (URLS.count > 0){ //we take a different path here entirely
         NSString *firstURL = URLS[0];
         [names appendString:firstURL];
+        NSString *scheme = [[NSURL URLWithString:firstURL] scheme];
+        NSLog(@"[Breezy] scheme: %@", scheme);
         applications = [ws applicationsAvailableForHandlingURLScheme:[[NSURL URLWithString:firstURL] scheme]];
         //PBLinkHandler is useless and we dont want to list it as an option.
         NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.apple.PBLinkHandler'"];
@@ -381,7 +393,8 @@
     
     //get the operation array here because its a mutable array we will continue to add on to.
     NSMutableArray <NSOperation *>*opArray = [self operationArray];
-    HBLogDebug(@"available applications: %@", applications);
+    NSLog(@"available applications: %@", applications);
+    NSString *cancelButtonTitle = @"Cancel";
     if (applications.count == 1){ //Theres only one application, just open it automatically
         id launchApp = applications[0];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -391,7 +404,7 @@
                     
                     //NSURL *url = [NSURL fileURLWithPath:localFile];
                     NSURL *url = [NSURL URLWithString:fileURL];
-                    NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
+                    NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE], @"LSDocumentDropCount": [NSNumber numberWithInteger:URLS.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]} options:nil delegate:self];
                     
                     HBLogDebug(@"operation: %@", operation);
                     [opArray addObject:operation];
@@ -400,7 +413,8 @@
                 [localFiles enumerateObjectsUsingBlock:^(NSString  * localFile, NSUInteger idx, BOOL * _Nonnull stop) {
                     
                     NSURL *url = [NSURL fileURLWithPath:localFile];
-                    NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
+                    
+                    NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE], @"LSDocumentDropCount": [NSNumber numberWithInteger:localFiles.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]} options:nil delegate:self];
                     
                     HBLogDebug(@"operation: %@", operation);
                     [opArray addObject:operation];
@@ -411,7 +425,7 @@
         });
         return;
         
-    } else { //multiple applications available, build up the menu
+    } else if (applications.count > 1){  //multiple applications available, build up the menu
         
         [applications enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [applicationAlert addButtonWithTitle:[obj localizedName] type:0 handler:^{
@@ -428,7 +442,7 @@
                             
                             //NSURL *url = [NSURL fileURLWithPath:localFile];
                             NSURL *url = [NSURL URLWithString:fileURL];
-                            NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
+                            NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE], @"LSDocumentDropCount": [NSNumber numberWithInteger:URLS.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]} options:nil delegate:self];
                             
                             HBLogDebug(@"operation: %@", operation);
                             [opArray addObject:operation];
@@ -436,7 +450,7 @@
                     } else {
                         [localFiles enumerateObjectsUsingBlock:^(NSString  * localFile, NSUInteger idx, BOOL * _Nonnull stop) {
                             NSURL *url = [NSURL fileURLWithPath:localFile];
-                            NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
+                            NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[obj bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE], @"LSDocumentDropCount": [NSNumber numberWithInteger:localFiles.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]} options:nil delegate:self];
                             HBLogDebug(@"operation: %@", operation);
                             [opArray addObject:operation];
                             
@@ -448,8 +462,17 @@
      
             }];
         }];
+    } else {
+    
+        cancelButtonTitle = @"OK";
+        NSLog(@"no applications found to open these file(s)");
+        NSString *newMessage = [NSString stringWithFormat:@"Failed to find any applications to open '%@' with", names];
+        [applicationAlert setText:newMessage];
     }
-    [applicationAlert addButtonWithTitle:@"Cancel" type:0 handler:^{
+    
+    
+    
+    [applicationAlert addButtonWithTitle:cancelButtonTitle type:0 handler:^{
         if (thirteenPlus) {
             [dialogManager dismissDialogWithContext:context options:nil completion:nil];
         } else {

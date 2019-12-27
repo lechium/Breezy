@@ -108,6 +108,7 @@
 @interface PBUserNotificationViewControllerAlert: UIViewController
 -(id)initWithTitle:(id)arg1 text:(id)arg2;
 -(void)addButtonWithTitle:(id)arg1 type:(unsigned long long)arg2 handler:(void (^)(void))handler;
+@property NSString *text;
 @end
 @interface LSDocumentProxy: NSObject
 +(id)documentProxyForName:(id)arg1 type:(id)arg2 MIMEType:(id)arg3 ;

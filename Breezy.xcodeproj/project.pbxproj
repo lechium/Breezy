@@ -1,0 +1,723 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		32F79BC0235F818100489C53 /* FindProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F79BB8235F818100489C53 /* FindProcess.m */; };
+		32F79BC1235F818100489C53 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 32F79BBA235F818100489C53 /* Makefile */; };
+		32F79BC2235F818100489C53 /* make.sh in Resources */ = {isa = PBXBuildFile; fileRef = 32F79BBB235F818100489C53 /* make.sh */; };
+		32F79BC3235F818100489C53 /* NSObject+CD.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F79BBC235F818100489C53 /* NSObject+CD.m */; };
+		32F79BC4235F818100489C53 /* Breezy.xm in Resources */ = {isa = PBXBuildFile; fileRef = 32F79BBD235F818100489C53 /* Breezy.xm */; };
+		32F79BC5235F818100489C53 /* Breezy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 32F79BBF235F818100489C53 /* Breezy.plist */; };
+		32F79C0A235F81AE00489C53 /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F79C05235F81AE00489C53 /* SVIndefiniteAnimatedView.m */; };
+		32F79C0B235F81AE00489C53 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F79C07235F81AE00489C53 /* SVProgressHUD.m */; };
+		32F79C0C235F81AE00489C53 /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F79C09235F81AE00489C53 /* SVRadialGradientLayer.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		327393DE2366BF0D00435ED7 /* breezy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = breezy.h; sourceTree = SOURCE_ROOT; };
+		32F5C2852398A2C100FB7839 /* BreezySettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BreezySettings.h; sourceTree = "<group>"; };
+		32F5C2862398A2C100FB7839 /* BreezySettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BreezySettings.m; sourceTree = "<group>"; };
+		32F5C2872398A2C100FB7839 /* ent.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ent.plist; sourceTree = "<group>"; };
+		32F5C2882398A2C100FB7839 /* entry.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = entry.plist; sourceTree = "<group>"; };
+		32F5C28B2398A2C100FB7839 /* control */ = {isa = PBXFileReference; lastKnownFileType = text; path = control; sourceTree = "<group>"; };
+		32F5C28F2398A2C100FB7839 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		32F5C2902398A2C100FB7839 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		32F5C2912398A2C100FB7839 /* NSTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSTask.h; sourceTree = "<group>"; };
+		32F5C2922398A2C100FB7839 /* prefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = prefs.h; sourceTree = "<group>"; };
+		32F5C2932398A2C100FB7839 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		32F5C2952398A2C100FB7839 /* icon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = icon.jpg; sourceTree = "<group>"; };
+		32F5C2962398A2C100FB7839 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		32F5C2972398A2C100FB7839 /* Sharing.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = Sharing.tbd; sourceTree = "<group>"; };
+		32F5C2992398A2C100FB7839 /* TSKPreviewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKPreviewViewController.h; sourceTree = "<group>"; };
+		32F5C29A2398A2C100FB7839 /* TSKVibrantImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKVibrantImageView.h; sourceTree = "<group>"; };
+		32F5C29C2398A2C100FB7839 /* _TSKAnimatorDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TSKAnimatorDelegate.h; sourceTree = "<group>"; };
+		32F5C29D2398A2C100FB7839 /* _TSKContentContainerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TSKContentContainerView.h; sourceTree = "<group>"; };
+		32F5C29E2398A2C100FB7839 /* _TSKSliceLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TSKSliceLayer.h; sourceTree = "<group>"; };
+		32F5C29F2398A2C100FB7839 /* _TSKSlideAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TSKSlideAnimator.h; sourceTree = "<group>"; };
+		32F5C2A02398A2C100FB7839 /* _TSKSplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TSKSplitViewController.h; sourceTree = "<group>"; };
+		32F5C2A12398A2C100FB7839 /* _TSKZoomAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TSKZoomAnimator.h; sourceTree = "<group>"; };
+		32F5C2A22398A2C100FB7839 /* SFPasswordSharingServiceDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFPasswordSharingServiceDelegate.h; sourceTree = "<group>"; };
+		32F5C2A32398A2C100FB7839 /* TSKAggregateSettingGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKAggregateSettingGroup.h; sourceTree = "<group>"; };
+		32F5C2A42398A2C100FB7839 /* TSKAppIconPreviewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKAppIconPreviewViewController.h; sourceTree = "<group>"; };
+		32F5C2A52398A2C100FB7839 /* TSKBaseTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKBaseTableViewCell.h; sourceTree = "<group>"; };
+		32F5C2A62398A2C100FB7839 /* TSKBoolFormatter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKBoolFormatter.h; sourceTree = "<group>"; };
+		32F5C2A72398A2C100FB7839 /* TSKBundleLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKBundleLoader.h; sourceTree = "<group>"; };
+		32F5C2A82398A2C100FB7839 /* TSKCellUpdating.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKCellUpdating.h; sourceTree = "<group>"; };
+		32F5C2A92398A2C100FB7839 /* TSKCollectionChange.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKCollectionChange.h; sourceTree = "<group>"; };
+		32F5C2AA2398A2C100FB7839 /* TSKCollectionComparator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKCollectionComparator.h; sourceTree = "<group>"; };
+		32F5C2AB2398A2C100FB7839 /* TSKKonamiCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKKonamiCode.h; sourceTree = "<group>"; };
+		32F5C2AC2398A2C100FB7839 /* TSKListSettingGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKListSettingGroup.h; sourceTree = "<group>"; };
+		32F5C2AD2398A2C100FB7839 /* TSKMappingFormatter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKMappingFormatter.h; sourceTree = "<group>"; };
+		32F5C2AE2398A2C100FB7839 /* TSKMultiValueViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKMultiValueViewController.h; sourceTree = "<group>"; };
+		32F5C2AF2398A2C100FB7839 /* TSKPieChartItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKPieChartItem.h; sourceTree = "<group>"; };
+		32F5C2B02398A2C100FB7839 /* TSKPieChartPreviewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKPieChartPreviewViewController.h; sourceTree = "<group>"; };
+		32F5C2B12398A2C100FB7839 /* TSKPieChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKPieChartView.h; sourceTree = "<group>"; };
+		32F5C2B22398A2C100FB7839 /* TSKPreferencesFacade.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKPreferencesFacade.h; sourceTree = "<group>"; };
+		32F5C2B32398A2C100FB7839 /* TSKPreviewing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKPreviewing.h; sourceTree = "<group>"; };
+		32F5C2B42398A2C100FB7839 /* TSKPreviewingDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKPreviewingDelegate.h; sourceTree = "<group>"; };
+		32F5C2B52398A2C100FB7839 /* TSKPreviewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKPreviewViewController.h; sourceTree = "<group>"; };
+		32F5C2B62398A2C100FB7839 /* TSKRadioSettingGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKRadioSettingGroup.h; sourceTree = "<group>"; };
+		32F5C2B72398A2C100FB7839 /* TSKSettingGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKSettingGroup.h; sourceTree = "<group>"; };
+		32F5C2B82398A2C100FB7839 /* TSKSettingGroupDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKSettingGroupDelegate.h; sourceTree = "<group>"; };
+		32F5C2B92398A2C100FB7839 /* TSKSettingItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKSettingItem.h; sourceTree = "<group>"; };
+		32F5C2BA2398A2C100FB7839 /* TSKSettingItemEditingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKSettingItemEditingController.h; sourceTree = "<group>"; };
+		32F5C2BB2398A2C100FB7839 /* TSKSettingItemEditingControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKSettingItemEditingControllerDelegate.h; sourceTree = "<group>"; };
+		32F5C2BC2398A2C100FB7839 /* TSKSettingItemUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKSettingItemUtilities.h; sourceTree = "<group>"; };
+		32F5C2BD2398A2C100FB7839 /* TSKShadowView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKShadowView.h; sourceTree = "<group>"; };
+		32F5C2BE2398A2C100FB7839 /* TSKTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKTableView.h; sourceTree = "<group>"; };
+		32F5C2BF2398A2C100FB7839 /* TSKTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKTableViewController.h; sourceTree = "<group>"; };
+		32F5C2C02398A2C100FB7839 /* TSKTableViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKTableViewDelegate.h; sourceTree = "<group>"; };
+		32F5C2C12398A2C100FB7839 /* TSKTableViewHeaderFooterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKTableViewHeaderFooterView.h; sourceTree = "<group>"; };
+		32F5C2C22398A2C100FB7839 /* TSKTableViewSectionDividerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKTableViewSectionDividerView.h; sourceTree = "<group>"; };
+		32F5C2C32398A2C100FB7839 /* TSKTableViewSubtitleTextCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKTableViewSubtitleTextCell.h; sourceTree = "<group>"; };
+		32F5C2C42398A2C100FB7839 /* TSKTableViewTextCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKTableViewTextCell.h; sourceTree = "<group>"; };
+		32F5C2C52398A2C100FB7839 /* TSKTextInputSettingItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKTextInputSettingItem.h; sourceTree = "<group>"; };
+		32F5C2C62398A2C100FB7839 /* TSKTextInputViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKTextInputViewController.h; sourceTree = "<group>"; };
+		32F5C2C72398A2C100FB7839 /* TSKVibrantImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKVibrantImageView.h; sourceTree = "<group>"; };
+		32F5C2C82398A2C100FB7839 /* TSKViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKViewController.h; sourceTree = "<group>"; };
+		32F5C2C92398A2C100FB7839 /* TVSettingKit-Structs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TVSettingKit-Structs.h"; sourceTree = "<group>"; };
+		32F5C2CA2398A2C100FB7839 /* TVSettingKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVSettingKit.h; sourceTree = "<group>"; };
+		32F5C2CB2398A2C100FB7839 /* TVSUITextEntryControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVSUITextEntryControllerDelegate.h; sourceTree = "<group>"; };
+		32F5C2CC2398A2C100FB7839 /* UIGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIGestureRecognizerDelegate.h; sourceTree = "<group>"; };
+		32F5C2CD2398A2C100FB7839 /* UINavigationControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UINavigationControllerDelegate.h; sourceTree = "<group>"; };
+		32F5C2CE2398A2C100FB7839 /* UIViewControllerAnimatedTransitioning.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIViewControllerAnimatedTransitioning.h; sourceTree = "<group>"; };
+		32F5C2D42398A33B00FB7839 /* ent.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ent.plist; sourceTree = "<group>"; };
+		32F5C2D62398A33B00FB7839 /* breezyd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = breezyd.m; sourceTree = "<group>"; };
+		32F5C2D72398A33B00FB7839 /* make.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = make.sh; sourceTree = "<group>"; };
+		32F5C2D82398A33B00FB7839 /* MediaRemote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MediaRemote.framework; sourceTree = "<group>"; };
+		32F5C2D92398A33B00FB7839 /* Sharing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sharing.framework; sourceTree = "<group>"; };
+		32F5C2DA2398A33B00FB7839 /* TVSPreferences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVSPreferences.h; sourceTree = "<group>"; };
+		32F79BA1235F80F600489C53 /* Breezy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Breezy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		32F79BB8235F818100489C53 /* FindProcess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindProcess.m; sourceTree = "<group>"; };
+		32F79BB9235F818100489C53 /* NSObject+CD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CD.h"; sourceTree = "<group>"; };
+		32F79BBA235F818100489C53 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		32F79BBB235F818100489C53 /* make.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = make.sh; sourceTree = "<group>"; };
+		32F79BBC235F818100489C53 /* NSObject+CD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+CD.m"; sourceTree = "<group>"; };
+		32F79BBD235F818100489C53 /* Breezy.xm */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = Breezy.xm; sourceTree = "<group>"; };
+		32F79BBE235F818100489C53 /* FindProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindProcess.h; sourceTree = "<group>"; };
+		32F79BBF235F818100489C53 /* Breezy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Breezy.plist; sourceTree = "<group>"; };
+		32F79BDA235F819300489C53 /* provscience.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = provscience.dylib; sourceTree = "<group>"; };
+		32F79BDB235F819300489C53 /* provscience.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = provscience.plist; sourceTree = "<group>"; };
+		32F79BDC235F819300489C53 /* build_session */ = {isa = PBXFileReference; lastKnownFileType = text; path = build_session; sourceTree = "<group>"; };
+		32F79BE0235F819300489C53 /* .stamp */ = {isa = PBXFileReference; lastKnownFileType = text; path = .stamp; sourceTree = "<group>"; };
+		32F79BE2235F819300489C53 /* provscience.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = provscience.dylib; sourceTree = "<group>"; };
+		32F79BE3235F819300489C53 /* provscience.dylib.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = provscience.dylib.dSYM; sourceTree = "<group>"; };
+		32F79BE4235F819300489C53 /* Tweak.x.275ae93f.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Tweak.x.275ae93f.o; sourceTree = "<group>"; };
+		32F79BE5235F819300489C53 /* Tweak.x.275ae93f.Td */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tweak.x.275ae93f.Td; sourceTree = "<group>"; };
+		32F79BE6235F819300489C53 /* Tweak.x.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.x.m; sourceTree = "<group>"; };
+		32F79BE7235F819300489C53 /* provscience.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = provscience.dylib; sourceTree = "<group>"; };
+		32F79BE8235F819300489C53 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		32F79BE9235F819300489C53 /* provscience.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = provscience.plist; sourceTree = "<group>"; };
+		32F79BEA235F819300489C53 /* provscience.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = provscience.xcodeproj; sourceTree = "<group>"; };
+		32F79BED235F819300489C53 /* Tweak.x */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tweak.x; sourceTree = "<group>"; };
+		32F79BFC235F81A000489C53 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		32F79BFD235F81A000489C53 /* VLC.x */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; path = VLC.x; sourceTree = "<group>"; };
+		32F79BFE235F81A000489C53 /* vlcscience.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = vlcscience.plist; sourceTree = "<group>"; };
+		32F79BFF235F81A000489C53 /* vlcscience.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = vlcscience.xcodeproj; sourceTree = "<group>"; };
+		32F79C04235F81AE00489C53 /* SVIndefiniteAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVIndefiniteAnimatedView.h; sourceTree = "<group>"; };
+		32F79C05235F81AE00489C53 /* SVIndefiniteAnimatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVIndefiniteAnimatedView.m; sourceTree = "<group>"; };
+		32F79C06235F81AE00489C53 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
+		32F79C07235F81AE00489C53 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
+		32F79C08235F81AE00489C53 /* SVRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVRadialGradientLayer.h; sourceTree = "<group>"; };
+		32F79C09235F81AE00489C53 /* SVRadialGradientLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVRadialGradientLayer.m; sourceTree = "<group>"; };
+		32F79C0D235F8B5C00489C53 /* breezy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = breezy.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		32F79B9E235F80F600489C53 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		32F5C26C2398A2C100FB7839 /* bundle */ = {
+			isa = PBXGroup;
+			children = (
+				32F5C2852398A2C100FB7839 /* BreezySettings.h */,
+				32F5C2862398A2C100FB7839 /* BreezySettings.m */,
+				32F5C2872398A2C100FB7839 /* ent.plist */,
+				32F5C2882398A2C100FB7839 /* entry.plist */,
+				32F5C2892398A2C100FB7839 /* layout */,
+				32F5C28F2398A2C100FB7839 /* LICENSE */,
+				32F5C2902398A2C100FB7839 /* Makefile */,
+				32F5C2912398A2C100FB7839 /* NSTask.h */,
+				32F5C2922398A2C100FB7839 /* prefs.h */,
+				32F5C2932398A2C100FB7839 /* README.md */,
+				32F5C2942398A2C100FB7839 /* Resources */,
+				32F5C2972398A2C100FB7839 /* Sharing.tbd */,
+				32F5C2982398A2C100FB7839 /* TVSettings */,
+				32F5C29B2398A2C100FB7839 /* TVSettingsKit */,
+			);
+			path = bundle;
+			sourceTree = "<group>";
+		};
+		32F5C2892398A2C100FB7839 /* layout */ = {
+			isa = PBXGroup;
+			children = (
+				32F5C28A2398A2C100FB7839 /* DEBIAN */,
+				32F5C28C2398A2C100FB7839 /* Library */,
+			);
+			path = layout;
+			sourceTree = "<group>";
+		};
+		32F5C28A2398A2C100FB7839 /* DEBIAN */ = {
+			isa = PBXGroup;
+			children = (
+				32F5C28B2398A2C100FB7839 /* control */,
+			);
+			path = DEBIAN;
+			sourceTree = "<group>";
+		};
+		32F5C28C2398A2C100FB7839 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				32F5C28D2398A2C100FB7839 /* PreferenceLoader */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		32F5C28D2398A2C100FB7839 /* PreferenceLoader */ = {
+			isa = PBXGroup;
+			children = (
+				32F5C28E2398A2C100FB7839 /* Preferences */,
+			);
+			path = PreferenceLoader;
+			sourceTree = "<group>";
+		};
+		32F5C28E2398A2C100FB7839 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Preferences;
+			sourceTree = "<group>";
+		};
+		32F5C2942398A2C100FB7839 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				32F5C2952398A2C100FB7839 /* icon.jpg */,
+				32F5C2962398A2C100FB7839 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		32F5C2982398A2C100FB7839 /* TVSettings */ = {
+			isa = PBXGroup;
+			children = (
+				32F5C2992398A2C100FB7839 /* TSKPreviewViewController.h */,
+				32F5C29A2398A2C100FB7839 /* TSKVibrantImageView.h */,
+			);
+			path = TVSettings;
+			sourceTree = "<group>";
+		};
+		32F5C29B2398A2C100FB7839 /* TVSettingsKit */ = {
+			isa = PBXGroup;
+			children = (
+				32F5C29C2398A2C100FB7839 /* _TSKAnimatorDelegate.h */,
+				32F5C29D2398A2C100FB7839 /* _TSKContentContainerView.h */,
+				32F5C29E2398A2C100FB7839 /* _TSKSliceLayer.h */,
+				32F5C29F2398A2C100FB7839 /* _TSKSlideAnimator.h */,
+				32F5C2A02398A2C100FB7839 /* _TSKSplitViewController.h */,
+				32F5C2A12398A2C100FB7839 /* _TSKZoomAnimator.h */,
+				32F5C2A22398A2C100FB7839 /* SFPasswordSharingServiceDelegate.h */,
+				32F5C2A32398A2C100FB7839 /* TSKAggregateSettingGroup.h */,
+				32F5C2A42398A2C100FB7839 /* TSKAppIconPreviewViewController.h */,
+				32F5C2A52398A2C100FB7839 /* TSKBaseTableViewCell.h */,
+				32F5C2A62398A2C100FB7839 /* TSKBoolFormatter.h */,
+				32F5C2A72398A2C100FB7839 /* TSKBundleLoader.h */,
+				32F5C2A82398A2C100FB7839 /* TSKCellUpdating.h */,
+				32F5C2A92398A2C100FB7839 /* TSKCollectionChange.h */,
+				32F5C2AA2398A2C100FB7839 /* TSKCollectionComparator.h */,
+				32F5C2AB2398A2C100FB7839 /* TSKKonamiCode.h */,
+				32F5C2AC2398A2C100FB7839 /* TSKListSettingGroup.h */,
+				32F5C2AD2398A2C100FB7839 /* TSKMappingFormatter.h */,
+				32F5C2AE2398A2C100FB7839 /* TSKMultiValueViewController.h */,
+				32F5C2AF2398A2C100FB7839 /* TSKPieChartItem.h */,
+				32F5C2B02398A2C100FB7839 /* TSKPieChartPreviewViewController.h */,
+				32F5C2B12398A2C100FB7839 /* TSKPieChartView.h */,
+				32F5C2B22398A2C100FB7839 /* TSKPreferencesFacade.h */,
+				32F5C2B32398A2C100FB7839 /* TSKPreviewing.h */,
+				32F5C2B42398A2C100FB7839 /* TSKPreviewingDelegate.h */,
+				32F5C2B52398A2C100FB7839 /* TSKPreviewViewController.h */,
+				32F5C2B62398A2C100FB7839 /* TSKRadioSettingGroup.h */,
+				32F5C2B72398A2C100FB7839 /* TSKSettingGroup.h */,
+				32F5C2B82398A2C100FB7839 /* TSKSettingGroupDelegate.h */,
+				32F5C2B92398A2C100FB7839 /* TSKSettingItem.h */,
+				32F5C2BA2398A2C100FB7839 /* TSKSettingItemEditingController.h */,
+				32F5C2BB2398A2C100FB7839 /* TSKSettingItemEditingControllerDelegate.h */,
+				32F5C2BC2398A2C100FB7839 /* TSKSettingItemUtilities.h */,
+				32F5C2BD2398A2C100FB7839 /* TSKShadowView.h */,
+				32F5C2BE2398A2C100FB7839 /* TSKTableView.h */,
+				32F5C2BF2398A2C100FB7839 /* TSKTableViewController.h */,
+				32F5C2C02398A2C100FB7839 /* TSKTableViewDelegate.h */,
+				32F5C2C12398A2C100FB7839 /* TSKTableViewHeaderFooterView.h */,
+				32F5C2C22398A2C100FB7839 /* TSKTableViewSectionDividerView.h */,
+				32F5C2C32398A2C100FB7839 /* TSKTableViewSubtitleTextCell.h */,
+				32F5C2C42398A2C100FB7839 /* TSKTableViewTextCell.h */,
+				32F5C2C52398A2C100FB7839 /* TSKTextInputSettingItem.h */,
+				32F5C2C62398A2C100FB7839 /* TSKTextInputViewController.h */,
+				32F5C2C72398A2C100FB7839 /* TSKVibrantImageView.h */,
+				32F5C2C82398A2C100FB7839 /* TSKViewController.h */,
+				32F5C2C92398A2C100FB7839 /* TVSettingKit-Structs.h */,
+				32F5C2CA2398A2C100FB7839 /* TVSettingKit.h */,
+				32F5C2CB2398A2C100FB7839 /* TVSUITextEntryControllerDelegate.h */,
+				32F5C2CC2398A2C100FB7839 /* UIGestureRecognizerDelegate.h */,
+				32F5C2CD2398A2C100FB7839 /* UINavigationControllerDelegate.h */,
+				32F5C2CE2398A2C100FB7839 /* UIViewControllerAnimatedTransitioning.h */,
+			);
+			path = TVSettingsKit;
+			sourceTree = "<group>";
+		};
+		32F5C2D12398A33B00FB7839 /* breezyd */ = {
+			isa = PBXGroup;
+			children = (
+				32F5C2D42398A33B00FB7839 /* ent.plist */,
+				32F5C2D62398A33B00FB7839 /* breezyd.m */,
+				32F5C2D72398A33B00FB7839 /* make.sh */,
+				32F5C2D82398A33B00FB7839 /* MediaRemote.framework */,
+				32F5C2D92398A33B00FB7839 /* Sharing.framework */,
+				32F5C2DA2398A33B00FB7839 /* TVSPreferences.h */,
+			);
+			path = breezyd;
+			sourceTree = "<group>";
+		};
+		32F79B98235F80F600489C53 = {
+			isa = PBXGroup;
+			children = (
+				32F5C2D12398A33B00FB7839 /* breezyd */,
+				32F5C26C2398A2C100FB7839 /* bundle */,
+				32F79BB7235F817600489C53 /* Breezy */,
+				32F79BFB235F81A000489C53 /* vlcscience */,
+				32F79BD4235F819300489C53 /* provscience */,
+				32F79BA2235F80F600489C53 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		32F79BA2235F80F600489C53 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BA1235F80F600489C53 /* Breezy.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		32F79BB7235F817600489C53 /* Breezy */ = {
+			isa = PBXGroup;
+			children = (
+				327393DE2366BF0D00435ED7 /* breezy.h */,
+				32F79C03235F81AE00489C53 /* SVProgressHUD */,
+				32F79BBF235F818100489C53 /* Breezy.plist */,
+				32F79BBD235F818100489C53 /* Breezy.xm */,
+				32F79C0D235F8B5C00489C53 /* breezy.h */,
+				32F79BBE235F818100489C53 /* FindProcess.h */,
+				32F79BB8235F818100489C53 /* FindProcess.m */,
+				32F79BBB235F818100489C53 /* make.sh */,
+				32F79BBA235F818100489C53 /* Makefile */,
+				32F79BB9235F818100489C53 /* NSObject+CD.h */,
+				32F79BBC235F818100489C53 /* NSObject+CD.m */,
+			);
+			name = Breezy;
+			sourceTree = "<group>";
+		};
+		32F79BD4235F819300489C53 /* provscience */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BD5235F819300489C53 /* .theos */,
+				32F79BE8235F819300489C53 /* Makefile */,
+				32F79BE9235F819300489C53 /* provscience.plist */,
+				32F79BEA235F819300489C53 /* provscience.xcodeproj */,
+				32F79BED235F819300489C53 /* Tweak.x */,
+			);
+			path = provscience;
+			sourceTree = "<group>";
+		};
+		32F79BD5235F819300489C53 /* .theos */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BD6235F819300489C53 /* _ */,
+				32F79BDC235F819300489C53 /* build_session */,
+				32F79BDD235F819300489C53 /* obj */,
+			);
+			path = .theos;
+			sourceTree = "<group>";
+		};
+		32F79BD6235F819300489C53 /* _ */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BD7235F819300489C53 /* Library */,
+			);
+			path = _;
+			sourceTree = "<group>";
+		};
+		32F79BD7235F819300489C53 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BD8235F819300489C53 /* MobileSubstrate */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		32F79BD8235F819300489C53 /* MobileSubstrate */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BD9235F819300489C53 /* DynamicLibraries */,
+			);
+			path = MobileSubstrate;
+			sourceTree = "<group>";
+		};
+		32F79BD9235F819300489C53 /* DynamicLibraries */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BDA235F819300489C53 /* provscience.dylib */,
+				32F79BDB235F819300489C53 /* provscience.plist */,
+			);
+			path = DynamicLibraries;
+			sourceTree = "<group>";
+		};
+		32F79BDD235F819300489C53 /* obj */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BDE235F819300489C53 /* appletv */,
+			);
+			path = obj;
+			sourceTree = "<group>";
+		};
+		32F79BDE235F819300489C53 /* appletv */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BDF235F819300489C53 /* debug */,
+			);
+			path = appletv;
+			sourceTree = "<group>";
+		};
+		32F79BDF235F819300489C53 /* debug */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BE0235F819300489C53 /* .stamp */,
+				32F79BE1235F819300489C53 /* arm64 */,
+				32F79BE7235F819300489C53 /* provscience.dylib */,
+			);
+			path = debug;
+			sourceTree = "<group>";
+		};
+		32F79BE1235F819300489C53 /* arm64 */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BE2235F819300489C53 /* provscience.dylib */,
+				32F79BE3235F819300489C53 /* provscience.dylib.dSYM */,
+				32F79BE4235F819300489C53 /* Tweak.x.275ae93f.o */,
+				32F79BE5235F819300489C53 /* Tweak.x.275ae93f.Td */,
+				32F79BE6235F819300489C53 /* Tweak.x.m */,
+			);
+			path = arm64;
+			sourceTree = "<group>";
+		};
+		32F79BEB235F819300489C53 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		32F79BFB235F81A000489C53 /* vlcscience */ = {
+			isa = PBXGroup;
+			children = (
+				32F79BFC235F81A000489C53 /* Makefile */,
+				32F79BFD235F81A000489C53 /* VLC.x */,
+				32F79BFE235F81A000489C53 /* vlcscience.plist */,
+				32F79BFF235F81A000489C53 /* vlcscience.xcodeproj */,
+			);
+			path = vlcscience;
+			sourceTree = "<group>";
+		};
+		32F79C00235F81A000489C53 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		32F79C03235F81AE00489C53 /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				32F79C04235F81AE00489C53 /* SVIndefiniteAnimatedView.h */,
+				32F79C05235F81AE00489C53 /* SVIndefiniteAnimatedView.m */,
+				32F79C06235F81AE00489C53 /* SVProgressHUD.h */,
+				32F79C07235F81AE00489C53 /* SVProgressHUD.m */,
+				32F79C08235F81AE00489C53 /* SVRadialGradientLayer.h */,
+				32F79C09235F81AE00489C53 /* SVRadialGradientLayer.m */,
+			);
+			path = SVProgressHUD;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		32F79BA0235F80F600489C53 /* Breezy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 32F79BB4235F80F900489C53 /* Build configuration list for PBXNativeTarget "Breezy" */;
+			buildPhases = (
+				32F79B9D235F80F600489C53 /* Sources */,
+				32F79B9E235F80F600489C53 /* Frameworks */,
+				32F79B9F235F80F600489C53 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Breezy;
+			productName = Breezy;
+			productReference = 32F79BA1235F80F600489C53 /* Breezy.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		32F79B99235F80F600489C53 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = nito;
+				TargetAttributes = {
+					32F79BA0235F80F600489C53 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+				};
+			};
+			buildConfigurationList = 32F79B9C235F80F600489C53 /* Build configuration list for PBXProject "Breezy" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 32F79B98235F80F600489C53;
+			productRefGroup = 32F79BA2235F80F600489C53 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 32F79BEB235F819300489C53 /* Products */;
+					ProjectRef = 32F79BEA235F819300489C53 /* provscience.xcodeproj */;
+				},
+				{
+					ProductGroup = 32F79C00235F81A000489C53 /* Products */;
+					ProjectRef = 32F79BFF235F81A000489C53 /* vlcscience.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				32F79BA0235F80F600489C53 /* Breezy */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		32F79B9F235F80F600489C53 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				32F79BC2235F818100489C53 /* make.sh in Resources */,
+				32F79BC5235F818100489C53 /* Breezy.plist in Resources */,
+				32F79BC4235F818100489C53 /* Breezy.xm in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		32F79B9D235F80F600489C53 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				32F79BC1235F818100489C53 /* Makefile in Sources */,
+				32F79C0C235F81AE00489C53 /* SVRadialGradientLayer.m in Sources */,
+				32F79BC3235F818100489C53 /* NSObject+CD.m in Sources */,
+				32F79C0B235F81AE00489C53 /* SVProgressHUD.m in Sources */,
+				32F79BC0235F818100489C53 /* FindProcess.m in Sources */,
+				32F79C0A235F81AE00489C53 /* SVIndefiniteAnimatedView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		32F79BB2235F80F900489C53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = appletvos;
+				TVOS_DEPLOYMENT_TARGET = 12.1;
+			};
+			name = Debug;
+		};
+		32F79BB3235F80F900489C53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = appletvos;
+				TVOS_DEPLOYMENT_TARGET = 12.1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		32F79BB5235F80F900489C53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9EUFEA5U7G;
+				INFOPLIST_FILE = Breezy/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nito.Breezy;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Debug;
+		};
+		32F79BB6235F80F900489C53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9EUFEA5U7G;
+				INFOPLIST_FILE = Breezy/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nito.Breezy;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		32F79B9C235F80F600489C53 /* Build configuration list for PBXProject "Breezy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				32F79BB2235F80F900489C53 /* Debug */,
+				32F79BB3235F80F900489C53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		32F79BB4235F80F900489C53 /* Build configuration list for PBXNativeTarget "Breezy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				32F79BB5235F80F900489C53 /* Debug */,
+				32F79BB6235F80F900489C53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 32F79B99235F80F600489C53 /* Project object */;
+}

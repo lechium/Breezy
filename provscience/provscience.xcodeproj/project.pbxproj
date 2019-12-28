@@ -1,0 +1,144 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		32F79BCC235F819200489C53 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
+		32F79BCD235F819200489C53 /* .theos */ = {isa = PBXFileReference; lastKnownFileType = folder; path = .theos; sourceTree = "<group>"; };
+		32F79BCE235F819200489C53 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		32F79BCF235F819200489C53 /* provscience.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = provscience.plist; sourceTree = "<group>"; };
+		32F79BD0235F819200489C53 /* Tweak.x */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tweak.x; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		32F79BC6235F819200489C53 = {
+			isa = PBXGroup;
+			children = (
+				32F79BCC235F819200489C53 /* .DS_Store */,
+				32F79BCD235F819200489C53 /* .theos */,
+				32F79BCE235F819200489C53 /* Makefile */,
+				32F79BCF235F819200489C53 /* provscience.plist */,
+				32F79BD0235F819200489C53 /* Tweak.x */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		32F79BCB235F819200489C53 /* provscience */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 32F79BD1235F819200489C53 /* Build configuration list for PBXLegacyTarget "provscience" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = /Users/kevinbradley/Projects/Breezy/provscience;
+			dependencies = (
+			);
+			name = provscience;
+			passBuildSettingsInEnvironment = 1;
+			productName = provscience;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		32F79BC7235F819200489C53 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 32F79BCA235F819200489C53 /* Build configuration list for PBXProject "provscience" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 32F79BC6235F819200489C53;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				32F79BCB235F819200489C53 /* provscience */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		32F79BC8235F819200489C53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		32F79BC9235F819200489C53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		32F79BD2235F819200489C53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = provscience;
+			};
+			name = Debug;
+		};
+		32F79BD3235F819200489C53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = provscience;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		32F79BCA235F819200489C53 /* Build configuration list for PBXProject "provscience" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				32F79BC8235F819200489C53 /* Debug */,
+				32F79BC9235F819200489C53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		32F79BD1235F819200489C53 /* Build configuration list for PBXLegacyTarget "provscience" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				32F79BD2235F819200489C53 /* Debug */,
+				32F79BD3235F819200489C53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 32F79BC7235F819200489C53 /* Project object */;
+}

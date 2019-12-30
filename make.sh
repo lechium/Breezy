@@ -19,7 +19,7 @@ popd
 SDK_PATH="`xcrun --sdk appletvos --show-sdk-path`"
 
 pushd breezyd
-xcrun -sdk appletvos clang -v -isysroot $SDK_PATH -arch arm64 -Iinclude -F. -framework Foundation -framework TVServices -mappletvos-version-min=9.0 -o breezyd breezyd.m
+xcrun -sdk appletvos clang -v -isysroot $SDK_PATH -arch arm64 -Iinclude -F. -framework Foundation -framework TVServices -framework Sharing -mappletvos-version-min=9.0 -o breezyd breezyd.m
 
 ldid2 -Sent.plist breezyd
 cp breezyd ../layout/usr/bin/

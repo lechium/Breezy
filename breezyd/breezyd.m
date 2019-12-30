@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
     
     breezyHelper *helper = [breezyHelper sharedHelper];
   
-    //[helper setupAirDrop];
+    [helper setupAirDrop];
     
     CFRunLoopRun();
     return 0;

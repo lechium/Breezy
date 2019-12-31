@@ -118,7 +118,7 @@
 */
 
 //start actual code
-
+%group Sharingd
 %hook SharingDaemon
 
 - (_Bool)canAccessAirDropSettings:(id)arg1 {
@@ -138,9 +138,6 @@
 }
 
 %end
-
-
-
 
 %hook SFAirDropTransfer
 
@@ -225,7 +222,6 @@
 }
 %end
 
-
 %hook SDAirDropTransferManager
 
 - (id)determineHandlerForTransfer:(id)transfer { 
@@ -249,6 +245,10 @@
     return r;
 }
 %end
+
+%end //Sharingd Group
+
+%group PineBoard
 
 %hook PBAppDelegate
 
@@ -341,7 +341,7 @@
 %new - (void)showSystemAlertFromAlert:(id)alert {
     
     %log;
-    BOOL thirteenPlus = (kCFCoreFoundationVersionNumber > 1575.17);
+    BOOL thirteenPlus = (kCFCoreFoundationVersionNumber > 1585.17); //12.4 is 1575.17, not sure what 12.4.1 is but this should be safe enough bump up
     __block id dialogManager; //13+ only
     if (thirteenPlus){
         dialogManager = [objc_getClass("PBDialogManager") sharedInstance]; //get this out of the way
@@ -349,7 +349,7 @@
     NSLog(@"[Breezy] CFVersion %.2f\n", kCFCoreFoundationVersionNumber);
     NSLog(@"[Breezy] showSystemAlertFromAlert: %@", alert);
     id windowManager = [objc_getClass("PBWindowManager") sharedInstance];
-    id ws = [objc_getClass("LSApplicationWorkspace") defaultWorkspace];
+    LSApplicationWorkspace *ws = [LSApplicationWorkspace defaultWorkspace];
     __block id context; //13+ only
     
     NSDictionary *userInfo = [alert userInfo];
@@ -369,7 +369,7 @@
         NSString *fileName = adFile[@"FileName"];
         NSString *fileType = adFile[@"FileType"];
         if (!doxy) {
-            doxy = [objc_getClass("LSDocumentProxy") documentProxyForName:fileName type:fileType MIMEType:nil];
+            doxy = [LSDocumentProxy documentProxyForName:fileName type:fileType MIMEType:nil];
         }
         [names appendFormat:@"%@, ", fileName];
         
@@ -397,12 +397,20 @@
     NSString *cancelButtonTitle = @"Cancel";
     if (applications.count == 1){ //Theres only one application, just open it automatically
         id launchApp = applications[0];
+        if (!thirteenPlus) {
+            if (URLS.count > 0){
+                //process URLs
+            } else {
+                //process files
+                [self legacyHandleFiles:localFiles withApplication:launchApp];
+            }
+        return;
+        }
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             
             if (URLS.count > 0){
                 [URLS enumerateObjectsUsingBlock:^(NSString  * fileURL, NSUInteger idx, BOOL * _Nonnull stop) {
                     
-                    //NSURL *url = [NSURL fileURLWithPath:localFile];
                     NSURL *url = [NSURL URLWithString:fileURL];
                     NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE], @"LSDocumentDropCount": [NSNumber numberWithInteger:URLS.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]} options:nil delegate:self];
                     
@@ -506,4 +514,61 @@
     
 }
 
+%new - (void)legacyHandleFiles:(NSArray *)items withApplication:(id)proxy {
+    
+    %log;
+    NSFileManager *man = [NSFileManager defaultManager];
+    NSString *onePath = [[proxy dataContainerURL] path];
+    if (onePath == nil){
+        onePath = [[proxy resourcesDirectoryURL] path];
+    }
+    __block NSMutableArray *finalArray = [NSMutableArray new];
+    NSString *cachePath = [onePath stringByAppendingPathComponent:@"Library/Caches"];
+    NSString *tempPlistFile = [cachePath stringByAppendingPathComponent:@"AirDrop.plist"];
+    [items enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+      
+        NSString *newPath = [cachePath stringByAppendingPathComponent:[obj lastPathComponent]];
+        NSError *copyError = nil;
+        if ([man fileExistsAtPath:newPath]){
+            [finalArray addObject:newPath];
+        } else {
+            if ([man copyItemAtPath:obj toPath:newPath error:&copyError]) {
+                [finalArray addObject:newPath];
+            } else {
+                HBLogDebug(@"failed to copy %@ to %@ with error: %@", obj, newPath, copyError);
+                
+            }
+        }
+      
+    }];
+    
+    if (finalArray.count > 0){
+        [finalArray writeToFile:tempPlistFile atomically:FALSE];
+        [[LSApplicationWorkspace defaultWorkspace] openApplicationWithBundleID:[proxy bundleIdentifier]];
+        //-(BOOL)openApplicationWithBundleID:(id)arg1
+        
+        /*
+        NSURL *url = [NSURL fileURLWithPath:tempPlistFile];
+        HBLogDebug(@"urL: %@", url);
+        
+        NSBlockOperation *operation = [[LSApplicationWorkspace defaultWorkspace] operationToOpenResource:url usingApplication:[proxy bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
+        HBLogDebug(@"operation: %@", operation);
+        [operation start];
+         */
+    }
+    
+}
+
 %end
+%end //PineBoard Group
+
+%ctor {
+    
+        NSString *processName = [[[[NSProcessInfo processInfo] arguments] lastObject] lastPathComponent];
+        HBLogDebug(@"Process name: %@", processName);
+        if ([processName isEqualToString:@"PineBoard"]){
+            %init(PineBoard);
+        } else if ([processName isEqualToString:@"sharingd"]){
+            %init(Sharingd);
+        }
+}

@@ -30,6 +30,8 @@
 +(id)applicationProxyForIdentifier:(id)arg1;
 -(BOOL)isContainerized;
 -(NSURL *)dataContainerURL;
+-(NSURL *)resourcesDirectoryURL;
+
 @end
 
 @interface PBDialogContext : NSObject
@@ -88,6 +90,7 @@
 @property (nonatomic) NSOperationQueue *openOperationQueue;
 @property (nonatomic) NSMutableArray *operationArray;
 - (void)runNextOperation;
+- (void)legacyHandleFiles:(NSArray *)items withApplication:(id)proxy;
 @end
 
 @interface LSApplicationWorkspace: NSObject

@@ -12,6 +12,7 @@
 -(BOOL)isContainerized;
 -(NSString *)bundleIdentifier;
 -(NSURL *)dataContainerURL;
+
 @end
 
 @interface LSApplicationWorkspace (More)

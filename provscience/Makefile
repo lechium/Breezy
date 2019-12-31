@@ -1,4 +1,4 @@
-INSTALL_TARGET_PROCESSES = Provenance
+#INSTALL_TARGET_PROCESSES = Provenance
 ARCHS = arm64
 target ?= appletv:clang:10.2.2:10.0
 export GO_EASY_ON_ME=1

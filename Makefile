@@ -2,7 +2,7 @@ ARCHS = arm64
 target ?= appletv:clang:10.2.2:10.0
 export GO_EASY_ON_ME=1
 THEOS_DEVICE_IP=4k.local
-DEBUG=0
+DEBUG=1
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Breezy
@@ -19,7 +19,7 @@ after-stage::
 	./make.sh
 
 after-install::
-	install.exec "killall -9 sharingd lsd"
+	install.exec "killall -9 sharingd lsd PineBoard"
 SUBPROJECTS += provscience
 SUBPROJECTS += vlcscience
 SUBPROJECTS += bundle

@@ -520,10 +520,15 @@
     NSFileManager *man = [NSFileManager defaultManager];
     NSString *onePath = [[proxy dataContainerURL] path];
     if (onePath == nil){
-        onePath = [[proxy resourcesDirectoryURL] path];
+        onePath = @"/";
     }
     __block NSMutableArray *finalArray = [NSMutableArray new];
-    NSString *cachePath = [onePath stringByAppendingPathComponent:@"Library/Caches"];
+    NSString *cachePath = [[onePath stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[proxy bundleIdentifier]];
+    if ([man fileExistsAtPath:cachePath]){
+        [man createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    HBLogDebug(@"cache path: %@", cachePath);
+    
     NSString *tempPlistFile = [cachePath stringByAppendingPathComponent:@"AirDrop.plist"];
     [items enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
       
@@ -532,6 +537,7 @@
         if ([man fileExistsAtPath:newPath]){
             [finalArray addObject:newPath];
         } else {
+             HBLogDebug(@"attempting to copy %@ to %@", obj, newPath);
             if ([man copyItemAtPath:obj toPath:newPath error:&copyError]) {
                 [finalArray addObject:newPath];
             } else {
@@ -545,8 +551,6 @@
     if (finalArray.count > 0){
         [finalArray writeToFile:tempPlistFile atomically:FALSE];
         [[LSApplicationWorkspace defaultWorkspace] openApplicationWithBundleID:[proxy bundleIdentifier]];
-        //-(BOOL)openApplicationWithBundleID:(id)arg1
-        
         /*
         NSURL *url = [NSURL fileURLWithPath:tempPlistFile];
         HBLogDebug(@"urL: %@", url);

@@ -702,7 +702,6 @@
         _ourDict[@"__PayloadOptions"] = @{@"UIApplicationLaunchOptionsSourceApplicationKey": @"com.apple.PineBoard"};
         _ourDict[@"__PayloadURL"] = [NSURL fileURLWithPath:item];
         
-        
         id options = [FBSOpenApplicationOptions optionsWithDictionary:_ourDict];
         id openAppRequest = [FBSystemServiceOpenApplicationRequest request];
         [openAppRequest setTrusted:TRUE];
@@ -711,27 +710,18 @@
         [openAppRequest setClientProcess:pbProcess];
         if ([pbProcMan respondsToSelector:@selector(_handleOpenApplicationRequest:bundleID:options:withResult:)]){
             [pbProcMan _handleOpenApplicationRequest:openAppRequest bundleID:[proxy bundleIdentifier] options:_ourDict withResult:^(NSError *error) {
-                
                 HBLogDebug(@"open app finished with error: %@", error);
-                
             }];
-            
         } else if ([pbProcMan respondsToSelector:@selector(_openAppFromRequest:bundleIdentifier:URL:withResult:)]){ //13.0 -> ?
-            
             [pbProcMan _openAppFromRequest:openAppRequest bundleIdentifier:[proxy bundleIdentifier] URL:[NSURL fileURLWithPath:item] withResult:^(NSError *error) {
-                
                 HBLogDebug(@"open app finished with error: %@", error);
             }];
-            
         } else {
-                
             [pbProcMan _openAppFromRequest:openAppRequest bundleIdentifier:[proxy bundleIdentifier] URL:[NSURL fileURLWithPath:item] completion:^(NSError *error) {
-                
                 HBLogDebug(@"open app finished with error: %@", error);
             }];
         }
     }];
-    
 }
 
 %new - (void)legacyHandleFiles:(NSArray *)items withApplication:(id)proxy {

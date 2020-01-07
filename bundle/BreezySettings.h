@@ -10,6 +10,9 @@
 #import <TVSettingsKit/TSKVibrantImageView.h>
 #import <TVSettingsKit/TSKPreviewViewController.h>
 
+@interface TVSettingsPreferenceFacade: NSObject
+- (id)initWithDomain:(NSString *)domain notifyChanges:(BOOL)notify;
+@end
 
 @interface NSDistributedNotificationCenter : NSNotificationCenter
 + (id)defaultCenter;

@@ -5,182 +5,9 @@
 #import "breezy.h"
 #import "CTBlockDescription.h"
 #include <CoreFoundation/CoreFoundation.h>
-
+#import "EXTobjc.h"
 
 @class BindingEvaluator, LSContext, LSBundleData;
-
-@protocol LSOpenResourceOperationDelegate <NSObject>
-@optional
--(void)openResourceOperation:(id)arg1 didFailWithError:(id)arg2;
--(void)openResourceOperationDidComplete:(id)arg1;
--(void)openResourceOperation:(id)arg1 didFinishCopyingResource:(id)arg2;
-@end
-
-/**
- 
- Some failed experiments to programatically add airdrop support so Info.plist doesn't need to be edited, no paydirt yet.
- 
- */
-
-/*
- %hook NSBundle
- 
- - (id)infoDictionary {
- 
- //%log;
- id orig = %orig;
- NSString *bundleId = [orig valueForKey:@"CFBundleIdentifier"];
- if (bundleId){
- if([[orig allKeys] containsObject:@"CFBundleDocumentTypes"]){
- HBLogDebug(@"### found bundle id", bundleId);
- }
- }
- return orig;
- }
- 
- %end
- 
- %hook _LSDModifyClient
- 
- -(void)removeHandlerForContentType:(id)arg1 roles:(unsigned)arg2 completionHandler:(id)arg3 {
- %log;
- %orig;
- }
- 
- -(void)setHandler:(id)arg1 version:(id)arg2 roles:(unsigned)arg3 forContentType:(id)arg4 completionHandler:(id)arg5 {
- 
- %log;
- %orig;
- 
- }
- %end
- 
- 
- %hook LSBundleProxy
- 
- - (id)_infoDictionary {
- %log;
- id orig = %orig;
- NSString *bundleId = [self bundleIdentifier];
- id propertyList = [orig valueForKey:@"propertyList"];
- NSLog(@"%@: %@", bundleId, propertyList);
- return orig;
- }
- 
- %end
- 
- %hook LSApplicationProxy
- 
- - (NSSet *)claimedDocumentContentTypes {
- 
- id orig = %orig;
- NSString *bundleId = [self bundleIdentifier];
- NSLog(@"Breezy.xm 41: LSApplicationProxy:claimedDocumentContenTypes: %@", orig);
- NSLog(@"Breezy.xm 42: bundleId: %@", bundleId);
- if ([bundleId isEqualToString:@"com.firecore.infuse.pro.5"]){
- NSLog(@"Breezy.xm 45: Infuse test run!");
- return [NSSet setWithArray:@[@"org.xiph.oga",@"public.mpeg",@"org.videolan.mxf",@"public.audio",@"org.videolan.webm",@"org.videolan.mxg",@"public.movie",@"public.aifc-audio",@"public.avi",@"public.mpeg-4",@"com.microsoft.windows-\xe2\x80\x8bmedia-wma",@"org.videolan.idx",@"org.videolan.jss",@"com.apple.quicktime-movie",@"public.aiff-audio",@"com.real.realmedia",@"com.microsoft.windows-media-wmv",@"org.videolan.caf",@"org.videolan.w64",@"org.videolan.opus",@"public.audiovisual-content",@"org.videolan.srt",@"public.utf",@"org.videolan.smi",@"org.matroska.mkv",@"com.divx.divx",@"com.microsoft.advanced-systems-format",@"com.real.smil",@"public.3gpp2",@"org.videolan.ass",@"org.videolan.oma",@"org.videolan.aqt",@"org.videolan.psb",@"org.videolan.smil",@"org.videolan.flac",@"public.ulaw-audio",@"com.microsoft.waveform-audio",@"org.videolan.vlc",@"org.videolan.ssa",@"com.real.realaudio",@"org.xiph.ogv",@"public.mp3",@"org.videolan.sub",@"org.videolan.cdg",@"org.videolan.rt",@"public.mpeg4",@"public.video",@"public.3gpp",@"com.microsoft.windows-media-wm",@"public.mpeg-4-audio"]];
- }
- return orig;
- 
- }
- 
- 
- %end
- 
- %hook _LSLazyPropertyList
- 
- -(BOOL)_getValue:(id*)arg1 forPropertyListKey:(id)arg2 {
- 
- %log;
- return %orig;
- }
- 
- %end
- 
- %hook _LSCompoundLazyPropertyList
- 
- -(BOOL)_getValue:(id*)arg1 forPropertyListKey:(id)arg2 {
- 
- %log;
- return %orig;
- }
- - (id)propertyList {
- 
- %log;
- id orig = %orig;
- NSString *bundleId = [orig valueForKey:@"CFBundleIdentifier"];
- if ([bundleId isEqualToString:@"target"]){
- 
- }
- return orig;
- }
- 
- %end
- */
-
-%group Bro
-
-%hook SFAirDropNode
-+(id)nodeWithSFNode:(id)arg1  { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(NSString *)secondaryName { %log; NSString * r = %orig; HBLogDebug(@" = %@", r); return r; }
--(void)setDisplayName:(NSString *)arg1  { %log; %orig; }
--(BOOL)isMe { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(void)setModel:(NSString *)arg1  { %log; %orig; }
--(void)setUnknown:(BOOL)arg1  { %log; %orig; }
--(void)setSecondaryName:(NSString *)arg1  { %log; %orig; }
--(void)setMe:(BOOL)arg1  { %log; %orig; }
--(NSString *)contactIdentifier { %log; NSString * r = %orig; HBLogDebug(@" = %@", r); return r; }
--(void)setContactIdentifier:(NSString *)arg1  { %log; %orig; }
--(void)setMonogram:(BOOL)arg1  { %log; %orig; }
--(BOOL)isUnknown { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(void)updateWithSFNode:(id)arg1  { %log; %orig; }
--(BOOL)isClassroom { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(BOOL)isClassroomCourse { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(BOOL)isKnown { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(void)handleOperationCallback:(id)arg1 event:(long long)arg2 withResults:(id)arg3  { %log; %orig; }
--(void)setDisplayIcon:(UIImage *)arg1  { %log; %orig; }
--(void)setRealName:(NSString *)arg1  { %log; %orig; }
--(void)cancelSend { %log; %orig; }
--(void)startSendForBundleID:(id)arg1 sessionID:(id)arg2 items:(id)arg3 description:(id)arg4 previewImage:(id)arg5  { %log; %orig; }
--(void)simulateFakeTransferWithSessionID:(id)arg1  { %log; %orig; }
--(NSString *)realName { %log; NSString * r = %orig; HBLogDebug(@" = %@", r); return r; }
--(UIImage *)displayIcon { %log; UIImage * r = %orig; HBLogDebug(@" = %@", r); return r; }
--(BOOL)isMonogram { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(void)setClassroom:(BOOL)arg1  { %log; %orig; }
--(BOOL)isclassroomGroup { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(void)setClassroomGroup:(BOOL)arg1  { %log; %orig; }
--(void)setClassroomCourse:(BOOL)arg1  { %log; %orig; }
--(BOOL)supportsCredentials { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(BOOL)supportsFMF { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(BOOL)supportsPasses { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(BOOL)supportsMixedTypes { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(NSDate *)discoveryDate { %log; NSDate * r = %orig; HBLogDebug(@" = %@", r); return r; }
--(id)init { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(BOOL)isEqual:(id)arg1  { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(unsigned long long)hash { %log; unsigned long long r = %orig; HBLogDebug(@" = %llu", r); return r; }
--(id)description { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(id)node { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(void)setNode:(id)arg1  { %log; %orig; }
--(NSString *)model { %log; NSString * r = %orig; HBLogDebug(@" = %@", r); return r; }
--(NSString *)displayName { %log; NSString * r = %orig; HBLogDebug(@" = %@", r); return r; }
-%end
-
-
-%hook MCMContainerManager
-+(id)defaultManager { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(id)init { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(id)containerWithContentClass:(long long)arg1 identifier:(id)arg2 error:(id*)arg3  { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(id)containerWithContentClass:(long long)arg1 identifier:(id)arg2 createIfNecessary:(BOOL)arg3 existed:(BOOL*)arg4 error:(id*)arg5  { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(id)temporaryContainerWithContentClass:(long long)arg1 identifier:(id)arg2 existed:(BOOL*)arg3 error:(id*)arg4  { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(id)containersWithClass:(long long)arg1 error:(id*)arg2  { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(id)temporaryContainersWithClass:(long long)arg1 error:(id*)arg2  { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(id)deleteContainers:(id)arg1 withCompletion:(/*^block*/id)arg2  { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
--(BOOL)replaceContainer:(id)arg1 withContainer:(id)arg2 error:(id*)arg3  { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(BOOL)replaceContainer:(id)arg1 withContainer:(id)arg2 error:(id*)arg3 withCompletion:(/*^block*/id)arg4  { %log; BOOL r = %orig; HBLogDebug(@" = %d", r); return r; }
--(id)_containersWithClass:(long long)arg1 temporary:(BOOL)arg2 error:(id*)arg3  { %log; id r = %orig; HBLogDebug(@" = %@", r); return r; }
-%end
-%end
 
 //start actual code
 %group Sharingd
@@ -244,7 +71,7 @@
 -(void)updateWithInformation:(id)arg {
     %log;
     NSProgress *prog = [self transferProgress];
-    HBLogDebug(@"progress: %@", prog);
+    //HBLogDebug(@"progress: %@", prog);
     NSArray <NSURL *> *items = arg[@"Items"];
     if (items.count > 0 && [prog isFinished]){
         HBLogDebug(@"info: %@", arg);
@@ -324,7 +151,13 @@
 
 %group PineBoard
 
+
 %hook PBProcessManager
+
+- (void)activateApplication:(id)arg1 openURL:(id)arg2 options:(id)arg3 suspended:(_Bool)arg4 completion:(id)arg5 {
+    %log;
+    %orig;
+}
 
 - (void)_openApp:(id)arg1 options:(id)arg2 origin:(id)arg3 withResult:(id)arg4 {
     %log;
@@ -344,7 +177,7 @@
     %log;
     %orig;
 }
--(void)_openAppFromRequest:(id)arg1 bundleIdentifier:(id)arg2 URL:(id)arg3 completion:(/*^block*/id)arg4  {
+-(void)_openAppFromRequest:(id)arg1 bundleIdentifier:(id)arg2 URL:(id)arg3 completion:(id)arg4  {
     %log;
     HBLogDebug(@"[Breezy] request: %@", arg1);
     HBLogDebug(@"[Breezy] bundleIdentifier: %@", arg2);
@@ -357,57 +190,18 @@
     %orig;
 }
 
--(void)openApplication:(id)arg1 launchURL:(id)arg2 options:(id)arg3 suspended:(BOOL)arg4 completion:(/*^block*/id)arg5  {
+-(void)openApplication:(id)arg1 launchURL:(id)arg2 options:(id)arg3 suspended:(BOOL)arg4 completion:(id)arg5  {
     %log;
     %orig;
 }
 %end
 
+
+
 %hook PBAppDelegate
 
+//can likely prune these out
 
-//add these delegate methods to handle when operations are complete, this is the proper way to do it. nothing else works.
-
-%new -(void)openResourceOperation:(id)arg1 didFailWithError:(id)arg2 {
-    %log;
-    //TODO: should probably do some error handling here
-    HBLogDebug(@"failed with error: %@", arg2);
-    [[self operationArray] removeObject:arg1];
-    [self runNextOperation];
-}
-
-%new - (void)openResourceOperationDidComplete:(id)arg1 {
-    %log;
-    [[self operationArray] removeObject:arg1];
-    [self runNextOperation];
-}
-
-%new - (void)openResourceOperation:(id)arg1 didFinishCopyingResource:(id)arg2 {
-    
-    %log;
-    [self postBulletinForFile:[arg2 lastPathComponent]];
-}
-%new - (void)runNextOperation {
-    
-    HBLogDebug(@"runNextOp operations: %@", [self operationArray]);
-    if ([[self operationArray] count] == 0){
-        HBLogDebug(@"no operations left!");
-    } else {
-        NSOperation *firstObject = [[self operationArray] firstObject];
-        HBLogDebug(@"next operation: %@", firstObject);
-        [firstObject start];
-    }
-    
-}
-
-%new - (NSMutableArray *)operationArray {
-    id ooq = objc_getAssociatedObject(self, @selector(operationArray));
-    if (ooq == nil){
-        ooq = [NSMutableArray new];
-        objc_setAssociatedObject(self, @selector(operationArray), ooq, OBJC_ASSOCIATION_RETAIN);
-    }
-    return ooq;
-}
 //__UTTypeAddWithDeclarationDictionary
 //a bit misleading, reports can come here and the import MIGHT have failed FIXME:
 %new - (void)postBulletinForFile:(NSString *)fileName {
@@ -488,9 +282,13 @@
         
     }];
     
+    if (names.length > 400){
+        names = [NSString stringWithFormat:@"%@...", [names substringToIndex:400]];
+    }
+    
     NSArray  *applications = [ws applicationsAvailableForOpeningDocument:doxy];
-    NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
-    applications = [applications filteredArrayUsingPredicate: pred];
+    //NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
+    //applications = [applications filteredArrayUsingPredicate: pred];
     if (URLS.count > 0){ //we take a different path here entirely
         NSString *firstURL = URLS[0];
         [names appendString:firstURL];
@@ -505,116 +303,68 @@
     NSLog(@"[Breezy] names length: %lu", names.length);
     id applicationAlert = [[objc_getClass("PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", names]];
     
-    //get the operation array here because its a mutable array we will continue to add on to.
-    NSMutableArray <NSOperation *>*opArray = [self operationArray];
     NSLog(@"available applications: %@", applications);
     NSString *cancelButtonTitle = @"Cancel";
     if (applications.count == 1){ //Theres only one application, just open it automatically
         id launchApp = applications[0];
-        //if (!thirteenPlus) {
             if (URLS.count > 0){
                 //process URLs
-                [self legacyHandleURLs:URLS withApplication:launchApp];
+                [self openItems:URLS ofType:KBBreezyFileTypeLink withApplication:launchApp];
             } else {
                 //process files
-                [self ourOpenOperationForItems:localFiles withApplication:launchApp];
+                [self openItems:localFiles ofType:KBBreezyFileTypeLocal withApplication:launchApp];
             }
-            return;
-        //}
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            
-            if (URLS.count > 0){
-                [URLS enumerateObjectsUsingBlock:^(NSString  * fileURL, NSUInteger idx, BOOL * _Nonnull stop) {
-                    
-                    NSURL *url = [NSURL URLWithString:fileURL];
-                    NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE], @"LSDocumentDropCount": [NSNumber numberWithInteger:URLS.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]} options:nil delegate:self];
-                    
-                    HBLogDebug(@"operation: %@", operation);
-                    [opArray addObject:operation];
-                }];
-            } else {
-                [localFiles enumerateObjectsUsingBlock:^(NSString  * localFile, NSUInteger idx, BOOL * _Nonnull stop) {
-                    
-                    NSURL *url = [NSURL fileURLWithPath:localFile];
-                    
-                    NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[launchApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE], @"LSDocumentDropCount": [NSNumber numberWithInteger:localFiles.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]} options:nil delegate:self];
-                    
-                    HBLogDebug(@"operation: %@", operation);
-                    [opArray addObject:operation];
-                }];
-            }
-            [[opArray firstObject] start];
-            
-        });
-        return;
+        return; //returning here because we dont want to show a dialog, we are done.
         
     } else if (applications.count > 1){  //multiple applications available, build up the menu
-        
+        __weak typeof(applicationAlert) weakAlert = applicationAlert;
         [applications enumerateObjectsUsingBlock:^(id  _Nonnull currentApp, NSUInteger idx, BOOL * _Nonnull stop) {
             [applicationAlert addButtonWithTitle:[currentApp localizedName] type:0 handler:^{
                 
                 if (thirteenPlus) {
                     [dialogManager dismissDialogWithContext:context options:nil completion:nil];
                 } else {
-                    [windowManager dismissDialogViewController:applicationAlert];
-                    if (URLS.count > 0){
-                        //process URLs
-                        [self legacyHandleURLs:URLS withApplication:currentApp];
-                    } else {
-                        //process files
-                        [self legacyHandleFiles:localFiles withApplication:currentApp];
-                    }
-                    return;
+                    
+                    [windowManager dismissDialogViewController:weakAlert];
                 }
+                if (URLS.count > 0){
+                    //process URLs
+                    [self openItems:URLS ofType:KBBreezyFileTypeLink withApplication:currentApp];
+                } else {
+                    //process files
+                    [self openItems:localFiles ofType:KBBreezyFileTypeLocal withApplication:currentApp];
+                }
+                
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                    if (URLS.count > 0){
-                        [URLS enumerateObjectsUsingBlock:^(NSString  * fileURL, NSUInteger idx, BOOL * _Nonnull stop) {
-                            
-                            //NSURL *url = [NSURL fileURLWithPath:localFile];
-                            NSURL *url = [NSURL URLWithString:fileURL];
-                            NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[currentApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE], @"LSDocumentDropCount": [NSNumber numberWithInteger:URLS.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]} options:nil delegate:self];
-                            
-                            HBLogDebug(@"operation: %@", operation);
-                            [opArray addObject:operation];
-                        }];
-                    } else {
-                        [localFiles enumerateObjectsUsingBlock:^(NSString  * localFile, NSUInteger idx, BOOL * _Nonnull stop) {
-                            NSURL *url = [NSURL fileURLWithPath:localFile];
-                            NSBlockOperation *operation = [ws operationToOpenResource:url usingApplication:[currentApp bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE], @"LSDocumentDropCount": [NSNumber numberWithInteger:localFiles.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]} options:nil delegate:self];
-                            HBLogDebug(@"operation: %@", operation);
-                            [opArray addObject:operation];
-                            
-                            
-                        }];
-                    }
-                    [[opArray firstObject] start];
+                    //leaving this here in case any of our processing actually needs to be in here..
                 });
                 
             }];
         }];
-    } else {
+    } else { //no applications found
         
         cancelButtonTitle = @"OK";
         NSLog(@"no applications found to open these file(s)");
         NSString *newMessage = [NSString stringWithFormat:@"Failed to find any applications to open '%@' with", names];
         [applicationAlert setText:newMessage];
     }
-    
-    
-    
+    __weak typeof(applicationAlert) weakAlert = applicationAlert;
     [applicationAlert addButtonWithTitle:cancelButtonTitle type:0 handler:^{
         if (thirteenPlus) {
             [dialogManager dismissDialogWithContext:context options:nil completion:nil];
         } else {
-            [windowManager dismissDialogViewController:applicationAlert];
+            [windowManager dismissDialogViewController:weakAlert];
             
         }
     }];
+    
+    //done all our processing, time to show the alert!
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         if (thirteenPlus){
             context = [objc_getClass("PBDialogContext") contextWithViewController:applicationAlert];
             dispatch_async(dispatch_get_main_queue(), ^{
-                [dialogManager presentDialogWithContext:context options:@{@"PBDialogOptionPresentForcedKey": [NSNumber numberWithInteger:1], @"PBDialogOptionPresentWhileScreenSaverActiveKey": [NSNumber numberWithInteger:1]} completion:nil];
+                [dialogManager presentDialogWithContext:context options:@{@"PBDialogOptionPresentForcedKey": @1, @"PBDialogOptionPresentWhileScreenSaverActiveKey": @1} completion:nil];
             });
             
         } else {
@@ -631,37 +381,8 @@
     _Bool orig = %orig;
     %log;
     id notificationCenter = [NSDistributedNotificationCenter defaultCenter];
-    [notificationCenter addObserver:self  selector:@selector(showSystemAlertFromAlert:) name:@"com.breezy.kludgeh4x" object:nil];
+    [notificationCenter addObserver:self  selector:@selector(showSystemAlertFromAlert:) name:@"com.breezy.kludgeh4x" object:nil]; //still need to get rid of this ugly eyesore
     return orig;
-    
-}
-
-%new - (void)legacyHandleURLs:(NSArray *)items withApplication:(id)proxy {
-    
-    %log;
-    if (items.count > 0){
-        if (items.count == 1){
-            NSURL *url = [NSURL URLWithString:items[0]];
-            HBLogDebug(@"urL: %@", url);
-            
-            NSBlockOperation *operation = [[LSApplicationWorkspace defaultWorkspace] operationToOpenResource:url usingApplication:[proxy bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
-            HBLogDebug(@"operation: %@", operation);
-            [operation start];
-        } else {
-            NSFileManager *man = [NSFileManager defaultManager];
-            NSString *onePath = [[proxy dataContainerURL] path];
-            if (onePath == nil){
-                onePath = @"/";
-            }
-            NSString *cachePath = [[onePath stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[proxy bundleIdentifier]];
-            if ([man fileExistsAtPath:cachePath]){
-                [man createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:nil];
-            }
-            NSString *tempPlistFile = [cachePath stringByAppendingPathComponent:@"AirDrop.plist"];
-            [items writeToFile:tempPlistFile atomically:FALSE];
-            [[LSApplicationWorkspace defaultWorkspace] openApplicationWithBundleID:[proxy bundleIdentifier]];
-        }
-    }
     
 }
 
@@ -684,34 +405,49 @@
  */
 
 
-%new - (void)ourOpenOperationForItems:(NSArray *)items withApplication:(id)proxy {
+%new - (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy {
     
     Class FBSOpenApplicationOptions = NSClassFromString(@"FBSOpenApplicationOptions");
     Class FBSystemServiceOpenApplicationRequest = NSClassFromString(@"FBSystemServiceOpenApplicationRequest");
     Class PBProcessManager = NSClassFromString(@"PBProcessManager");
+    Class FBProcessManager = NSClassFromString(@"FBProcessManager");
     id pbProcMan = [PBProcessManager sharedInstance];
-    id _fbProcMan = [pbProcMan valueForKey:@"_fbProcessManager"];
-    id pbProcess = [_fbProcMan processesForBundleIdentifier:@"com.apple.PineBoard"][0];
+    id _fbProcMan = [FBProcessManager sharedInstance];
+    __block id pbProcess = [_fbProcMan systemApplicationProcess];
     [items enumerateObjectsUsingBlock:^(NSString * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
-        //LSBlockUntilComplete = 1;
-        NSMutableDictionary *_ourDict = [NSMutableDictionary new];
-        _ourDict[FBSOpenApplicationOptionKeyActivateSuspended] = @0;
-        _ourDict[FBSOpenApplicationOptionKeyDocumentOpen4LS] = @1;
-        //_ourDict[@"LSBlockUntilComplete"] = @1; //13.0+ shouldnt hurt anything
-        _ourDict[FBSOpenApplicationOptionKeyPayloadAnnotation] = @{@"LSMoveDocumentOnOpen": @0, @"LSDocumentDropCount": [NSNumber numberWithInteger:items.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]};
-        _ourDict[FBSOpenApplicationOptionKeyPayloadOptions] = @{@"UIApplicationLaunchOptionsSourceApplicationKey": @"com.apple.PineBoard"};
-        _ourDict[FBSOpenApplicationOptionKeyPayloadURL] = [NSURL fileURLWithPath:item];
+        NSMutableDictionary *_options = [NSMutableDictionary new];
+        _options[FBSOpenApplicationOptionKeyActivateSuspended] = @0;
+        _options[FBSOpenApplicationOptionKeyDocumentOpen4LS] = @1;
+        //_options[@"LSBlockUntilComplete"] = @1; //13.0+ shouldnt hurt anything
+        _options[FBSOpenApplicationOptionKeyPayloadAnnotation] = @{@"LSMoveDocumentOnOpen": @0, @"LSDocumentDropCount": [NSNumber numberWithInteger:items.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]};
+        _options[FBSOpenApplicationOptionKeyPayloadOptions] = @{@"UIApplicationLaunchOptionsSourceApplicationKey": @"com.apple.PineBoard"};
+        if (fileType == KBBreezyFileTypeLink){
+            _options[FBSOpenApplicationOptionKeyPayloadURL] = [NSURL URLWithString:item];
+        } else {
+            _options[FBSOpenApplicationOptionKeyPayloadURL] = [NSURL fileURLWithPath:item];
+        }
         
-        id options = [FBSOpenApplicationOptions optionsWithDictionary:_ourDict];
+        id options = [FBSOpenApplicationOptions optionsWithDictionary:_options];
         id openAppRequest = [FBSystemServiceOpenApplicationRequest request];
         [openAppRequest setTrusted:TRUE];
         [openAppRequest setBundleIdentifier:[proxy bundleIdentifier]];
         [openAppRequest setOptions:options];
         [openAppRequest setClientProcess:pbProcess];
-        if ([pbProcMan respondsToSelector:@selector(_handleOpenApplicationRequest:bundleID:options:withResult:)]){
-            [pbProcMan _handleOpenApplicationRequest:openAppRequest bundleID:[proxy bundleIdentifier] options:_ourDict withResult:^(NSError *error) {
-                HBLogDebug(@"open app finished with error: %@", error);
-            }];
+        if ([pbProcMan respondsToSelector:@selector(_handleOpenApplicationRequest:bundleID:options:withResult:)]){ //12.x or less
+     //on 12.x and lower you cant open documents too closely together or it will throw a fit about being in the middle of a transition, this staggers each open by 1 second.
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, idx * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                
+                [pbProcMan _handleOpenApplicationRequest:openAppRequest bundleID:[proxy bundleIdentifier] options:_options withResult:^(NSError *error) {
+                    HBLogDebug(@"open app finished with error: %@", error);
+                    
+                    if (error != nil){
+         
+                        [pbProcMan activateApplication:[proxy bundleIdentifier] openURL:_options[FBSOpenApplicationOptionKeyPayloadURL] options:_options suspended:FALSE completion:nil];
+                    }
+                }];
+                
+            });
+           
         } else if ([pbProcMan respondsToSelector:@selector(_openAppFromRequest:bundleIdentifier:URL:withResult:)]){ //13.0 -> ?
             [pbProcMan _openAppFromRequest:openAppRequest bundleIdentifier:[proxy bundleIdentifier] URL:[NSURL fileURLWithPath:item] withResult:^(NSError *error) {
                 HBLogDebug(@"open app finished with error: %@", error);
@@ -724,72 +460,10 @@
     }];
 }
 
-%new - (void)legacyHandleFiles:(NSArray *)items withApplication:(id)proxy {
-    
-    %log;
-    NSFileManager *man = [NSFileManager defaultManager];
-    NSString *onePath = [[proxy dataContainerURL] path];
-    if (onePath == nil){
-        onePath = @"/";
-    }
-    __block NSMutableArray *finalArray = [NSMutableArray new];
-    NSString *cachePath = [[onePath stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[proxy bundleIdentifier]];
-    NSError *theError = nil;
-    if ([man fileExistsAtPath:cachePath]){
-        [man createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:&theError];
-    }
-    HBLogDebug(@"cache path: %@ error: %@", cachePath, theError);
-    
-    [items enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        NSString *newPath = [cachePath stringByAppendingPathComponent:[obj lastPathComponent]];
-        NSError *copyError = nil;
-        if ([man fileExistsAtPath:newPath]){
-            [finalArray addObject:newPath];
-        } else {
-            HBLogDebug(@"attempting to copy %@ to %@", obj, newPath);
-            if ([man copyItemAtPath:obj toPath:newPath error:&copyError]) {
-                [finalArray addObject:newPath];
-            } else {
-                HBLogDebug(@"failed to copy %@ to %@ with error: %@", obj, newPath, copyError);
-                
-            }
-        }
-        
-    }];
-    
-    if (finalArray.count > 0){
-        
-        if (finalArray.count == 1){
-            /*
-             NSURL *url = [NSURL fileURLWithPath:finalArray[0]];
-             HBLogDebug(@"urL: %@", url);
-             
-             NSBlockOperation *operation = [[LSApplicationWorkspace defaultWorkspace] operationToOpenResource:url usingApplication:[proxy bundleIdentifier] uniqueDocumentIdentifier:nil isContentManaged:0 sourceAuditToken:nil userInfo:@{@"LSMoveDocumentOnOpen": [NSNumber numberWithBool:TRUE]} options:nil delegate:self];
-             HBLogDebug(@"operation: %@", operation);
-             [operation start];
-             
-             */
-            [self ourOpenOperationForItems:finalArray withApplication:proxy];
-            
-        } else {
-            NSString *tempPlistFile = [cachePath stringByAppendingPathComponent:@"AirDrop.plist"];
-            [finalArray writeToFile:tempPlistFile atomically:FALSE];
-            [[LSApplicationWorkspace defaultWorkspace] openApplicationWithBundleID:[proxy bundleIdentifier]];
-        }
-        
-        /*
-         
-         */
-    }
-    
-}
-
 %end
 %end //PineBoard Group
 
 %ctor {
-    %init(Bro);
     NSString *processName = [[[[NSProcessInfo processInfo] arguments] lastObject] lastPathComponent];
     //HBLogDebug(@"Process name: %@", processName);
     if ([processName isEqualToString:@"PineBoard"]){

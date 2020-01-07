@@ -1,4 +1,5 @@
 
+
 extern NSString * const FBSOpenApplicationOptionKeyDocumentOpen4LS; //@"__DocumentOpen4LS"
 extern NSString * const FBSOpenApplicationOptionKeyActivateSuspended; //@"__ActivateSuspended"
 extern NSString * const FBSOpenApplicationOptionKeyPayloadAnnotation; //@"__PayloadAnnotation"
@@ -7,29 +8,11 @@ extern NSString * const FBSOpenApplicationOptionKeyBrowserAppLinkState4LS;
 extern NSString * const FBSOpenApplicationOptionKeyAppLink4LS;
 extern NSString * const FBSOpenApplicationOptionKeyPayloadOptions; //@"__PayloadOptions"
 
+typedef enum : NSUInteger {
+    KBBreezyFileTypeLocal,
+    KBBreezyFileTypeLink,
+} KBBreezyFileType;
 
-@interface _LSLazyPropertyList : NSObject
-
-@property (readonly) NSDictionary * propertyList;
-+(BOOL)supportsSecureCoding;
-+(id)lazyPropertyListWithPropertyListData:(id)arg1 ;
-+(id)lazyPropertyList;
-+(id)lazyPropertyListWithPropertyListURL:(id)arg1 ;
-+(id)lazyPropertyListWithPropertyList:(id)arg1 ;
-+(id)lazyPropertyListWithContext:(id)arg1 unit:(unsigned)arg2 ;
-+(id)lazyPropertyListWithLazyPropertyLists:(id)arg1 ;
--(id)copyWithZone:(NSZone*)arg1 ;
--(id)init;
--(void)encodeWithCoder:(id)arg1 ;
--(id)initWithCoder:(id)arg1 ;
--(NSDictionary *)propertyList;
--(id)objectForPropertyListKey:(id)arg1 ofClass:(Class)arg2 ;
--(BOOL)_getPropertyList:(id*)arg1 ;
--(BOOL)_getValue:(id*)arg1 forPropertyListKey:(id)arg2 ;
--(id)_filterValueFromPropertyList:(id)arg1 ofClass:(Class)arg2 valuesOfClass:(Class)arg3 ;
--(id)objectsForPropertyListKeys:(id)arg1 ;
--(id)objectForPropertyListKey:(id)arg1 ofClass:(Class)arg2 valuesOfClass:(Class)arg3 ;
-@end
 
 @interface LSBundleProxy: NSObject
 -(NSString *)bundleIdentifier;
@@ -59,11 +42,6 @@ extern NSString * const FBSOpenApplicationOptionKeyPayloadOptions; //@"__Payload
 +(id)sharedInstance;
 -(NSMutableDictionary *)identifiersToContexts;
 -(NSMutableArray *)hiddenDialogAssertions;
--(void)overlayController:(id)arg1 willPresentSession:(id)arg2 ;
--(void)overlayController:(id)arg1 didPresentSession:(id)arg2 ;
--(void)overlayController:(id)arg1 willDismissSession:(id)arg2 withContext:(id)arg3 ;
--(void)overlayController:(id)arg1 didDismissSession:(id)arg2 ;
--(void)overlayController:(id)arg1 didCancelSession:(id)arg2 withContext:(id)arg3 ;
 -(id)overlayController;
 -(void)presentDialogWithContext:(id)arg1 options:(id)arg2 completion:(/*^block*/id)arg3 ;
 -(void)dismissDialogWithContext:(id)arg1 options:(id)arg2 completion:(/*^block*/id)arg3 ;
@@ -91,16 +69,8 @@ extern NSString * const FBSOpenApplicationOptionKeyPayloadOptions; //@"__Payload
 - (void)showSystemAlertFromAlert:(id)alert;
 - (void)postBulletinForFile:(NSString *)file;
 - (void)sendBulletinWithMessage:(NSString *)message title:(NSString *)title;
-@end
+- (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy;
 
-@interface PBAppDelegate (science)
-
-@property (nonatomic) NSOperationQueue *openOperationQueue;
-@property (nonatomic) NSMutableArray *operationArray;
-- (void)runNextOperation;
-- (void)legacyHandleFiles:(NSArray *)items withApplication:(id)proxy;
-- (void)legacyHandleURLs:(NSArray *)items withApplication:(id)proxy;
-- (void)ourOpenOperationForItems:(NSArray *)items withApplication:(id)proxy;
 @end
 
 @interface LSApplicationWorkspace: NSObject
@@ -179,16 +149,27 @@ extern NSString * const FBSOpenApplicationOptionKeyPayloadOptions; //@"__Payload
  */
 
 
-
 @interface FBProcessManager : NSObject
 - (void)_handleOpenApplicationRequest:(id)arg1 bundleID:(id)arg2 options:(id)arg3 withResult:(void(^)(NSError *error))arg4; //12.4 and lower
 - (void)_openAppFromRequest:(id)arg1 bundleIdentifier:(id)arg2 URL:(id)arg3 completion:(void(^)(NSError *error))arg4; //13.2+
 - (void)_openAppFromRequest:(id)arg1 bundleIdentifier:(id)arg2 URL:(id)arg3 withResult:(void(^)(NSError *error))arg4; //13.0 - ?
 - (NSArray *)processesForBundleIdentifier:(NSString *)bundleId;
+-(id)systemApplicationProcess; //FBApplicationProcess
++ (id)sharedInstance;
+@end
+
+@interface FBScene : NSObject
+-(BOOL)_isInTransaction;
 @end
 
 @interface PBProcessManager : NSObject
 + (id)sharedInstance;
+//12.4 only
+@property(readonly, nonatomic) NSString *focusedProcessBundleIdentifier;
+- (void)setFocusedProcess:(id)proc;
+- (void)activateApplication:(id)arg1 openURL:(id)arg2 options:(id)arg3 suspended:(_Bool)arg4 completion:(id)arg5;    // IMP=0x00000001000fb210
+- (void)activateApplication:(id)arg1 openURL:(id)arg2 suspended:(_Bool)arg3 completion:(id)arg4;
+- (id)_foregroundScene;
 @end
 
 @interface FBSOpenApplicationOptions: NSObject
@@ -196,3 +177,5 @@ extern NSString * const FBSOpenApplicationOptionKeyPayloadOptions; //@"__Payload
 + (instancetype)optionsWithDictionary:(NSDictionary *)dictionary;
 
 @end
+
+

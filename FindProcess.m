@@ -128,7 +128,7 @@ static int process_buffer_size = 4096;
 }
 
 + (boolean_t) process:(pid_t)ppid matches:(const char* )name {
-    pid_t *pid_buffer;
+    //pid_t *pid_buffer;
     char path_buffer[MAXPATHLEN];
     boolean_t res = FALSE;
     int ret = proc_pidpath(ppid, (void*)path_buffer, sizeof(path_buffer));

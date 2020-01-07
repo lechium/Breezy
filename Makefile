@@ -1,7 +1,7 @@
 ARCHS = arm64
 target ?= appletv:clang:10.2.2:10.0
 export GO_EASY_ON_ME=1
-THEOS_DEVICE_IP=guest-room.local
+THEOS_DEVICE_IP=4k.local
 DEBUG=1
 include $(THEOS)/makefiles/common.mk
 
@@ -11,8 +11,8 @@ Breezy_FILES = Breezy.xm FindProcess.m CTBlockDescription.m Extra.xm
 Breezy_LIBRARIES = substrate
 Breezy_FRAMEWORKS = Foundation UIKit CoreGraphics MobileCoreServices
 #Breezy_LDFLAGS = -undefined dynamic_lookup
-Breezy_CFLAGS = -fobjc-arc
-Breezy_LDFLAGS = -F. -framework FrontBoardServices
+Breezy_CFLAGS = -fobjc-arc -Iextobjc -Iextobjc/Extensions -Iextobjc/Modules 
+Breezy_LDFLAGS = -F. -framework FrontBoardServices -Iextobjc -Iextobjc/Extensions -Iextobjc/Modules 
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

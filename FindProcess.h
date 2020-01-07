@@ -7,6 +7,10 @@
 
 #import <Foundation/Foundation.h>
 
+@interface Bro : NSObject
+-(id)initWithDomain:(id)arg1 ;
+@end
+
 #define OurLog(format, ...) CFShow((__bridge CFStringRef)[NSString stringWithFormat:format, ## __VA_ARGS__]);
 
 @interface FindProcess : NSObject

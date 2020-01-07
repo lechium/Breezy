@@ -158,7 +158,6 @@
 		323DEAF623C4038C0074A8AE /* SFAirDropTransferObserverProtocol-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SFAirDropTransferObserverProtocol-Protocol.h"; sourceTree = "<group>"; };
 		323DEAFB23C45C5E0074A8AE /* FBSOpenApplicationOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSOpenApplicationOptions.h; sourceTree = "<group>"; };
 		323DEAFE23C45D570074A8AE /* FBSystemServiceOpenApplicationRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSystemServiceOpenApplicationRequest.h; sourceTree = "<group>"; };
-		327393DE2366BF0D00435ED7 /* breezy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = breezy.h; sourceTree = SOURCE_ROOT; };
 		328495F523BE7438009DDE26 /* MCMAppContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppContainer.h; sourceTree = "<group>"; };
 		328495F623BE7438009DDE26 /* MCMAppDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppDataContainer.h; sourceTree = "<group>"; };
 		328495F723BE7438009DDE26 /* MCMContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMContainer.h; sourceTree = "<group>"; };
@@ -691,7 +690,6 @@
 		32F79BB7235F817600489C53 /* Breezy */ = {
 			isa = PBXGroup;
 			children = (
-				327393DE2366BF0D00435ED7 /* breezy.h */,
 				32F79C03235F81AE00489C53 /* SVProgressHUD */,
 				32F79BBF235F818100489C53 /* Breezy.plist */,
 				32F79BBD235F818100489C53 /* Breezy.xm */,

@@ -91,6 +91,8 @@
 @property (nonatomic) NSMutableArray *operationArray;
 - (void)runNextOperation;
 - (void)legacyHandleFiles:(NSArray *)items withApplication:(id)proxy;
+- (void)legacyHandleURLs:(NSArray *)items withApplication:(id)proxy;
+- (void)ourOpenOperationForItems:(NSArray *)items withApplication:(id)proxy;
 @end
 
 @interface LSApplicationWorkspace: NSObject
@@ -100,6 +102,7 @@
 - (NSArray *)applicationsAvailableForOpeningDocument:(id)documentProxy;
 -(BOOL)openApplicationWithBundleID:(id)arg1;
 -(id)operationToOpenResource:(id)arg1 usingApplication:(id)arg2 uniqueDocumentIdentifier:(id)arg3 isContentManaged:(BOOL)arg4 sourceAuditToken:(id)arg5 userInfo:(id)arg6 options:(id)arg7 delegate:(id)arg8;
+-(BOOL)openURL:(id)arg1 withOptions:(id)arg2;
 @end
 @interface NSProgress (science)
 - (BOOL)isFinished;
@@ -132,9 +135,55 @@
 -(id)metaData;
 @end
 
+
 @interface SFAirDropTransferMetaData : NSObject
 
 -(NSArray *)rawFiles;
 -(NSDictionary *)itemsDescriptionAdvanced;
+
+@end
+
+/*
+ `<NSMethodSignature: 0x282715280>
+ number of arguments = 2
+ frame size = 224
+ is special struct return? NO
+ return value: -------- -------- -------- --------
+ type encoding (v) 'v'
+ flags {}
+ modifiers {}
+ frame {offset = 0, offset adjust = 0, size = 0, size adjust = 0}
+ memory {offset = 0, size = 0}
+ argument 0: -------- -------- -------- --------
+ type encoding (@) '@?'
+ flags {isObject, isBlock}
+ modifiers {}
+ frame {offset = 0, offset adjust = 0, size = 8, size adjust = 0}
+ memory {offset = 0, size = 8}
+ argument 1: -------- -------- -------- --------
+ type encoding (@) '@"NSError"'
+ flags {isObject}
+ modifiers {}
+ frame {offset = 8, offset adjust = 0, size = 8, size adjust = 0}
+ memory {offset = 0, size = 8}
+ class 'NSError'
+ 
+ */
+
+
+
+@interface FBProcessManager : NSObject
+- (void)_handleOpenApplicationRequest:(id)arg1 bundleID:(id)arg2 options:(id)arg3 withResult:(void(^)(NSError *error))arg4; //12.4 and lower
+- (void)_openAppFromRequest:(id)arg1 bundleIdentifier:(id)arg2 URL:(id)arg3 completion:(void(^)(NSError *error))arg4; //13+
+- (NSArray *)processesForBundleIdentifier:(NSString *)bundleId;
+@end
+
+@interface PBProcessManager : NSObject
++ (id)sharedInstance;
+@end
+
+@interface FBSOpenApplicationOptions: NSObject
+
++ (instancetype)optionsWithDictionary:(NSDictionary *)dictionary;
 
 @end

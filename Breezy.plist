@@ -4,6 +4,7 @@
 			"com.apple.PineBoard",
 			"com.apple.CoreServices",
 			"com.apple.Foundation",
+			"com.apple.MobileContainerManager",
 		);
 		Executables = (
 			sharingd,

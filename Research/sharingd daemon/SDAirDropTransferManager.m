@@ -18,7 +18,7 @@
 - (void)askEventForRecordID:(id)recordID withResults:(id)results {
 
 	SFAirDropTransfer *transfer = [SFAirDropTransfer initWithIdentifier:recordID initialInformation:results]
-	[transfer updateWithInformation: results]; //seems odd
+	[transfer updateWithInformation: results]; 
 	NSSet *itemTypes = [self itemTypesForTransfer:transfer];
 	SFAirDropTransferMetaData *metadata = [transfer metaData];
 	[metaData setItems:itemTypes];

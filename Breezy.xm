@@ -454,7 +454,7 @@
 %new - (void)showSystemAlertFromAlert:(id)alert {
     
     %log;
-    BOOL thirteenPlus = FALSE;//(kCFCoreFoundationVersionNumber > 1585.17); //12.4 is 1575.17, not sure what 12.4.1 is but this should be safe enough bump up
+    BOOL thirteenPlus = (kCFCoreFoundationVersionNumber > 1585.17); //12.4 is 1575.17, not sure what 12.4.1 is but this should be safe enough bump up
     __block id dialogManager; //13+ only
     if (thirteenPlus){
         dialogManager = [objc_getClass("PBDialogManager") sharedInstance]; //get this out of the way
@@ -489,7 +489,8 @@
     }];
     
     NSArray  *applications = [ws applicationsAvailableForOpeningDocument:doxy];
-    
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
+    applications = [applications filteredArrayUsingPredicate: pred];
     if (URLS.count > 0){ //we take a different path here entirely
         NSString *firstURL = URLS[0];
         [names appendString:firstURL];
@@ -510,7 +511,7 @@
     NSString *cancelButtonTitle = @"Cancel";
     if (applications.count == 1){ //Theres only one application, just open it automatically
         id launchApp = applications[0];
-        if (!thirteenPlus) {
+        //if (!thirteenPlus) {
             if (URLS.count > 0){
                 //process URLs
                 [self legacyHandleURLs:URLS withApplication:launchApp];
@@ -519,7 +520,7 @@
                 [self ourOpenOperationForItems:localFiles withApplication:launchApp];
             }
             return;
-        }
+        //}
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             
             if (URLS.count > 0){
@@ -688,16 +689,16 @@
     Class FBSOpenApplicationOptions = NSClassFromString(@"FBSOpenApplicationOptions");
     Class FBSystemServiceOpenApplicationRequest = NSClassFromString(@"FBSystemServiceOpenApplicationRequest");
     Class PBProcessManager = NSClassFromString(@"PBProcessManager");
-    id sProcMan = [PBProcessManager sharedInstance];
-    id _fbProcMan = [sProcMan valueForKey:@"_fbProcessManager"];
+    id pbProcMan = [PBProcessManager sharedInstance];
+    id _fbProcMan = [pbProcMan valueForKey:@"_fbProcessManager"];
     id pbProcess = [_fbProcMan processesForBundleIdentifier:@"com.apple.PineBoard"][0];
-    //_fbProcessManager
     [items enumerateObjectsUsingBlock:^(NSString * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
         //LSBlockUntilComplete = 1;
         NSMutableDictionary *_ourDict = [NSMutableDictionary new];
         _ourDict[@"__ActivateSuspended"] = @0;
         _ourDict[@"__DocumentOpen4LS"] = @1;
-        _ourDict[@"__PayloadAnnotation"] = @{@"LSMoveDocumentOnOpen": @0};
+        //_ourDict[@"LSBlockUntilComplete"] = @1; //13.0+ shouldnt hurt anything
+        _ourDict[@"__PayloadAnnotation"] = @{@"LSMoveDocumentOnOpen": @0, @"LSDocumentDropCount": [NSNumber numberWithInteger:items.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]};
         _ourDict[@"__PayloadOptions"] = @{@"UIApplicationLaunchOptionsSourceApplicationKey": @"com.apple.PineBoard"};
         _ourDict[@"__PayloadURL"] = [NSURL fileURLWithPath:item];
         
@@ -706,17 +707,25 @@
         id openAppRequest = [FBSystemServiceOpenApplicationRequest request];
         [openAppRequest setTrusted:TRUE];
         [openAppRequest setBundleIdentifier:[proxy bundleIdentifier]];
+        [openAppRequest setOptions:options];
         [openAppRequest setClientProcess:pbProcess];
-        if ([sProcMan respondsToSelector:@selector(_handleOpenApplicationRequest:bundleID:options:withResult:)]){
-            [sProcMan _handleOpenApplicationRequest:openAppRequest bundleID:[proxy bundleIdentifier] options:_ourDict withResult:^(NSError *error) {
+        if ([pbProcMan respondsToSelector:@selector(_handleOpenApplicationRequest:bundleID:options:withResult:)]){
+            [pbProcMan _handleOpenApplicationRequest:openAppRequest bundleID:[proxy bundleIdentifier] options:_ourDict withResult:^(NSError *error) {
                 
                 HBLogDebug(@"open app finished with error: %@", error);
                 
             }];
             
-        } else {
+        } else if ([pbProcMan respondsToSelector:@selector(_openAppFromRequest:bundleIdentifier:URL:withResult:)]){ //13.0 -> ?
             
-            [sProcMan _openAppFromRequest:openAppRequest bundleIdentifier:[proxy bundleIdentifier] URL:[NSURL fileURLWithPath:item] completion:^(NSError *error) {
+            [pbProcMan _openAppFromRequest:openAppRequest bundleIdentifier:[proxy bundleIdentifier] URL:[NSURL fileURLWithPath:item] withResult:^(NSError *error) {
+                
+                HBLogDebug(@"open app finished with error: %@", error);
+            }];
+            
+        } else {
+                
+            [pbProcMan _openAppFromRequest:openAppRequest bundleIdentifier:[proxy bundleIdentifier] URL:[NSURL fileURLWithPath:item] completion:^(NSError *error) {
                 
                 HBLogDebug(@"open app finished with error: %@", error);
             }];

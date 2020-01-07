@@ -174,7 +174,8 @@
 
 @interface FBProcessManager : NSObject
 - (void)_handleOpenApplicationRequest:(id)arg1 bundleID:(id)arg2 options:(id)arg3 withResult:(void(^)(NSError *error))arg4; //12.4 and lower
-- (void)_openAppFromRequest:(id)arg1 bundleIdentifier:(id)arg2 URL:(id)arg3 completion:(void(^)(NSError *error))arg4; //13+
+- (void)_openAppFromRequest:(id)arg1 bundleIdentifier:(id)arg2 URL:(id)arg3 completion:(void(^)(NSError *error))arg4; //13.2+
+- (void)_openAppFromRequest:(id)arg1 bundleIdentifier:(id)arg2 URL:(id)arg3 withResult:(void(^)(NSError *error))arg4; //13.0 - ?
 - (NSArray *)processesForBundleIdentifier:(NSString *)bundleId;
 @end
 

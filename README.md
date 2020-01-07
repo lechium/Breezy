@@ -226,6 +226,25 @@ Said dictionary looks like this
 
 From there we cycle through the items and convert them to NSString's (URL's can't be sent in a NSDistributedNotification) And then post a notification that is listened for inside of hooks into PineBoard (this is currently necessary to get access to the dialog/windowing classes we need to use to show the user an alert with options to choose from)
 
+## PineBoard 
+
+```- (_Bool)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2 {
+    _Bool orig = %orig;
+    %log;
+    id notificationCenter = [NSDistributedNotificationCenter defaultCenter];
+    [notificationCenter addObserver:self  selector:@selector(showSystemAlertFromAlert:) name:@"com.breezy.kludgeh4x" object:nil]; //still need to get rid of this ugly eyesore
+    return orig;
+    
+}
+```
+
+showSystemAlertFromAlert will show an alert if there is more than one application that is capable of opening the files / urls that were airdropped, otherwise it will automatically open urls (tested 12.4-13.2) as necessary in the targeted application in a new function added
+
+```%new - (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy
+```
+there a combination of FrontBoard(Services) and PineBoard are used to actually open the urls in their target applications. A FBSystemServiceOpenApplicationRequest is created from a special NSDictionary that is crafted into an instance of FBSOpenApplicationOptions. from there PBProcessManager is utlized differently depending on OS version to open the files / URLs in the targeted application.
+
+
 ## Preference loader bundle
 
 Handles whether or not AirDrop sharing is turned on or off, and gives ability to restart sharingd in case injection didn't happen properly during installation. (bundle/BreezySettngs.m)

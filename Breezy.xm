@@ -223,10 +223,8 @@
     
     Class FBSOpenApplicationOptions = NSClassFromString(@"FBSOpenApplicationOptions");
     Class FBSystemServiceOpenApplicationRequest = NSClassFromString(@"FBSystemServiceOpenApplicationRequest");
-    Class PBProcessManager = NSClassFromString(@"PBProcessManager");
-    Class FBProcessManager = NSClassFromString(@"FBProcessManager");
-    id pbProcMan = [PBProcessManager sharedInstance];
-    id _fbProcMan = [FBProcessManager sharedInstance];
+    id pbProcMan = [NSClassFromString(@"PBProcessManager") sharedInstance];
+    id _fbProcMan = [NSClassFromString(@"FBProcessManager") sharedInstance];
     __block id pbProcess = [_fbProcMan systemApplicationProcess];
     [items enumerateObjectsUsingBlock:^(NSString * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
         NSMutableDictionary *_options = [NSMutableDictionary new];

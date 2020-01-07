@@ -12,6 +12,7 @@ Breezy_LIBRARIES = substrate
 Breezy_FRAMEWORKS = Foundation UIKit CoreGraphics MobileCoreServices
 #Breezy_LDFLAGS = -undefined dynamic_lookup
 Breezy_CFLAGS = -fobjc-arc
+Breezy_LDFLAGS = -F. -framework FrontBoardServices
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

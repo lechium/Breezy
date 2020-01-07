@@ -695,12 +695,12 @@
     [items enumerateObjectsUsingBlock:^(NSString * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
         //LSBlockUntilComplete = 1;
         NSMutableDictionary *_ourDict = [NSMutableDictionary new];
-        _ourDict[@"__ActivateSuspended"] = @0;
-        _ourDict[@"__DocumentOpen4LS"] = @1;
+        _ourDict[FBSOpenApplicationOptionKeyActivateSuspended] = @0;
+        _ourDict[FBSOpenApplicationOptionKeyDocumentOpen4LS] = @1;
         //_ourDict[@"LSBlockUntilComplete"] = @1; //13.0+ shouldnt hurt anything
-        _ourDict[@"__PayloadAnnotation"] = @{@"LSMoveDocumentOnOpen": @0, @"LSDocumentDropCount": [NSNumber numberWithInteger:items.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]};
-        _ourDict[@"__PayloadOptions"] = @{@"UIApplicationLaunchOptionsSourceApplicationKey": @"com.apple.PineBoard"};
-        _ourDict[@"__PayloadURL"] = [NSURL fileURLWithPath:item];
+        _ourDict[FBSOpenApplicationOptionKeyPayloadAnnotation] = @{@"LSMoveDocumentOnOpen": @0, @"LSDocumentDropCount": [NSNumber numberWithInteger:items.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]};
+        _ourDict[FBSOpenApplicationOptionKeyPayloadOptions] = @{@"UIApplicationLaunchOptionsSourceApplicationKey": @"com.apple.PineBoard"};
+        _ourDict[FBSOpenApplicationOptionKeyPayloadURL] = [NSURL fileURLWithPath:item];
         
         id options = [FBSOpenApplicationOptions optionsWithDictionary:_ourDict];
         id openAppRequest = [FBSystemServiceOpenApplicationRequest request];

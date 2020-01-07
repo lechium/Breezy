@@ -1,4 +1,12 @@
 
+extern NSString * const FBSOpenApplicationOptionKeyDocumentOpen4LS; //@"__DocumentOpen4LS"
+extern NSString * const FBSOpenApplicationOptionKeyActivateSuspended; //@"__ActivateSuspended"
+extern NSString * const FBSOpenApplicationOptionKeyPayloadAnnotation; //@"__PayloadAnnotation"
+extern NSString * const FBSOpenApplicationOptionKeyPayloadURL; //@"__PayloadURL"
+extern NSString * const FBSOpenApplicationOptionKeyBrowserAppLinkState4LS;
+extern NSString * const FBSOpenApplicationOptionKeyAppLink4LS;
+extern NSString * const FBSOpenApplicationOptionKeyPayloadOptions; //@"__PayloadOptions"
+
 
 @interface _LSLazyPropertyList : NSObject
 

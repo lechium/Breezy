@@ -119,7 +119,6 @@
     __block NSMutableString *names = [NSMutableString new];
     __block id doxy = nil;
     //TODO: this could smarter, its possible the files selected dont all work in one app, need to accomodate that
-
     __block BOOL hasIPA = FALSE; //kinda of a hacky check to make sure IPA's go through ReProvision if its avail.
     [files enumerateObjectsUsingBlock:^(NSDictionary  * adFile, NSUInteger idx, BOOL * _Nonnull stop) {
         NSString *fileName = adFile[@"FileName"];
@@ -154,10 +153,23 @@
     id applicationAlert = [[objc_getClass("PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", appList]];
     NSLog(@"[Breezy] available applications: %@", applications);
     NSString *cancelButtonTitle = @"Cancel";
+    //VLC h4x
+    NSPredicate *hasEthPred = [NSPredicate predicateWithFormat:@"bundleIdentifier == 'com.nito.Ethereal'"];
+    if ([applications filteredArrayUsingPredicate: hasEthPred].count > 0){
+        NSLog(@"[Breezy] yo we got Eth breh");
+        id vlcCheck = [LSApplicationProxy applicationProxyForIdentifier:@"org.videolan.vlc-ios"];
+        if (vlcCheck != nil){
+            NSLog(@"[Breezy] yo we got vlc breh");
+            NSMutableArray *_tempApps = [applications mutableCopy];
+            [_tempApps addObject:vlcCheck];
+            applications = _tempApps;
+            NSLog(@"[Breezy] updated apps yo: %@", applications);
+        }
+    }
     if (applications.count == 0){
         if (hasIPA){
             NSLog(@"[Breezy] no applications and its an IPA file, check for ReProvision!");
-            id reproCheck = [NSClassFromString(@"LSApplicationProxy") applicationProxyForIdentifier:@"com.matchstic.reprovision.tvos"];
+            id reproCheck = [LSApplicationProxy applicationProxyForIdentifier:@"com.matchstic.reprovision.tvos"];
             if (reproCheck){
                 NSLog(@"[Breezy] got found him: %@", reproCheck );
                 applications = @[reproCheck];

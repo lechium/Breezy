@@ -42,7 +42,7 @@ This [Info.plist](https://github.com/lechium/RetroArch/blob/master/pkg/apple/tvO
 
 You can also reference the file in this repo: [VLC-tvOS-Info.plist](../master/VLC-tvOS-Info.plist) to see how I took the Info.plist from VLC for iOS and grabbed the necessary keys and added them to the tvOS version. Just replaced the old Info.plist inside the original with this one, ran uicache and was good to go!
 
-In the future I would like to make it possible to add support without manually modifying these files, haven't gotten that far yet!
+Currently there is a stop gap implementation to get VLC to support AirDropped files through code injection & piggybacking off the files that Ethereal supports. This is thoroughly documented inside [Breezy.xm](../master/Breezy.xm#L128)
 
 ## Exporting files using AirDrop
 

@@ -89,7 +89,7 @@ Thats it!
 
 As long as you add 
 ```
-com.nito.breezy (>=2.1)
+com.nito.breezy (>=2.5-1)
 ``` 
 to your dependencies, this will open an AirDrop sharing dialog with whatever file you feed it with the call to 
 
@@ -228,7 +228,8 @@ From there we cycle through the items and convert them to NSString's (URL's can'
 
 ## PineBoard 
 
-```- (_Bool)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2 {
+```Objective-C 
+- (_Bool)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2 {
     _Bool orig = %orig;
     %log;
     id notificationCenter = [NSDistributedNotificationCenter defaultCenter];
@@ -238,11 +239,12 @@ From there we cycle through the items and convert them to NSString's (URL's can'
 }
 ```
 
-showSystemAlertFromAlert will show an alert if there is more than one application that is capable of opening the files / urls that were airdropped, otherwise it will automatically open urls (tested 12.4-13.2) as necessary in the targeted application in a new function added
+***showSystemAlertFromAlert*** will show an alert if there is more than one application that is capable of opening the files / urls that were airdropped, otherwise it will automatically open URL's (tested 12.4-13.2) as necessary in the targeted application in a new function added
 
-```%new - (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy
+```Objective-C 
+%new - (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy
 ```
-there a combination of FrontBoard(Services) and PineBoard are used to actually open the urls in their target applications. A FBSystemServiceOpenApplicationRequest is created from a special NSDictionary that is crafted into an instance of FBSOpenApplicationOptions. from there PBProcessManager is utlized differently depending on OS version to open the files / URLs in the targeted application.
+there a combination of **FrontBoard(Services)** and **PineBoard** are used to actually open the urls in their target applications. A ***FBSystemServiceOpenApplicationRequest*** is created from a special ***NSDictionary*** that is crafted into an instance of ***FBSOpenApplicationOptions***. from there ***PBProcessManager*** is utlized in different ways depending on OS version to open the files / URLs in the targeted application.
 
 
 ## Preference loader bundle

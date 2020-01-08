@@ -119,18 +119,23 @@
     __block NSMutableString *names = [NSMutableString new];
     __block id doxy = nil;
     //TODO: this could smarter, its possible the files selected dont all work in one app, need to accomodate that
-    //TODO: also, the file name list should have a limit so it gets truncated at a certain point, the wall of text can get MASSIVE.
-    
+
+    __block BOOL hasIPA = FALSE; //kinda of a hacky check to make sure IPA's go through ReProvision if its avail.
     [files enumerateObjectsUsingBlock:^(NSDictionary  * adFile, NSUInteger idx, BOOL * _Nonnull stop) {
         NSString *fileName = adFile[@"FileName"];
         NSString *fileType = adFile[@"FileType"];
+        if ([[[fileType pathExtension] lowercaseString] isEqualToString:@"ipa"] || [[[fileName pathExtension] lowercaseString] isEqualToString:@"ipa"]){
+            hasIPA = TRUE;
+        }
         if (!doxy) {
             doxy = [LSDocumentProxy documentProxyForName:fileName type:fileType MIMEType:nil];
         }
         [names appendFormat:@"%@, ", fileName];
     }];
+   
+    NSString *appList = names;
     if (names.length > 400){
-        names = [NSString stringWithFormat:@"%@...", [names substringToIndex:400]];
+        appList = [NSString stringWithFormat:@"%@...", [names substringToIndex:400]];
     }
     NSArray  *applications = [ws applicationsAvailableForOpeningDocument:doxy];
     //NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
@@ -145,10 +150,20 @@
         NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.apple.PBLinkHandler'"];
         applications = [applications filteredArrayUsingPredicate: pred];
     }
-    NSLog(@"[Breezy] names length: %lu", names.length);
-    id applicationAlert = [[objc_getClass("PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", names]];
-    NSLog(@"available applications: %@", applications);
+    //NSLog(@"[Breezy] names length: %lu", names.length);
+    id applicationAlert = [[objc_getClass("PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", appList]];
+    NSLog(@"[Breezy] available applications: %@", applications);
     NSString *cancelButtonTitle = @"Cancel";
+    if (applications.count == 0){
+        if (hasIPA){
+            NSLog(@"[Breezy] no applications and its an IPA file, check for ReProvision!");
+            id reproCheck = [NSClassFromString(@"LSApplicationProxy") applicationProxyForIdentifier:@"com.matchstic.reprovision.tvos"];
+            if (reproCheck){
+                NSLog(@"[Breezy] got found him: %@", reproCheck );
+                applications = @[reproCheck];
+            }
+        }
+    }
     if (applications.count == 1){ //Theres only one application, just open it automatically
         id launchApp = applications[0];
             if (URLS.count > 0){
@@ -237,31 +252,41 @@
         } else {
             _options[FBSOpenApplicationOptionKeyPayloadURL] = [NSURL fileURLWithPath:item];
         }
+        NSString *bundleID = [proxy bundleIdentifier];
         id options = [FBSOpenApplicationOptions optionsWithDictionary:_options];
         id openAppRequest = [FBSystemServiceOpenApplicationRequest request];
         [openAppRequest setTrusted:TRUE];
-        [openAppRequest setBundleIdentifier:[proxy bundleIdentifier]];
+        [openAppRequest setBundleIdentifier:bundleID];
         [openAppRequest setOptions:options];
         [openAppRequest setClientProcess:pbProcess];
-        if ([pbProcMan respondsToSelector:@selector(_handleOpenApplicationRequest:bundleID:options:withResult:)]){ //12.x or less
-     //on 12.x and lower you cant open documents too closely together or it will throw a fit about being in the middle of a transition, this staggers each open by 1 second.
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, idx * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                [pbProcMan _handleOpenApplicationRequest:openAppRequest bundleID:[proxy bundleIdentifier] options:_options withResult:^(NSError *error) {
+        CGFloat multiplier = 0.5;
+        if ([_fbProcMan processesForBundleIdentifier:bundleID].count == 0){
+            multiplier = 1;
+            HBLogDebug(@"App isnt running yet, bumping up the multiplier so stuff gets processed successfully");
+        }
+        CGFloat offset = idx*multiplier;
+        
+        // staggers each open by 'offset' seconds
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, offset * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            
+            if ([pbProcMan respondsToSelector:@selector(_handleOpenApplicationRequest:bundleID:options:withResult:)]){
+                [pbProcMan _handleOpenApplicationRequest:openAppRequest bundleID:bundleID options:_options withResult:^(NSError *error) {
                     HBLogDebug(@"open app finished with error: %@", error);
                     if (error != nil){
-                        [pbProcMan activateApplication:[proxy bundleIdentifier] openURL:_options[FBSOpenApplicationOptionKeyPayloadURL] options:_options suspended:FALSE completion:nil];
+                        [pbProcMan activateApplication:bundleID openURL:_options[FBSOpenApplicationOptionKeyPayloadURL] options:_options suspended:FALSE completion:nil];
                     }
                 }];
-            });
-        } else if ([pbProcMan respondsToSelector:@selector(_openAppFromRequest:bundleIdentifier:URL:withResult:)]){ //13.0 -> ?
-            [pbProcMan _openAppFromRequest:openAppRequest bundleIdentifier:[proxy bundleIdentifier] URL:[NSURL fileURLWithPath:item] withResult:^(NSError *error) {
-                HBLogDebug(@"open app finished with error: %@", error);
-            }];
-        } else {
-            [pbProcMan _openAppFromRequest:openAppRequest bundleIdentifier:[proxy bundleIdentifier] URL:[NSURL fileURLWithPath:item] completion:^(NSError *error) {
-                HBLogDebug(@"open app finished with error: %@", error);
-            }];
-        }
+                
+            } else if ([pbProcMan respondsToSelector:@selector(_openAppFromRequest:bundleIdentifier:URL:withResult:)]){ //13.0 -> ?
+                [pbProcMan _openAppFromRequest:openAppRequest bundleIdentifier:bundleID URL:[NSURL fileURLWithPath:item] withResult:^(NSError *error) {
+                    HBLogDebug(@"open app finished with error: %@", error);
+                }];
+            } else {
+                [pbProcMan _openAppFromRequest:openAppRequest bundleIdentifier:bundleID URL:[NSURL fileURLWithPath:item] completion:^(NSError *error) {
+                    HBLogDebug(@"open app finished with error: %@", error);
+                }];
+            }
+        });
     }];
 }
 

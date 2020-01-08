@@ -68,8 +68,8 @@
 -(id)previewForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     TSKPreviewViewController *item = [super previewForItemAtIndexPath:indexPath];
-    TSKSettingGroup *currentGroup = self.settingGroups[indexPath.section];
-    TSKSettingItem *currentItem = currentGroup.settingItems[indexPath.row];
+    //TSKSettingGroup *currentGroup = self.settingGroups[indexPath.section];
+    //TSKSettingItem *currentItem = currentGroup.settingItems[indexPath.row];
     NSString *imagePath = [[NSBundle bundleForClass:self.class] pathForResource:@"icon" ofType:@"png"];
     UIImage *icon = [UIImage imageWithContentsOfFile:imagePath];
     if (icon != nil) {

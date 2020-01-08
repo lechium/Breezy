@@ -27,6 +27,7 @@ typedef enum : NSUInteger {
 
 @interface SFAirDropDiscoveryController: UIViewController
 - (void)setDiscoverableMode:(NSInteger)mode;
+- (SDAirDropDiscoverableMode)discoverableMode;
 @end;
 
 #define DLog(format, ...) CFShow((__bridge CFStringRef)[NSString stringWithFormat:format, ## __VA_ARGS__]);

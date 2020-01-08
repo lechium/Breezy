@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		326E1C8623C53FD10007D826 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 326E1C8523C53FD10007D826 /* README.md */; };
 		32F79BC0235F818100489C53 /* FindProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F79BB8235F818100489C53 /* FindProcess.m */; };
 		32F79BC1235F818100489C53 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 32F79BBA235F818100489C53 /* Makefile */; };
 		32F79BC2235F818100489C53 /* make.sh in Resources */ = {isa = PBXBuildFile; fileRef = 32F79BBB235F818100489C53 /* make.sh */; };
@@ -19,17 +20,170 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		327393DE2366BF0D00435ED7 /* breezy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = breezy.h; sourceTree = SOURCE_ROOT; };
+		323DEA6923C4038C0074A8AE /* PBContentPresentingContainmentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBContentPresentingContainmentViewController.h; sourceTree = "<group>"; };
+		323DEA6A23C4038C0074A8AE /* PBSystemOverlayContentDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBSystemOverlayContentDelegate.h; sourceTree = "<group>"; };
+		323DEA6C23C4038C0074A8AE /* LSApplicationProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSApplicationProxy.h; sourceTree = "<group>"; };
+		323DEA6D23C4038C0074A8AE /* LSApplicationRestrictionsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSApplicationRestrictionsManager.h; sourceTree = "<group>"; };
+		323DEA6E23C4038C0074A8AE /* LSApplicationWorkspace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSApplicationWorkspace.h; sourceTree = "<group>"; };
+		323DEA6F23C4038C0074A8AE /* LSApplicationWorkspaceObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSApplicationWorkspaceObserver.h; sourceTree = "<group>"; };
+		323DEA7023C4038C0074A8AE /* LSApplicationWorkspaceObserverProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSApplicationWorkspaceObserverProtocol.h; sourceTree = "<group>"; };
+		323DEA7123C4038C0074A8AE /* LSApplicationWorkspaceRemoteObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSApplicationWorkspaceRemoteObserver.h; sourceTree = "<group>"; };
+		323DEA7223C4038C0074A8AE /* LSAppLink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSAppLink.h; sourceTree = "<group>"; };
+		323DEA7323C4038C0074A8AE /* LSBundleInfoCachedValues.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSBundleInfoCachedValues.h; sourceTree = "<group>"; };
+		323DEA7423C4038C0074A8AE /* LSBundleProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSBundleProxy.h; sourceTree = "<group>"; };
+		323DEA7523C4038C0074A8AE /* LSBundleRecordBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSBundleRecordBuilder.h; sourceTree = "<group>"; };
+		323DEA7623C4038C0074A8AE /* LSBundleRecordUpdater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSBundleRecordUpdater.h; sourceTree = "<group>"; };
+		323DEA7723C4038C0074A8AE /* LSDatabaseBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSDatabaseBuilder.h; sourceTree = "<group>"; };
+		323DEA7923C4038C0074A8AE /* MCMAppContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppContainer.h; sourceTree = "<group>"; };
+		323DEA7A23C4038C0074A8AE /* MCMAppDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppDataContainer.h; sourceTree = "<group>"; };
+		323DEA7B23C4038C0074A8AE /* MCMContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMContainer.h; sourceTree = "<group>"; };
+		323DEA7C23C4038C0074A8AE /* MCMContainerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMContainerManager.h; sourceTree = "<group>"; };
+		323DEA7D23C4038C0074A8AE /* MCMDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMDataContainer.h; sourceTree = "<group>"; };
+		323DEA7E23C4038C0074A8AE /* MCMFrameworkContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMFrameworkContainer.h; sourceTree = "<group>"; };
+		323DEA7F23C4038C0074A8AE /* MCMInternalDaemonDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMInternalDaemonDataContainer.h; sourceTree = "<group>"; };
+		323DEA8023C4038C0074A8AE /* MCMPluginKitPluginContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMPluginKitPluginContainer.h; sourceTree = "<group>"; };
+		323DEA8123C4038C0074A8AE /* MCMPluginKitPluginDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMPluginKitPluginDataContainer.h; sourceTree = "<group>"; };
+		323DEA8223C4038C0074A8AE /* MCMSharedDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMSharedDataContainer.h; sourceTree = "<group>"; };
+		323DEA8323C4038C0074A8AE /* MCMSharedSystemDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMSharedSystemDataContainer.h; sourceTree = "<group>"; };
+		323DEA8423C4038C0074A8AE /* MCMSystemDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMSystemDataContainer.h; sourceTree = "<group>"; };
+		323DEA8523C4038C0074A8AE /* MCMTempDirDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMTempDirDataContainer.h; sourceTree = "<group>"; };
+		323DEA8623C4038C0074A8AE /* MCMVPNPluginContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMVPNPluginContainer.h; sourceTree = "<group>"; };
+		323DEA8723C4038C0074A8AE /* MCMVPNPluginDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMVPNPluginDataContainer.h; sourceTree = "<group>"; };
+		323DEA8823C4038C0074A8AE /* MCMXPCServiceDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMXPCServiceDataContainer.h; sourceTree = "<group>"; };
+		323DEA8923C4038C0074A8AE /* MobileContainerManager-Structs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MobileContainerManager-Structs.h"; sourceTree = "<group>"; };
+		323DEA8A23C4038C0074A8AE /* MobileContainerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MobileContainerManager.h; sourceTree = "<group>"; };
+		323DEA8C23C4038C0074A8AE /* NSXPCConnectionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSXPCConnectionDelegate.h; sourceTree = "<group>"; };
+		323DEA8D23C4038C0074A8AE /* SFAirDropAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropAction.h; sourceTree = "<group>"; };
+		323DEA8E23C4038C0074A8AE /* SFAirDropActiveIconView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropActiveIconView.h; sourceTree = "<group>"; };
+		323DEA8F23C4038C0074A8AE /* SFAirDropActivityViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropActivityViewController.h; sourceTree = "<group>"; };
+		323DEA9023C4038C0074A8AE /* SFAirDropActivityViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropActivityViewControllerDelegate.h; sourceTree = "<group>"; };
+		323DEA9123C4038C0074A8AE /* SFAirDropBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropBrowser.h; sourceTree = "<group>"; };
+		323DEA9223C4038C0074A8AE /* SFAirDropBrowserBatchDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropBrowserBatchDelegate.h; sourceTree = "<group>"; };
+		323DEA9323C4038C0074A8AE /* SFAirDropClassroomTransferManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropClassroomTransferManager.h; sourceTree = "<group>"; };
+		323DEA9423C4038C0074A8AE /* SFAirDropClassroomTransferManagerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropClassroomTransferManagerProtocol.h; sourceTree = "<group>"; };
+		323DEA9523C4038C0074A8AE /* SFAirDropDiscoveryController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropDiscoveryController.h; sourceTree = "<group>"; };
+		323DEA9623C4038C0074A8AE /* SFAirDropIconView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropIconView.h; sourceTree = "<group>"; };
+		323DEA9723C4038C0074A8AE /* SFAirDropNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropNode.h; sourceTree = "<group>"; };
+		323DEA9823C4038C0074A8AE /* SFAirDropPayload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropPayload.h; sourceTree = "<group>"; };
+		323DEA9923C4038C0074A8AE /* SFAirDropReceiverViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropReceiverViewController.h; sourceTree = "<group>"; };
+		323DEA9A23C4038C0074A8AE /* SFAirDropSharingViewControllerTV.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropSharingViewControllerTV.h; sourceTree = "<group>"; };
+		323DEA9B23C4038C0074A8AE /* SFAirDropTransfer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropTransfer.h; sourceTree = "<group>"; };
+		323DEA9C23C4038C0074A8AE /* SFAirDropTransferItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropTransferItem.h; sourceTree = "<group>"; };
+		323DEA9D23C4038C0074A8AE /* SFAirDropTransferMetaData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropTransferMetaData.h; sourceTree = "<group>"; };
+		323DEA9E23C4038C0074A8AE /* SFAirDropTransferObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropTransferObserver.h; sourceTree = "<group>"; };
+		323DEA9F23C4038C0074A8AE /* SFAirDropTransferObserverProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropTransferObserverProtocol.h; sourceTree = "<group>"; };
+		323DEAA023C4038C0074A8AE /* SFAirDropViewServiceHostProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAirDropViewServiceHostProtocol.h; sourceTree = "<group>"; };
+		323DEAA123C4038C0074A8AE /* SFCompanionXPCManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFCompanionXPCManager.h; sourceTree = "<group>"; };
+		323DEAA223C4038C0074A8AE /* SFCompanionXPCManagerObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFCompanionXPCManagerObserver.h; sourceTree = "<group>"; };
+		323DEAA323C4038C0074A8AE /* SFXPCClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFXPCClient.h; sourceTree = "<group>"; };
+		323DEAA423C4038C0074A8AE /* SFXPCInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFXPCInterface.h; sourceTree = "<group>"; };
+		323DEAA623C4038C0074A8AE /* SDAirDropHandlerGenericFiles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerGenericFiles.h; sourceTree = "<group>"; };
+		323DEAA723C4038C0074A8AE /* SDAirDropTransferManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropTransferManager.h; sourceTree = "<group>"; };
+		323DEAA823C4038C0074A8AE /* SDAirDropTransferManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDAirDropTransferManager.m; sourceTree = "<group>"; };
+		323DEAAA23C4038C0074A8AE /* _TtC8sharingd15SDAirDropLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TtC8sharingd15SDAirDropLogger.h; sourceTree = "<group>"; };
+		323DEAAB23C4038C0074A8AE /* _TtC8sharingd15SDAirDropStatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TtC8sharingd15SDAirDropStatus.h; sourceTree = "<group>"; };
+		323DEAAC23C4038C0074A8AE /* _TtC8sharingd17SDAirDropListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TtC8sharingd17SDAirDropListener.h; sourceTree = "<group>"; };
+		323DEAAD23C4038C0074A8AE /* _TtC8sharingd19SDAirDropHandlerIPA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TtC8sharingd19SDAirDropHandlerIPA.h; sourceTree = "<group>"; };
+		323DEAAE23C4038C0074A8AE /* _TtC8sharingd21SDAirDropHashStoreCDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TtC8sharingd21SDAirDropHashStoreCDB.h; sourceTree = "<group>"; };
+		323DEAAF23C4038C0074A8AE /* _TtC8sharingd26SDAirDropHashStoreInMemory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TtC8sharingd26SDAirDropHashStoreInMemory.h; sourceTree = "<group>"; };
+		323DEAB023C4038C0074A8AE /* _TtC8sharingd27SDAirDropContactHashManager-sharingd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "_TtC8sharingd27SDAirDropContactHashManager-sharingd.h"; sourceTree = "<group>"; };
+		323DEAB123C4038C0074A8AE /* _TtC8sharingd27SDAirDropContactHashManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TtC8sharingd27SDAirDropContactHashManager.h; sourceTree = "<group>"; };
+		323DEAB223C4038C0074A8AE /* _TtP8sharingd23SDAirDropStatusDelegate_-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "_TtP8sharingd23SDAirDropStatusDelegate_-Protocol.h"; sourceTree = "<group>"; };
+		323DEAB323C4038C0074A8AE /* _TtP8sharingd25SDAirDropListenerDelegate_-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "_TtP8sharingd25SDAirDropListenerDelegate_-Protocol.h"; sourceTree = "<group>"; };
+		323DEAB423C4038C0074A8AE /* AWDSharingAirDropPeerDiscoveredInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AWDSharingAirDropPeerDiscoveredInfo.h; sourceTree = "<group>"; };
+		323DEAB523C4038C0074A8AE /* AWDSharingAirDropSessionInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AWDSharingAirDropSessionInfo.h; sourceTree = "<group>"; };
+		323DEAB623C4038C0074A8AE /* AWDSharingAirDropTransferResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AWDSharingAirDropTransferResult.h; sourceTree = "<group>"; };
+		323DEAB723C4038C0074A8AE /* SDAirDropAlertManager-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropAlertManager-Protocol.h"; sourceTree = "<group>"; };
+		323DEAB823C4038C0074A8AE /* SDAirDropAlertManagerDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropAlertManagerDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEAB923C4038C0074A8AE /* SDAirDropClassroomTransferManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropClassroomTransferManager.h; sourceTree = "<group>"; };
+		323DEABA23C4038C0074A8AE /* SDAirDropClassroomTransferManagerProtocol-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropClassroomTransferManagerProtocol-Protocol.h"; sourceTree = "<group>"; };
+		323DEABB23C4038C0074A8AE /* SDAirDropClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropClient.h; sourceTree = "<group>"; };
+		323DEABC23C4038C0074A8AE /* SDAirDropClientDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropClientDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEABD23C4038C0074A8AE /* SDAirDropCompressor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropCompressor.h; sourceTree = "<group>"; };
+		323DEABE23C4038C0074A8AE /* SDAirDropConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropConnection.h; sourceTree = "<group>"; };
+		323DEABF23C4038C0074A8AE /* SDAirDropConnectionDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropConnectionDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEAC023C4038C0074A8AE /* SDAirDropController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropController.h; sourceTree = "<group>"; };
+		323DEAC123C4038C0074A8AE /* SDAirDropControllerDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropControllerDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEAC223C4038C0074A8AE /* SDAirDropFakeTransfer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropFakeTransfer.h; sourceTree = "<group>"; };
+		323DEAC323C4038C0074A8AE /* SDAirDropFileZipper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropFileZipper.h; sourceTree = "<group>"; };
+		323DEAC423C4038C0074A8AE /* SDAirDropFileZipperDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropFileZipperDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEAC523C4038C0074A8AE /* SDAirDropHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandler.h; sourceTree = "<group>"; };
+		323DEAC623C4038C0074A8AE /* SDAirDropHandlerAppStoreLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerAppStoreLinks.h; sourceTree = "<group>"; };
+		323DEAC723C4038C0074A8AE /* SDAirDropHandlerCalendarEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerCalendarEvents.h; sourceTree = "<group>"; };
+		323DEAC823C4038C0074A8AE /* SDAirDropHandlerContacts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerContacts.h; sourceTree = "<group>"; };
+		323DEAC923C4038C0074A8AE /* SDAirDropHandlerCredentialLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerCredentialLinks.h; sourceTree = "<group>"; };
+		323DEACA23C4038C0074A8AE /* SDAirDropHandlerFailed.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerFailed.h; sourceTree = "<group>"; };
+		323DEACB23C4038C0074A8AE /* SDAirDropHandlerFailedMixedTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerFailedMixedTypes.h; sourceTree = "<group>"; };
+		323DEACC23C4038C0074A8AE /* SDAirDropHandlerFindMyFriendsLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerFindMyFriendsLinks.h; sourceTree = "<group>"; };
+		323DEACD23C4038C0074A8AE /* SDAirDropHandlerGenericLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerGenericLinks.h; sourceTree = "<group>"; };
+		323DEACE23C4038C0074A8AE /* SDAirDropHandleriBooksItems.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandleriBooksItems.h; sourceTree = "<group>"; };
+		323DEACF23C4038C0074A8AE /* SDAirDropHandleriBooksLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandleriBooksLinks.h; sourceTree = "<group>"; };
+		323DEAD023C4038C0074A8AE /* SDAirDropHandleriCloudDrive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandleriCloudDrive.h; sourceTree = "<group>"; };
+		323DEAD123C4038C0074A8AE /* SDAirDropHandleriLifeLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandleriLifeLinks.h; sourceTree = "<group>"; };
+		323DEAD223C4038C0074A8AE /* SDAirDropHandleriTunesStoreLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandleriTunesStoreLinks.h; sourceTree = "<group>"; };
+		323DEAD323C4038C0074A8AE /* SDAirDropHandleriTunesULinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandleriTunesULinks.h; sourceTree = "<group>"; };
+		323DEAD423C4038C0074A8AE /* SDAirDropHandleriWorkLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandleriWorkLinks.h; sourceTree = "<group>"; };
+		323DEAD523C4038C0074A8AE /* SDAirDropHandlerKeynoteLiveLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerKeynoteLiveLinks.h; sourceTree = "<group>"; };
+		323DEAD623C4038C0074A8AE /* SDAirDropHandlerMapsLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerMapsLinks.h; sourceTree = "<group>"; };
+		323DEAD723C4038C0074A8AE /* SDAirDropHandlerMixedTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerMixedTypes.h; sourceTree = "<group>"; };
+		323DEAD823C4038C0074A8AE /* SDAirDropHandlerNewsLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerNewsLinks.h; sourceTree = "<group>"; };
+		323DEAD923C4038C0074A8AE /* SDAirDropHandlerNotes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerNotes.h; sourceTree = "<group>"; };
+		323DEADA23C4038C0074A8AE /* SDAirDropHandlerPDFs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerPDFs.h; sourceTree = "<group>"; };
+		323DEADB23C4038C0074A8AE /* SDAirDropHandlerPhoneLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerPhoneLinks.h; sourceTree = "<group>"; };
+		323DEADC23C4038C0074A8AE /* SDAirDropHandlerPhotos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerPhotos.h; sourceTree = "<group>"; };
+		323DEADD23C4038C0074A8AE /* SDAirDropHandlerPlaygroundItems.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerPlaygroundItems.h; sourceTree = "<group>"; };
+		323DEADE23C4038C0074A8AE /* SDAirDropHandlerPodcastsLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerPodcastsLinks.h; sourceTree = "<group>"; };
+		323DEADF23C4038C0074A8AE /* SDAirDropHandlerProfiles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerProfiles.h; sourceTree = "<group>"; };
+		323DEAE023C4038C0074A8AE /* SDAirDropHandlerSharediCloudDocumentsLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerSharediCloudDocumentsLinks.h; sourceTree = "<group>"; };
+		323DEAE123C4038C0074A8AE /* SDAirDropHandlerUnsupportedType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerUnsupportedType.h; sourceTree = "<group>"; };
+		323DEAE223C4038C0074A8AE /* SDAirDropHandlerVoiceMails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerVoiceMails.h; sourceTree = "<group>"; };
+		323DEAE323C4038C0074A8AE /* SDAirDropHandlerVoiceMemos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerVoiceMemos.h; sourceTree = "<group>"; };
+		323DEAE423C4038C0074A8AE /* SDAirDropHandlerWalletItems.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerWalletItems.h; sourceTree = "<group>"; };
+		323DEAE523C4038C0074A8AE /* SDAirDropHandlerWebLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropHandlerWebLinks.h; sourceTree = "<group>"; };
+		323DEAE623C4038C0074A8AE /* SDAirDropIconCacher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropIconCacher.h; sourceTree = "<group>"; };
+		323DEAE723C4038C0074A8AE /* SDAirDropIconCacherDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropIconCacherDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEAE823C4038C0074A8AE /* SDAirDropInformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropInformation.h; sourceTree = "<group>"; };
+		323DEAE923C4038C0074A8AE /* SDAirDropInformationDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropInformationDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEAEA23C4038C0074A8AE /* SDAirDropPeerMetric.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropPeerMetric.h; sourceTree = "<group>"; };
+		323DEAEB23C4038C0074A8AE /* SDAirDropPublisher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropPublisher.h; sourceTree = "<group>"; };
+		323DEAEC23C4038C0074A8AE /* SDAirDropPublisherDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropPublisherDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEAED23C4038C0074A8AE /* SDAirDropReceiveManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropReceiveManager.h; sourceTree = "<group>"; };
+		323DEAEE23C4038C0074A8AE /* SDAirDropServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropServer.h; sourceTree = "<group>"; };
+		323DEAEF23C4038C0074A8AE /* SDAirDropServerDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropServerDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEAF023C4038C0074A8AE /* SDAirDropSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAirDropSession.h; sourceTree = "<group>"; };
+		323DEAF123C4038C0074A8AE /* SDAirDropSessionDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropSessionDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEAF223C4038C0074A8AE /* SDAirDropTransferManagerProtocol-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDAirDropTransferManagerProtocol-Protocol.h"; sourceTree = "<group>"; };
+		323DEAF323C4038C0074A8AE /* SFAirDropClassroomTransferDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SFAirDropClassroomTransferDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEAF423C4038C0074A8AE /* SFAirDropClassroomTransferManagerProtocol-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SFAirDropClassroomTransferManagerProtocol-Protocol.h"; sourceTree = "<group>"; };
+		323DEAF523C4038C0074A8AE /* SFAirDropTransferObserverDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SFAirDropTransferObserverDelegate-Protocol.h"; sourceTree = "<group>"; };
+		323DEAF623C4038C0074A8AE /* SFAirDropTransferObserverProtocol-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SFAirDropTransferObserverProtocol-Protocol.h"; sourceTree = "<group>"; };
+		326E1C8523C53FD10007D826 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		328495F523BE7438009DDE26 /* MCMAppContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppContainer.h; sourceTree = "<group>"; };
+		328495F623BE7438009DDE26 /* MCMAppDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppDataContainer.h; sourceTree = "<group>"; };
+		328495F723BE7438009DDE26 /* MCMContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMContainer.h; sourceTree = "<group>"; };
+		328495F823BE7438009DDE26 /* MCMContainerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMContainerManager.h; sourceTree = "<group>"; };
+		328495F923BE7438009DDE26 /* MCMDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMDataContainer.h; sourceTree = "<group>"; };
+		328495FA23BE7438009DDE26 /* MCMFrameworkContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMFrameworkContainer.h; sourceTree = "<group>"; };
+		328495FB23BE7438009DDE26 /* MCMInternalDaemonDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMInternalDaemonDataContainer.h; sourceTree = "<group>"; };
+		328495FC23BE7438009DDE26 /* MCMPluginKitPluginContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMPluginKitPluginContainer.h; sourceTree = "<group>"; };
+		328495FD23BE7438009DDE26 /* MCMPluginKitPluginDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMPluginKitPluginDataContainer.h; sourceTree = "<group>"; };
+		328495FE23BE7438009DDE26 /* MCMSharedDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMSharedDataContainer.h; sourceTree = "<group>"; };
+		328495FF23BE7438009DDE26 /* MCMSharedSystemDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMSharedSystemDataContainer.h; sourceTree = "<group>"; };
+		3284960023BE7438009DDE26 /* MCMSystemDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMSystemDataContainer.h; sourceTree = "<group>"; };
+		3284960123BE7438009DDE26 /* MCMTempDirDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMTempDirDataContainer.h; sourceTree = "<group>"; };
+		3284960223BE7438009DDE26 /* MCMVPNPluginContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMVPNPluginContainer.h; sourceTree = "<group>"; };
+		3284960323BE7438009DDE26 /* MCMVPNPluginDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMVPNPluginDataContainer.h; sourceTree = "<group>"; };
+		3284960423BE7438009DDE26 /* MCMXPCServiceDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMXPCServiceDataContainer.h; sourceTree = "<group>"; };
+		3284960523BE7438009DDE26 /* MobileContainerManager-Structs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MobileContainerManager-Structs.h"; sourceTree = "<group>"; };
+		3284960623BE7438009DDE26 /* MobileContainerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MobileContainerManager.h; sourceTree = "<group>"; };
 		32F5C2852398A2C100FB7839 /* BreezySettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BreezySettings.h; sourceTree = "<group>"; };
 		32F5C2862398A2C100FB7839 /* BreezySettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BreezySettings.m; sourceTree = "<group>"; };
 		32F5C2872398A2C100FB7839 /* ent.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ent.plist; sourceTree = "<group>"; };
 		32F5C2882398A2C100FB7839 /* entry.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = entry.plist; sourceTree = "<group>"; };
 		32F5C28B2398A2C100FB7839 /* control */ = {isa = PBXFileReference; lastKnownFileType = text; path = control; sourceTree = "<group>"; };
-		32F5C28F2398A2C100FB7839 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		32F5C2902398A2C100FB7839 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		32F5C2912398A2C100FB7839 /* NSTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSTask.h; sourceTree = "<group>"; };
 		32F5C2922398A2C100FB7839 /* prefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = prefs.h; sourceTree = "<group>"; };
-		32F5C2932398A2C100FB7839 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		32F5C2952398A2C100FB7839 /* icon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = icon.jpg; sourceTree = "<group>"; };
 		32F5C2962398A2C100FB7839 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		32F5C2972398A2C100FB7839 /* Sharing.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = Sharing.tbd; sourceTree = "<group>"; };
@@ -98,7 +252,7 @@
 		32F79BBA235F818100489C53 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		32F79BBB235F818100489C53 /* make.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = make.sh; sourceTree = "<group>"; };
 		32F79BBC235F818100489C53 /* NSObject+CD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+CD.m"; sourceTree = "<group>"; };
-		32F79BBD235F818100489C53 /* Breezy.xm */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = Breezy.xm; sourceTree = "<group>"; };
+		32F79BBD235F818100489C53 /* Breezy.xm */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc.preprocessed; fileEncoding = 4; path = Breezy.xm; sourceTree = "<group>"; };
 		32F79BBE235F818100489C53 /* FindProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindProcess.h; sourceTree = "<group>"; };
 		32F79BBF235F818100489C53 /* Breezy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Breezy.plist; sourceTree = "<group>"; };
 		32F79BDA235F819300489C53 /* provscience.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = provscience.dylib; sourceTree = "<group>"; };
@@ -114,7 +268,7 @@
 		32F79BE8235F819300489C53 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		32F79BE9235F819300489C53 /* provscience.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = provscience.plist; sourceTree = "<group>"; };
 		32F79BEA235F819300489C53 /* provscience.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = provscience.xcodeproj; sourceTree = "<group>"; };
-		32F79BED235F819300489C53 /* Tweak.x */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tweak.x; sourceTree = "<group>"; };
+		32F79BED235F819300489C53 /* Tweak.x */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc.preprocessed; path = Tweak.x; sourceTree = "<group>"; };
 		32F79BFC235F81A000489C53 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		32F79BFD235F81A000489C53 /* VLC.x */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; path = VLC.x; sourceTree = "<group>"; };
 		32F79BFE235F81A000489C53 /* vlcscience.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = vlcscience.plist; sourceTree = "<group>"; };
@@ -139,6 +293,224 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		323DEA6723C4038C0074A8AE /* Research */ = {
+			isa = PBXGroup;
+			children = (
+				323DEA6823C4038C0074A8AE /* 13 */,
+				323DEA6B23C4038C0074A8AE /* CoreServices */,
+				323DEA7823C4038C0074A8AE /* MobileContainerManager */,
+				323DEA8B23C4038C0074A8AE /* Sharing framework */,
+				323DEAA523C4038C0074A8AE /* sharingd daemon */,
+			);
+			path = Research;
+			sourceTree = "<group>";
+		};
+		323DEA6823C4038C0074A8AE /* 13 */ = {
+			isa = PBXGroup;
+			children = (
+				323DEA6923C4038C0074A8AE /* PBContentPresentingContainmentViewController.h */,
+				323DEA6A23C4038C0074A8AE /* PBSystemOverlayContentDelegate.h */,
+			);
+			path = 13;
+			sourceTree = "<group>";
+		};
+		323DEA6B23C4038C0074A8AE /* CoreServices */ = {
+			isa = PBXGroup;
+			children = (
+				323DEA6C23C4038C0074A8AE /* LSApplicationProxy.h */,
+				323DEA6D23C4038C0074A8AE /* LSApplicationRestrictionsManager.h */,
+				323DEA6E23C4038C0074A8AE /* LSApplicationWorkspace.h */,
+				323DEA6F23C4038C0074A8AE /* LSApplicationWorkspaceObserver.h */,
+				323DEA7023C4038C0074A8AE /* LSApplicationWorkspaceObserverProtocol.h */,
+				323DEA7123C4038C0074A8AE /* LSApplicationWorkspaceRemoteObserver.h */,
+				323DEA7223C4038C0074A8AE /* LSAppLink.h */,
+				323DEA7323C4038C0074A8AE /* LSBundleInfoCachedValues.h */,
+				323DEA7423C4038C0074A8AE /* LSBundleProxy.h */,
+				323DEA7523C4038C0074A8AE /* LSBundleRecordBuilder.h */,
+				323DEA7623C4038C0074A8AE /* LSBundleRecordUpdater.h */,
+				323DEA7723C4038C0074A8AE /* LSDatabaseBuilder.h */,
+			);
+			path = CoreServices;
+			sourceTree = "<group>";
+		};
+		323DEA7823C4038C0074A8AE /* MobileContainerManager */ = {
+			isa = PBXGroup;
+			children = (
+				323DEA7923C4038C0074A8AE /* MCMAppContainer.h */,
+				323DEA7A23C4038C0074A8AE /* MCMAppDataContainer.h */,
+				323DEA7B23C4038C0074A8AE /* MCMContainer.h */,
+				323DEA7C23C4038C0074A8AE /* MCMContainerManager.h */,
+				323DEA7D23C4038C0074A8AE /* MCMDataContainer.h */,
+				323DEA7E23C4038C0074A8AE /* MCMFrameworkContainer.h */,
+				323DEA7F23C4038C0074A8AE /* MCMInternalDaemonDataContainer.h */,
+				323DEA8023C4038C0074A8AE /* MCMPluginKitPluginContainer.h */,
+				323DEA8123C4038C0074A8AE /* MCMPluginKitPluginDataContainer.h */,
+				323DEA8223C4038C0074A8AE /* MCMSharedDataContainer.h */,
+				323DEA8323C4038C0074A8AE /* MCMSharedSystemDataContainer.h */,
+				323DEA8423C4038C0074A8AE /* MCMSystemDataContainer.h */,
+				323DEA8523C4038C0074A8AE /* MCMTempDirDataContainer.h */,
+				323DEA8623C4038C0074A8AE /* MCMVPNPluginContainer.h */,
+				323DEA8723C4038C0074A8AE /* MCMVPNPluginDataContainer.h */,
+				323DEA8823C4038C0074A8AE /* MCMXPCServiceDataContainer.h */,
+				323DEA8923C4038C0074A8AE /* MobileContainerManager-Structs.h */,
+				323DEA8A23C4038C0074A8AE /* MobileContainerManager.h */,
+			);
+			path = MobileContainerManager;
+			sourceTree = "<group>";
+		};
+		323DEA8B23C4038C0074A8AE /* Sharing framework */ = {
+			isa = PBXGroup;
+			children = (
+				323DEA8C23C4038C0074A8AE /* NSXPCConnectionDelegate.h */,
+				323DEA8D23C4038C0074A8AE /* SFAirDropAction.h */,
+				323DEA8E23C4038C0074A8AE /* SFAirDropActiveIconView.h */,
+				323DEA8F23C4038C0074A8AE /* SFAirDropActivityViewController.h */,
+				323DEA9023C4038C0074A8AE /* SFAirDropActivityViewControllerDelegate.h */,
+				323DEA9123C4038C0074A8AE /* SFAirDropBrowser.h */,
+				323DEA9223C4038C0074A8AE /* SFAirDropBrowserBatchDelegate.h */,
+				323DEA9323C4038C0074A8AE /* SFAirDropClassroomTransferManager.h */,
+				323DEA9423C4038C0074A8AE /* SFAirDropClassroomTransferManagerProtocol.h */,
+				323DEA9523C4038C0074A8AE /* SFAirDropDiscoveryController.h */,
+				323DEA9623C4038C0074A8AE /* SFAirDropIconView.h */,
+				323DEA9723C4038C0074A8AE /* SFAirDropNode.h */,
+				323DEA9823C4038C0074A8AE /* SFAirDropPayload.h */,
+				323DEA9923C4038C0074A8AE /* SFAirDropReceiverViewController.h */,
+				323DEA9A23C4038C0074A8AE /* SFAirDropSharingViewControllerTV.h */,
+				323DEA9B23C4038C0074A8AE /* SFAirDropTransfer.h */,
+				323DEA9C23C4038C0074A8AE /* SFAirDropTransferItem.h */,
+				323DEA9D23C4038C0074A8AE /* SFAirDropTransferMetaData.h */,
+				323DEA9E23C4038C0074A8AE /* SFAirDropTransferObserver.h */,
+				323DEA9F23C4038C0074A8AE /* SFAirDropTransferObserverProtocol.h */,
+				323DEAA023C4038C0074A8AE /* SFAirDropViewServiceHostProtocol.h */,
+				323DEAA123C4038C0074A8AE /* SFCompanionXPCManager.h */,
+				323DEAA223C4038C0074A8AE /* SFCompanionXPCManagerObserver.h */,
+				323DEAA323C4038C0074A8AE /* SFXPCClient.h */,
+				323DEAA423C4038C0074A8AE /* SFXPCInterface.h */,
+			);
+			path = "Sharing framework";
+			sourceTree = "<group>";
+		};
+		323DEAA523C4038C0074A8AE /* sharingd daemon */ = {
+			isa = PBXGroup;
+			children = (
+				323DEAA623C4038C0074A8AE /* SDAirDropHandlerGenericFiles.h */,
+				323DEAA723C4038C0074A8AE /* SDAirDropTransferManager.h */,
+				323DEAA823C4038C0074A8AE /* SDAirDropTransferManager.m */,
+				323DEAA923C4038C0074A8AE /* Untapped AirDrop Details */,
+			);
+			path = "sharingd daemon";
+			sourceTree = "<group>";
+		};
+		323DEAA923C4038C0074A8AE /* Untapped AirDrop Details */ = {
+			isa = PBXGroup;
+			children = (
+				323DEAAA23C4038C0074A8AE /* _TtC8sharingd15SDAirDropLogger.h */,
+				323DEAAB23C4038C0074A8AE /* _TtC8sharingd15SDAirDropStatus.h */,
+				323DEAAC23C4038C0074A8AE /* _TtC8sharingd17SDAirDropListener.h */,
+				323DEAAD23C4038C0074A8AE /* _TtC8sharingd19SDAirDropHandlerIPA.h */,
+				323DEAAE23C4038C0074A8AE /* _TtC8sharingd21SDAirDropHashStoreCDB.h */,
+				323DEAAF23C4038C0074A8AE /* _TtC8sharingd26SDAirDropHashStoreInMemory.h */,
+				323DEAB023C4038C0074A8AE /* _TtC8sharingd27SDAirDropContactHashManager-sharingd.h */,
+				323DEAB123C4038C0074A8AE /* _TtC8sharingd27SDAirDropContactHashManager.h */,
+				323DEAB223C4038C0074A8AE /* _TtP8sharingd23SDAirDropStatusDelegate_-Protocol.h */,
+				323DEAB323C4038C0074A8AE /* _TtP8sharingd25SDAirDropListenerDelegate_-Protocol.h */,
+				323DEAB423C4038C0074A8AE /* AWDSharingAirDropPeerDiscoveredInfo.h */,
+				323DEAB523C4038C0074A8AE /* AWDSharingAirDropSessionInfo.h */,
+				323DEAB623C4038C0074A8AE /* AWDSharingAirDropTransferResult.h */,
+				323DEAB723C4038C0074A8AE /* SDAirDropAlertManager-Protocol.h */,
+				323DEAB823C4038C0074A8AE /* SDAirDropAlertManagerDelegate-Protocol.h */,
+				323DEAB923C4038C0074A8AE /* SDAirDropClassroomTransferManager.h */,
+				323DEABA23C4038C0074A8AE /* SDAirDropClassroomTransferManagerProtocol-Protocol.h */,
+				323DEABB23C4038C0074A8AE /* SDAirDropClient.h */,
+				323DEABC23C4038C0074A8AE /* SDAirDropClientDelegate-Protocol.h */,
+				323DEABD23C4038C0074A8AE /* SDAirDropCompressor.h */,
+				323DEABE23C4038C0074A8AE /* SDAirDropConnection.h */,
+				323DEABF23C4038C0074A8AE /* SDAirDropConnectionDelegate-Protocol.h */,
+				323DEAC023C4038C0074A8AE /* SDAirDropController.h */,
+				323DEAC123C4038C0074A8AE /* SDAirDropControllerDelegate-Protocol.h */,
+				323DEAC223C4038C0074A8AE /* SDAirDropFakeTransfer.h */,
+				323DEAC323C4038C0074A8AE /* SDAirDropFileZipper.h */,
+				323DEAC423C4038C0074A8AE /* SDAirDropFileZipperDelegate-Protocol.h */,
+				323DEAC523C4038C0074A8AE /* SDAirDropHandler.h */,
+				323DEAC623C4038C0074A8AE /* SDAirDropHandlerAppStoreLinks.h */,
+				323DEAC723C4038C0074A8AE /* SDAirDropHandlerCalendarEvents.h */,
+				323DEAC823C4038C0074A8AE /* SDAirDropHandlerContacts.h */,
+				323DEAC923C4038C0074A8AE /* SDAirDropHandlerCredentialLinks.h */,
+				323DEACA23C4038C0074A8AE /* SDAirDropHandlerFailed.h */,
+				323DEACB23C4038C0074A8AE /* SDAirDropHandlerFailedMixedTypes.h */,
+				323DEACC23C4038C0074A8AE /* SDAirDropHandlerFindMyFriendsLinks.h */,
+				323DEACD23C4038C0074A8AE /* SDAirDropHandlerGenericLinks.h */,
+				323DEACE23C4038C0074A8AE /* SDAirDropHandleriBooksItems.h */,
+				323DEACF23C4038C0074A8AE /* SDAirDropHandleriBooksLinks.h */,
+				323DEAD023C4038C0074A8AE /* SDAirDropHandleriCloudDrive.h */,
+				323DEAD123C4038C0074A8AE /* SDAirDropHandleriLifeLinks.h */,
+				323DEAD223C4038C0074A8AE /* SDAirDropHandleriTunesStoreLinks.h */,
+				323DEAD323C4038C0074A8AE /* SDAirDropHandleriTunesULinks.h */,
+				323DEAD423C4038C0074A8AE /* SDAirDropHandleriWorkLinks.h */,
+				323DEAD523C4038C0074A8AE /* SDAirDropHandlerKeynoteLiveLinks.h */,
+				323DEAD623C4038C0074A8AE /* SDAirDropHandlerMapsLinks.h */,
+				323DEAD723C4038C0074A8AE /* SDAirDropHandlerMixedTypes.h */,
+				323DEAD823C4038C0074A8AE /* SDAirDropHandlerNewsLinks.h */,
+				323DEAD923C4038C0074A8AE /* SDAirDropHandlerNotes.h */,
+				323DEADA23C4038C0074A8AE /* SDAirDropHandlerPDFs.h */,
+				323DEADB23C4038C0074A8AE /* SDAirDropHandlerPhoneLinks.h */,
+				323DEADC23C4038C0074A8AE /* SDAirDropHandlerPhotos.h */,
+				323DEADD23C4038C0074A8AE /* SDAirDropHandlerPlaygroundItems.h */,
+				323DEADE23C4038C0074A8AE /* SDAirDropHandlerPodcastsLinks.h */,
+				323DEADF23C4038C0074A8AE /* SDAirDropHandlerProfiles.h */,
+				323DEAE023C4038C0074A8AE /* SDAirDropHandlerSharediCloudDocumentsLinks.h */,
+				323DEAE123C4038C0074A8AE /* SDAirDropHandlerUnsupportedType.h */,
+				323DEAE223C4038C0074A8AE /* SDAirDropHandlerVoiceMails.h */,
+				323DEAE323C4038C0074A8AE /* SDAirDropHandlerVoiceMemos.h */,
+				323DEAE423C4038C0074A8AE /* SDAirDropHandlerWalletItems.h */,
+				323DEAE523C4038C0074A8AE /* SDAirDropHandlerWebLinks.h */,
+				323DEAE623C4038C0074A8AE /* SDAirDropIconCacher.h */,
+				323DEAE723C4038C0074A8AE /* SDAirDropIconCacherDelegate-Protocol.h */,
+				323DEAE823C4038C0074A8AE /* SDAirDropInformation.h */,
+				323DEAE923C4038C0074A8AE /* SDAirDropInformationDelegate-Protocol.h */,
+				323DEAEA23C4038C0074A8AE /* SDAirDropPeerMetric.h */,
+				323DEAEB23C4038C0074A8AE /* SDAirDropPublisher.h */,
+				323DEAEC23C4038C0074A8AE /* SDAirDropPublisherDelegate-Protocol.h */,
+				323DEAED23C4038C0074A8AE /* SDAirDropReceiveManager.h */,
+				323DEAEE23C4038C0074A8AE /* SDAirDropServer.h */,
+				323DEAEF23C4038C0074A8AE /* SDAirDropServerDelegate-Protocol.h */,
+				323DEAF023C4038C0074A8AE /* SDAirDropSession.h */,
+				323DEAF123C4038C0074A8AE /* SDAirDropSessionDelegate-Protocol.h */,
+				323DEAF223C4038C0074A8AE /* SDAirDropTransferManagerProtocol-Protocol.h */,
+				323DEAF323C4038C0074A8AE /* SFAirDropClassroomTransferDelegate-Protocol.h */,
+				323DEAF423C4038C0074A8AE /* SFAirDropClassroomTransferManagerProtocol-Protocol.h */,
+				323DEAF523C4038C0074A8AE /* SFAirDropTransferObserverDelegate-Protocol.h */,
+				323DEAF623C4038C0074A8AE /* SFAirDropTransferObserverProtocol-Protocol.h */,
+			);
+			path = "Untapped AirDrop Details";
+			sourceTree = "<group>";
+		};
+		328495F423BE7438009DDE26 /* MobileContainerManager */ = {
+			isa = PBXGroup;
+			children = (
+				328495F523BE7438009DDE26 /* MCMAppContainer.h */,
+				328495F623BE7438009DDE26 /* MCMAppDataContainer.h */,
+				328495F723BE7438009DDE26 /* MCMContainer.h */,
+				328495F823BE7438009DDE26 /* MCMContainerManager.h */,
+				328495F923BE7438009DDE26 /* MCMDataContainer.h */,
+				328495FA23BE7438009DDE26 /* MCMFrameworkContainer.h */,
+				328495FB23BE7438009DDE26 /* MCMInternalDaemonDataContainer.h */,
+				328495FC23BE7438009DDE26 /* MCMPluginKitPluginContainer.h */,
+				328495FD23BE7438009DDE26 /* MCMPluginKitPluginDataContainer.h */,
+				328495FE23BE7438009DDE26 /* MCMSharedDataContainer.h */,
+				328495FF23BE7438009DDE26 /* MCMSharedSystemDataContainer.h */,
+				3284960023BE7438009DDE26 /* MCMSystemDataContainer.h */,
+				3284960123BE7438009DDE26 /* MCMTempDirDataContainer.h */,
+				3284960223BE7438009DDE26 /* MCMVPNPluginContainer.h */,
+				3284960323BE7438009DDE26 /* MCMVPNPluginDataContainer.h */,
+				3284960423BE7438009DDE26 /* MCMXPCServiceDataContainer.h */,
+				3284960523BE7438009DDE26 /* MobileContainerManager-Structs.h */,
+				3284960623BE7438009DDE26 /* MobileContainerManager.h */,
+			);
+			name = MobileContainerManager;
+			path = Research/MobileContainerManager;
+			sourceTree = "<group>";
+		};
 		32F5C26C2398A2C100FB7839 /* bundle */ = {
 			isa = PBXGroup;
 			children = (
@@ -147,11 +519,9 @@
 				32F5C2872398A2C100FB7839 /* ent.plist */,
 				32F5C2882398A2C100FB7839 /* entry.plist */,
 				32F5C2892398A2C100FB7839 /* layout */,
-				32F5C28F2398A2C100FB7839 /* LICENSE */,
 				32F5C2902398A2C100FB7839 /* Makefile */,
 				32F5C2912398A2C100FB7839 /* NSTask.h */,
 				32F5C2922398A2C100FB7839 /* prefs.h */,
-				32F5C2932398A2C100FB7839 /* README.md */,
 				32F5C2942398A2C100FB7839 /* Resources */,
 				32F5C2972398A2C100FB7839 /* Sharing.tbd */,
 				32F5C2982398A2C100FB7839 /* TVSettings */,
@@ -292,12 +662,15 @@
 		32F79B98235F80F600489C53 = {
 			isa = PBXGroup;
 			children = (
+				326E1C8523C53FD10007D826 /* README.md */,
+				328495F423BE7438009DDE26 /* MobileContainerManager */,
 				32F5C2D12398A33B00FB7839 /* breezyd */,
 				32F5C26C2398A2C100FB7839 /* bundle */,
 				32F79BB7235F817600489C53 /* Breezy */,
 				32F79BFB235F81A000489C53 /* vlcscience */,
 				32F79BD4235F819300489C53 /* provscience */,
 				32F79BA2235F80F600489C53 /* Products */,
+				323DEA6723C4038C0074A8AE /* Research */,
 			);
 			sourceTree = "<group>";
 		};
@@ -312,7 +685,6 @@
 		32F79BB7235F817600489C53 /* Breezy */ = {
 			isa = PBXGroup;
 			children = (
-				327393DE2366BF0D00435ED7 /* breezy.h */,
 				32F79C03235F81AE00489C53 /* SVProgressHUD */,
 				32F79BBF235F818100489C53 /* Breezy.plist */,
 				32F79BBD235F818100489C53 /* Breezy.xm */,
@@ -527,6 +899,7 @@
 			files = (
 				32F79BC2235F818100489C53 /* make.sh in Resources */,
 				32F79BC5235F818100489C53 /* Breezy.plist in Resources */,
+				326E1C8623C53FD10007D826 /* README.md in Resources */,
 				32F79BC4235F818100489C53 /* Breezy.xm in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

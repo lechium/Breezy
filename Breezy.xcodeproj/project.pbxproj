@@ -157,8 +157,6 @@
 		323DEAF423C4038C0074A8AE /* SFAirDropClassroomTransferManagerProtocol-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SFAirDropClassroomTransferManagerProtocol-Protocol.h"; sourceTree = "<group>"; };
 		323DEAF523C4038C0074A8AE /* SFAirDropTransferObserverDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SFAirDropTransferObserverDelegate-Protocol.h"; sourceTree = "<group>"; };
 		323DEAF623C4038C0074A8AE /* SFAirDropTransferObserverProtocol-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SFAirDropTransferObserverProtocol-Protocol.h"; sourceTree = "<group>"; };
-		323DEAFB23C45C5E0074A8AE /* FBSOpenApplicationOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSOpenApplicationOptions.h; sourceTree = "<group>"; };
-		323DEAFE23C45D570074A8AE /* FBSystemServiceOpenApplicationRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSystemServiceOpenApplicationRequest.h; sourceTree = "<group>"; };
 		326E1C8523C53FD10007D826 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		328495F523BE7438009DDE26 /* MCMAppContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppContainer.h; sourceTree = "<group>"; };
 		328495F623BE7438009DDE26 /* MCMAppDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppDataContainer.h; sourceTree = "<group>"; };
@@ -183,11 +181,9 @@
 		32F5C2872398A2C100FB7839 /* ent.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ent.plist; sourceTree = "<group>"; };
 		32F5C2882398A2C100FB7839 /* entry.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = entry.plist; sourceTree = "<group>"; };
 		32F5C28B2398A2C100FB7839 /* control */ = {isa = PBXFileReference; lastKnownFileType = text; path = control; sourceTree = "<group>"; };
-		32F5C28F2398A2C100FB7839 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		32F5C2902398A2C100FB7839 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		32F5C2912398A2C100FB7839 /* NSTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSTask.h; sourceTree = "<group>"; };
 		32F5C2922398A2C100FB7839 /* prefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = prefs.h; sourceTree = "<group>"; };
-		32F5C2932398A2C100FB7839 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		32F5C2952398A2C100FB7839 /* icon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = icon.jpg; sourceTree = "<group>"; };
 		32F5C2962398A2C100FB7839 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		32F5C2972398A2C100FB7839 /* Sharing.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = Sharing.tbd; sourceTree = "<group>"; };
@@ -523,11 +519,9 @@
 				32F5C2872398A2C100FB7839 /* ent.plist */,
 				32F5C2882398A2C100FB7839 /* entry.plist */,
 				32F5C2892398A2C100FB7839 /* layout */,
-				32F5C28F2398A2C100FB7839 /* LICENSE */,
 				32F5C2902398A2C100FB7839 /* Makefile */,
 				32F5C2912398A2C100FB7839 /* NSTask.h */,
 				32F5C2922398A2C100FB7839 /* prefs.h */,
-				32F5C2932398A2C100FB7839 /* README.md */,
 				32F5C2942398A2C100FB7839 /* Resources */,
 				32F5C2972398A2C100FB7839 /* Sharing.tbd */,
 				32F5C2982398A2C100FB7839 /* TVSettings */,
@@ -669,8 +663,6 @@
 			isa = PBXGroup;
 			children = (
 				326E1C8523C53FD10007D826 /* README.md */,
-				323DEAFE23C45D570074A8AE /* FBSystemServiceOpenApplicationRequest.h */,
-				323DEAFB23C45C5E0074A8AE /* FBSOpenApplicationOptions.h */,
 				328495F423BE7438009DDE26 /* MobileContainerManager */,
 				32F5C2D12398A33B00FB7839 /* breezyd */,
 				32F5C26C2398A2C100FB7839 /* bundle */,

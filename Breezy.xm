@@ -5,7 +5,6 @@
 #import "breezy.h"
 #import "CTBlockDescription.h"
 #include <CoreFoundation/CoreFoundation.h>
-#import "EXTobjc.h"
 
 @class BindingEvaluator, LSContext, LSBundleData;
 

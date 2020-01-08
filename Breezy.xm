@@ -112,7 +112,6 @@
     LSApplicationWorkspace *ws = [LSApplicationWorkspace defaultWorkspace];
     __block id context; //13+ only
     NSDictionary *userInfo = [alert userInfo];
-
     NSArray <NSDictionary *> *files = userInfo[@"Files"];
     NSArray <NSString *> *localFiles = userInfo[@"LocalFiles"];
     NSArray <NSString *> *URLS = userInfo[@"URLS"];
@@ -126,6 +125,7 @@
         if ([[[fileType pathExtension] lowercaseString] isEqualToString:@"ipa"] || [[[fileName pathExtension] lowercaseString] isEqualToString:@"ipa"]){
             hasIPA = TRUE;
         }
+        //h4x, we are only creating doxy if it doesnt already exist, so that means we are only taking into account the file type of the first file in the list.
         if (!doxy) {
             doxy = [LSDocumentProxy documentProxyForName:fileName type:fileType MIMEType:nil];
         }
@@ -139,7 +139,7 @@
     NSArray  *applications = [ws applicationsAvailableForOpeningDocument:doxy];
     //NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
     //applications = [applications filteredArrayUsingPredicate: pred];
-    if (URLS.count > 0){ //we take a different path here entirely
+    if (URLS.count > 0){ //we take a different path here
         NSString *firstURL = URLS[0];
         [names appendString:firstURL];
         NSString *scheme = [[NSURL URLWithString:firstURL] scheme];
@@ -149,29 +149,53 @@
         NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.apple.PBLinkHandler'"];
         applications = [applications filteredArrayUsingPredicate: pred];
     }
-    //NSLog(@"[Breezy] names length: %lu", names.length);
+
+    //create the alert, we may not end up using it if theres only one application
     id applicationAlert = [[objc_getClass("PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", appList]];
     NSLog(@"[Breezy] available applications: %@", applications);
     NSString *cancelButtonTitle = @"Cancel";
-    //VLC h4x
+    /*
+     Temporary VLC hack, & will require Ethereal to work.
+     
+     This temporary implementation is a precursor to the future plan of how this will be implemented.
+     
+     There will be a preference file maintained (or it will be added to the current one)
+     that will have a series of keys corresponding to target apps and the app they want to use
+     as a template.
+     
+     org.videolan.vlc-ios {
+        "mimic": "com.nito.Ethereal";
+     }
+
+     This will mean any time we find ethereal as a potential target application, we will also add the
+     target ID app as an option to use to open the file as well.
+     
+     This will only be part of the equation, you will still need to write your own tweak similar to 'vlcscience' or 'provscience' examples included as part of this project. that will
+     handle the rest of the process (opening the URL and moving it to where it needs to be)
+     
+     */
+    
+    //create predicate to see if ethereal is included in our 'applications' query
     NSPredicate *hasEthPred = [NSPredicate predicateWithFormat:@"bundleIdentifier == 'com.nito.Ethereal'"];
-    if ([applications filteredArrayUsingPredicate: hasEthPred].count > 0){
-        NSLog(@"[Breezy] yo we got Eth breh");
+    if ([applications filteredArrayUsingPredicate: hasEthPred].count > 0){ //see if our results are found
         id vlcCheck = [LSApplicationProxy applicationProxyForIdentifier:@"org.videolan.vlc-ios"];
         if (vlcCheck != nil){
-            NSLog(@"[Breezy] yo we got vlc breh");
-            NSMutableArray *_tempApps = [applications mutableCopy];
-            [_tempApps addObject:vlcCheck];
-            applications = _tempApps;
-            NSLog(@"[Breezy] updated apps yo: %@", applications);
+            //found VLC, so at this point we have VLC AND ethereal installed
+            NSMutableArray *_tempApps = [applications mutableCopy]; //mutable copy of apps
+            [_tempApps addObject:vlcCheck]; //add VLC
+            applications = _tempApps; //update apps.
         }
     }
+    
+    //this is to work around old bug that may or may not still be present for ReProvision not registering
+    //for IPA support properly.
+    
     if (applications.count == 0){
         if (hasIPA){
             NSLog(@"[Breezy] no applications and its an IPA file, check for ReProvision!");
             id reproCheck = [LSApplicationProxy applicationProxyForIdentifier:@"com.matchstic.reprovision.tvos"];
             if (reproCheck){
-                NSLog(@"[Breezy] got found him: %@", reproCheck );
+                NSLog(@"[Breezy] found ReProvision: %@", reproCheck );
                 applications = @[reproCheck];
             }
         }
@@ -235,6 +259,9 @@
     });
     //HBLogDebug(@"file: %@ of type: %@ can open in the following applications: %@",fileName, fileType, applications);
 }
+
+//eyesore! one of the last remaining hacky things i'd like to do better - this is the
+//communication channel between sharingd and PineBoard - listen for a notification to show alert / finish process
 - (_Bool)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2 {
     
     _Bool orig = %orig;
@@ -245,13 +272,23 @@
     
 }
 
+/*
+ 
+ Meat and potatoes of opening the applications on our own, this works better than their
+ operations provided in LSApplicationWorkspace to open files.
+ 
+ Use FrontBoardServices framework in conjunction with FBProcessManager, CoreServices and Launchservices
+ to create an application launch request and process it.
+ 
+ */
+
 %new - (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy {
     
     Class FBSOpenApplicationOptions = NSClassFromString(@"FBSOpenApplicationOptions");
     Class FBSystemServiceOpenApplicationRequest = NSClassFromString(@"FBSystemServiceOpenApplicationRequest");
     id pbProcMan = [NSClassFromString(@"PBProcessManager") sharedInstance];
     id _fbProcMan = [NSClassFromString(@"FBProcessManager") sharedInstance];
-    __block id pbProcess = [_fbProcMan systemApplicationProcess];
+    __block id pbProcess = [_fbProcMan systemApplicationProcess]; //Our process reference to PineBoard
     [items enumerateObjectsUsingBlock:^(NSString * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
         NSMutableDictionary *_options = [NSMutableDictionary new];
         _options[FBSOpenApplicationOptionKeyActivateSuspended] = @0;

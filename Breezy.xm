@@ -98,6 +98,42 @@
 
 %hook PBAppDelegate
 
+/*
+ 
+ the Breezy preferences (/var/mobile/Library/Preferences/com.nito.Breezy.plist) track whether or not
+ AirDrop is on AND whether or not applications will 'mimic' another to shoe-horn in AirDrop support
+ utilizing code injection rather than editing a file on device.
+ 
+ In this default example we add VLC to mimic Ethereal's AirDrop advertising settings, that means
+ any file that Ethereal can open, VLC will claim it can open as well!
+ 
+ */
+
+%new - (NSArray *) updatedApplicationsWithMimes:(NSArray *)original {
+    __block NSMutableArray *newApps = [original mutableCopy];
+    NSDictionary *appMimicMap = [self appMimicMap];
+    if (appMimicMap == nil){
+        //setup default
+        appMimicMap = @{@"com.nito.Ethereal":@[@"org.videolan.vlc-ios"]};
+        [[self breezyPreferences] setObject:appMimicMap forKey:@"appMimicMap"];
+        [[self breezyPreferences] synchronize];
+    }
+    [original enumerateObjectsUsingBlock:^(LSApplicationProxy *application, NSUInteger idx, BOOL * _Nonnull stop){
+        NSString *bundleID = [application bundleIdentifier];
+        if ([[appMimicMap allKeys] containsObject:bundleID]){
+            id apps = [appMimicMap objectForKey:bundleID];
+            [apps enumerateObjectsUsingBlock:^(id obj, NSUInteger appIdx, BOOL * _Nonnull stopA) {
+               id foundProx = [LSApplicationProxy applicationProxyForIdentifier:obj];
+               if (foundProx){
+                    HBLogDebug(@"found application: %@", foundProx);
+                    [newApps addObject:foundProx];
+               }
+            }];
+        }
+    }];
+    return newApps;
+}
+
 %new - (void)showSystemAlertFromAlert:(id)alert {
     %log;
     BOOL thirteenPlus = (kCFCoreFoundationVersionNumber > 1585.17); //12.4 is 1575.17, not sure what 12.4.1 is but this should be safe enough bump up
@@ -153,38 +189,8 @@
     id applicationAlert = [[%c(PBUserNotificationViewControllerAlert) alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", appList]];
     NSLog(@"[Breezy] available applications: %@", applications);
     NSString *cancelButtonTitle = @"Cancel";
-    /*
-     Temporary VLC hack, & will require Ethereal to work.
-     
-     This temporary implementation is a precursor to the future plan of how this will be implemented.
-     
-     There will be a preference file maintained (or it will be added to the current one)
-     that will have a series of keys corresponding to target apps and the app they want to use
-     as a template.
-     
-     org.videolan.vlc-ios {
-        "mimic": "com.nito.Ethereal";
-     }
-
-     This will mean any time we find ethereal as a potential target application, we will also add the
-     target ID app as an option to use to open the file as well.
-     
-     This will only be part of the equation, you will still need to write your own tweak similar to 'vlcscience' or 'provscience' examples included as part of this project. that will
-     handle the rest of the process (opening the URL and moving it to where it needs to be)
-     
-     */
-    
-    //create predicate to see if ethereal is included in our 'applications' query
-    NSPredicate *hasEthPred = [NSPredicate predicateWithFormat:@"bundleIdentifier == 'com.nito.Ethereal'"];
-    if ([applications filteredArrayUsingPredicate: hasEthPred].count > 0){ //see if our results are found
-        id vlcCheck = [LSApplicationProxy applicationProxyForIdentifier:@"org.videolan.vlc-ios"];
-        if (vlcCheck != nil){
-            //found VLC, so at this point we have VLC AND ethereal installed
-            NSMutableArray *_tempApps = [applications mutableCopy]; //mutable copy of apps
-            [_tempApps addObject:vlcCheck]; //add VLC
-            applications = _tempApps; //update apps.
-        }
-    }
+    //let applications mimic one another to easily add AirDrop support
+    applications = [self updatedApplicationsWithMimes:applications];
     
     //this is to work around old bug that may or may not still be present for ReProvision not registering
     //for IPA support properly.
@@ -267,6 +273,7 @@
     %log;
     id notificationCenter = [NSDistributedNotificationCenter defaultCenter];
     [notificationCenter addObserver:self  selector:@selector(showSystemAlertFromAlert:) name:@"com.breezy.kludgeh4x" object:nil]; //still need to get rid of this ugly eyesore
+    [self setupPreferences];
     return orig;
     
 }
@@ -323,6 +330,30 @@
         }
     }
     return inputFile;
+}
+
+%new - (id)appMimicMap {
+    
+    return [[self breezyPreferences] objectForKey:@"appMimicMap"];
+}
+
+%new - (id)breezyPreferences {
+    id bp = objc_getAssociatedObject(self, @selector(breezyPreferences));
+    if (bp == nil){
+        [[NSBundle bundleWithPath:@"/System/Library/Frameworks/TVServices.framework/"] load];
+        bp = [%c(TVSPreferences) preferencesWithDomain:@"com.nito.Breezy"];
+        objc_setAssociatedObject(self, @selector(breezyPreferences), bp, OBJC_ASSOCIATION_RETAIN);
+    }
+    return bp;
+}
+
+%new -(void)setupPreferences {
+    
+    //dlopen("/System/Library/Frameworks/TVServices.framework/TVServices", RTLD_NOW);
+    [[NSBundle bundleWithPath:@"/System/Library/Frameworks/TVServices.framework/"] load];
+    id prefs = [%c(TVSPreferences) preferencesWithDomain:@"com.nito.Breezy"];
+    BOOL airdropServerState = [prefs boolForKey:@"airdropServerState"];
+    NSLog(@"[Breezy] airdropServerState: %i", airdropServerState);
 }
 
 /*

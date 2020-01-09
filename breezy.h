@@ -1,4 +1,21 @@
 
+typedef enum : NSUInteger {
+    KBBreezyFileTypeLocal,
+    KBBreezyFileTypeLink,
+} KBBreezyFileType;
+
+
+@interface PBAppDelegate: NSObject
+- (void)showSystemAlertFromAlert:(id)alert;
+- (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy;
+- (NSURL *)inboxForIdentifier:(NSString *)identifier;
+- (NSString *)importFile:(NSString *)inputFile withApp:(id)proxy;
+- (void)setupPreferences;
+- (id)breezyPreferences;
+- (id)appMimicMap;
+- (NSArray *)updatedApplicationsWithMimes:(NSArray *)original;
+@end
+
 extern id __LSGetInboxURLForAppIdentifier(id);
 
 extern NSString * const FBSOpenApplicationOptionKeyDocumentOpen4LS; //@"__DocumentOpen4LS"
@@ -9,11 +26,27 @@ extern NSString * const FBSOpenApplicationOptionKeyBrowserAppLinkState4LS;
 extern NSString * const FBSOpenApplicationOptionKeyAppLink4LS;
 extern NSString * const FBSOpenApplicationOptionKeyPayloadOptions; //@"__PayloadOptions"
 
-typedef enum : NSUInteger {
-    KBBreezyFileTypeLocal,
-    KBBreezyFileTypeLink,
-} KBBreezyFileType;
-
+@interface TVSPreferences: NSObject
++ (id)preferencesWithDomain:(NSString *)domain;
+-(id)stringForKey:(id)arg1;
+-(BOOL)boolForKey:(id)arg1;
+-(BOOL)setFloat:(float)arg1 forKey:(id)arg2 ;
+-(id)objectForKey:(id)arg1 ;
+-(BOOL)synchronize;
+//-(BOOL)setObject:(id)arg1 forKey:(id)arg2 ;
+-(BOOL)boolForKey:(id)arg1 ;
+-(id)stringForKey:(id)arg1 ;
+-(BOOL)setBool:(BOOL)arg1 forKey:(id)arg2 ;
+-(int)integerForKey:(id)arg1 ;
+-(float)floatForKey:(id)arg1 ;
+-(double)doubleForKey:(id)arg1 ;
+-(BOOL)setDouble:(double)arg1 forKey:(id)arg2 ;
+-(BOOL)setInteger:(int)arg1 forKey:(id)arg2 ;
+-(double)doubleForKey:(id)arg1 defaultValue:(double)arg2 ;
+-(int)integerForKey:(id)arg1 defaultValue:(int)arg2 ;
+-(BOOL)boolForKey:(id)arg1 defaultValue:(BOOL)arg2 ;
+-(float)floatForKey:(id)arg1 defaultValue:(float)arg2 ;
+@end
 
 @interface LSBundleProxy: NSObject
 -(NSString *)bundleIdentifier;
@@ -66,12 +99,7 @@ typedef enum : NSUInteger {
 
 @end
 
-@interface PBAppDelegate: NSObject
-- (void)showSystemAlertFromAlert:(id)alert;
-- (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy;
-- (NSURL *)inboxForIdentifier:(NSString *)identifier;
-- (NSString *)importFile:(NSString *)inputFile withApp:(id)proxy;
-@end
+
 
 @interface LSApplicationWorkspace: NSObject
 

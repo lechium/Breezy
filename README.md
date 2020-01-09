@@ -11,6 +11,24 @@ It is also necessary to handle opening file URL's (done the same way it is in iO
 
 Will use my changes to RetroArch here as the implementation example:
 
+Example of an incoming notification
+
+```[AirPhoto] 
+    app: <UIApplication: 0x14be16ed0> app 
+    openURL: file:///Library/Caches/com.nito.AirPhoto/Screen%20Shot%202019-12-17%20at%206.47.15%20PM.png url, 
+    options: {
+    UIApplicationOpenURLOptionsAnnotationKey =     {
+        LSDocumentDropCount = 13;
+        LSDocumentDropIndex = 0;
+        LSMoveDocumentOnOpen = 0;
+    };
+    UIApplicationOpenURLOptionsOpenInPlaceKey = 0;
+    UIApplicationOpenURLOptionsSourceApplicationKey = "com.apple.PineBoard";
+}
+```
+You will notice a LSDocumentDropCount & LSDocumentDropIndex key, these are special keys we add so you can either support the files in a cluster once they are all received, OR you can process them one at a time. This part is completely up to you on implementation. For instance nitoTV wants to process DEB files in a cluster because they may include dependencies needed for the packages to install. However, the drawback is things will not start visibly processing until it has received ALL of the files.
+
+
 ```Objective-C
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary *)options {

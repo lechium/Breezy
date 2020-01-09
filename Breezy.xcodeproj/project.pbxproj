@@ -161,6 +161,7 @@
 		326E1C8523C53FD10007D826 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		326E1C8D23C6D1610007D826 /* CTBlockDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTBlockDescription.h; sourceTree = "<group>"; };
 		326E1C9023C6D1610007D826 /* CTBlockDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBlockDescription.m; sourceTree = "<group>"; };
+		326E1CB523C79C8A0007D826 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		328495F523BE7438009DDE26 /* MCMAppContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppContainer.h; sourceTree = "<group>"; };
 		328495F623BE7438009DDE26 /* MCMAppDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppDataContainer.h; sourceTree = "<group>"; };
 		328495F723BE7438009DDE26 /* MCMContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMContainer.h; sourceTree = "<group>"; };
@@ -688,6 +689,7 @@
 		32F79BB7235F817600489C53 /* Breezy */ = {
 			isa = PBXGroup;
 			children = (
+				326E1CB523C79C8A0007D826 /* Makefile */,
 				32F79C03235F81AE00489C53 /* SVProgressHUD */,
 				32F79BBF235F818100489C53 /* Breezy.plist */,
 				32F79BBD235F818100489C53 /* Breezy.xm */,

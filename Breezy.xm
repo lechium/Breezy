@@ -271,16 +271,7 @@
     
 }
 
-/*
- 
- Meat and potatoes of opening the applications on our own, this works better than their
- operations provided in LSApplicationWorkspace to open files.
- 
- Use FrontBoardServices framework in conjunction with FBProcessManager, CoreServices and Launchservices
- to create an application launch request and process it.
- 
- */
-
+//this never ended up being needed but im leaving it in as an example of how to hook a private C function
 %new - (NSURL *)inboxForIdentifier:(NSString *)identifier {
     //dlopen("/System/Library/Frameworks/CoreServices.framework/CoreServices", RTLD_LAZY);
     MSImageRef cs = MSGetImageByName("/System/Library/Frameworks/CoreServices.framework/CoreServices");
@@ -294,6 +285,56 @@
     return nil;
 }
 
+/*
+ 
+ Added this to make sure files are in a folder they can be accessed from.
+ 
+ */
+
+%new - (NSString *)importFile:(NSString *)inputFile withApp:(id)proxy {
+    
+    NSFileManager *man = [NSFileManager defaultManager];
+    NSString *onePath = [[proxy dataContainerURL] path];
+    if (onePath == nil){
+        onePath = @"/";
+    }
+    NSString *cachePath = [[onePath stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[proxy bundleIdentifier]];
+    if (![man fileExistsAtPath:cachePath]){
+        NSDictionary *folderAttrs = @{NSFileGroupOwnerAccountName: @"admin",NSFileOwnerAccountName: @"mobile", NSFilePosixPermissions: @755};
+        NSError *error = nil;
+        [man createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:folderAttrs error:&error];
+        if (error){
+            HBLogDebug(@"creating %@ had error: %@", cachePath, error);
+        }
+    }
+    NSString *newPath = [cachePath stringByAppendingPathComponent:[inputFile lastPathComponent]];
+    NSError *copyError = nil;
+    if ([man fileExistsAtPath:newPath]){
+        [man removeItemAtPath:inputFile error:nil];
+        return newPath;
+    } else {
+        HBLogDebug(@"attempting to copy %@ to %@", inputFile, newPath);
+        if ([man copyItemAtPath:inputFile toPath:newPath error:&copyError]) {
+            [man removeItemAtPath:inputFile error:nil];
+            return newPath;
+        } else {
+            HBLogDebug(@"failed to copy %@ to %@ with error: %@", inputFile, newPath, copyError);
+            return inputFile;
+        }
+    }
+    return inputFile;
+}
+
+/*
+ 
+ Meat and potatoes of opening the applications on our own, this works better than their
+ operations provided in LSApplicationWorkspace to open files.
+ 
+ Use FrontBoardServices framework in conjunction with FBProcessManager, CoreServices and Launchservices
+ to create an application launch request and process it.
+ 
+ */
+
 %new - (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy {
     
     Class FBSOpenApplicationOptions = %c(FBSOpenApplicationOptions);
@@ -301,9 +342,6 @@
     id pbProcMan = [%c(PBProcessManager) sharedInstance];
     id _fbProcMan = [%c(FBProcessManager) sharedInstance];
     NSString *bundleID = [proxy bundleIdentifier];
-    //[self performSelector:@selector(bro)];
-    NSString *inbox = [self inboxForIdentifier:bundleID].path;
-    NSLog(@"[Breezy] Inbizzle; %@", inbox);
     __block id pbProcess = [_fbProcMan systemApplicationProcess]; //Our process reference to PineBoard
     [items enumerateObjectsUsingBlock:^(NSString * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
         NSMutableDictionary *_options = [NSMutableDictionary new];
@@ -316,9 +354,10 @@
             _options[FBSOpenApplicationOptionKeyPayloadURL] = [NSURL URLWithString:item];
         } else {
             NSLog(@"[Breezy] og item: %@", item);
-            NSString *importedItem = [inbox stringByAppendingPathComponent:item.lastPathComponent];
+            //NSString *importedItem = [inbox stringByAppendingPathComponent:item.lastPathComponent];
+            NSString *importedItem = [self importFile:item withApp:proxy];
             NSLog(@"[Breezy] imported item: %@", importedItem);
-            _options[FBSOpenApplicationOptionKeyPayloadURL] = [NSURL fileURLWithPath:item];
+            _options[FBSOpenApplicationOptionKeyPayloadURL] = [NSURL fileURLWithPath:importedItem];
         }
         
         id options = [FBSOpenApplicationOptions optionsWithDictionary:_options];
@@ -360,15 +399,59 @@
 
 %end
 %end //PineBoard Group
+id (*__OG_UTTypeAddWithDeclarationDictionary13)(id lsdatabase, NSDictionary *utiDict, NSDictionary *unknownDict, int unk);
+id (*__OG_UTTypeAddWithDeclarationDictionary12)(id lsdatabase, NSDictionary *utiDict, int arg2, int arg3);
+//default    20:57:42.827081 -0700    lsd    [Breezy] __UTTypeAddWithDeclarationDictionary() called with 0: _LSDatabase 1: __NSDictionaryM 3: __NSFrozenDictionaryM 4: 116
 
-//id (*_LSGetInboxURLForAppIdentifier)(id b);
+/*
+ 
+ [Breezy] __UTTypeAddWithDeclarationDictionary() called with 0: <LSDatabase 0x101817200> { path = '/private/var/containers/Data/System/7212BC67-20CD-4982-99E0-711EB95AB895/Library/Caches/com.apple.LaunchServices-231-v2.csstore' } 1: {
+ UTTypeConformsTo = "public.movie";
+ UTTypeDescription = RealMedia;
+ UTTypeIdentifier = "com.real.realmedia";
+ UTTypeTagSpecification =     {
+ "com.apple.ostype" = PNRM;
+ "public.filename-extension" = rm;
+ "public.mime-type" = "application/vnd.rn-realmedia";
+ };
+ } 2: 100 3: 4
+ 
+ */
+
+id ___UTTypeAddWithDeclarationDictionary13(id lsdatabase, NSDictionary *utiDict, NSDictionary *targetDict, int arg3)
+{
+    NSLog(@"[Breezy] __UTTypeAddWithDeclarationDictionary() called with 0: %@ 1: %@ 2: %i 3: %i", lsdatabase, utiDict, targetDict, arg3);
+    //int retv = __OG_UTTypeAddWithDeclarationDictionary13(lsdatabase, utiDict, targetDict, arg3);
+    return nil;
+}
+
+//id (*__OG_UTTypeAddWithDeclarationDictionary)(id arg0, id arg1, int arg2, int arg3);
+id ___UTTypeAddWithDeclarationDictionary12(id lsdatabase, NSDictionary *utiDict, int arg2, int arg3)
+{
+    NSLog(@"[Breezy] __UTTypeAddWithDeclarationDictionary() called with 0: %@ 1: %@ 2: %i 3: %i", lsdatabase, utiDict, arg2, arg3);
+    //int retv = __OG_UTTypeAddWithDeclarationDictionary12(arg0, arg1, arg2, arg3);
+    return nil;
+}
 
 %ctor {
     
     NSString *processName = [[[[NSProcessInfo processInfo] arguments] lastObject] lastPathComponent];
     //HBLogDebug(@"Process name: %@", processName);
+    if ([processName isEqualToString:@"lsd"]){
+        HBLogDebug(@"[Breezy] tripping bro");
+        //int __UTTypeAddWithDeclarationDictionary(int arg0, int arg1, int arg2, int arg3)
+        MSImageRef cs = MSGetImageByName("/System/Library/Frameworks/CoreServices.framework/CoreServices");
+        void* weouthere = MSFindSymbol(cs, "__UTTypeAddWithDeclarationDictionary");
+        NSLog(@"[Breezy] hooking %p", weouthere);
+        
+        if (weouthere){
+            //MSHookFunction((void*)weouthere, (void*)___UTTypeAddWithDeclarationDictionary12, (void**)&__OG_UTTypeAddWithDeclarationDictionary12);
+        }
+      
+    }
     if ([processName isEqualToString:@"PineBoard"]){
         %init(PineBoard);
+
     } else if ([processName isEqualToString:@"sharingd"]){
         %init(Sharingd);
     }

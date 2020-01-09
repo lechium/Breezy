@@ -68,10 +68,9 @@ typedef enum : NSUInteger {
 
 @interface PBAppDelegate: NSObject
 - (void)showSystemAlertFromAlert:(id)alert;
-- (void)postBulletinForFile:(NSString *)file;
-- (void)sendBulletinWithMessage:(NSString *)message title:(NSString *)title;
 - (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy;
 - (NSURL *)inboxForIdentifier:(NSString *)identifier;
+- (NSString *)importFile:(NSString *)inputFile withApp:(id)proxy;
 @end
 
 @interface LSApplicationWorkspace: NSObject

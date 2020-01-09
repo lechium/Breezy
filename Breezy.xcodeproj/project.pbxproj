@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		326E1C8623C53FD10007D826 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 326E1C8523C53FD10007D826 /* README.md */; };
+		326E1C9123C6D1610007D826 /* CTBlockDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 326E1C9023C6D1610007D826 /* CTBlockDescription.m */; };
 		32F79BC0235F818100489C53 /* FindProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F79BB8235F818100489C53 /* FindProcess.m */; };
 		32F79BC1235F818100489C53 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 32F79BBA235F818100489C53 /* Makefile */; };
 		32F79BC2235F818100489C53 /* make.sh in Resources */ = {isa = PBXBuildFile; fileRef = 32F79BBB235F818100489C53 /* make.sh */; };
@@ -158,6 +159,8 @@
 		323DEAF523C4038C0074A8AE /* SFAirDropTransferObserverDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SFAirDropTransferObserverDelegate-Protocol.h"; sourceTree = "<group>"; };
 		323DEAF623C4038C0074A8AE /* SFAirDropTransferObserverProtocol-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SFAirDropTransferObserverProtocol-Protocol.h"; sourceTree = "<group>"; };
 		326E1C8523C53FD10007D826 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		326E1C8D23C6D1610007D826 /* CTBlockDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTBlockDescription.h; sourceTree = "<group>"; };
+		326E1C9023C6D1610007D826 /* CTBlockDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBlockDescription.m; sourceTree = "<group>"; };
 		328495F523BE7438009DDE26 /* MCMAppContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppContainer.h; sourceTree = "<group>"; };
 		328495F623BE7438009DDE26 /* MCMAppDataContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMAppDataContainer.h; sourceTree = "<group>"; };
 		328495F723BE7438009DDE26 /* MCMContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMContainer.h; sourceTree = "<group>"; };
@@ -689,6 +692,8 @@
 				32F79BBF235F818100489C53 /* Breezy.plist */,
 				32F79BBD235F818100489C53 /* Breezy.xm */,
 				32F79C0D235F8B5C00489C53 /* breezy.h */,
+				326E1C8D23C6D1610007D826 /* CTBlockDescription.h */,
+				326E1C9023C6D1610007D826 /* CTBlockDescription.m */,
 				32F79BBE235F818100489C53 /* FindProcess.h */,
 				32F79BB8235F818100489C53 /* FindProcess.m */,
 				32F79BBB235F818100489C53 /* make.sh */,
@@ -916,6 +921,7 @@
 				32F79BC3235F818100489C53 /* NSObject+CD.m in Sources */,
 				32F79C0B235F81AE00489C53 /* SVProgressHUD.m in Sources */,
 				32F79BC0235F818100489C53 /* FindProcess.m in Sources */,
+				326E1C9123C6D1610007D826 /* CTBlockDescription.m in Sources */,
 				32F79C0A235F81AE00489C53 /* SVIndefiniteAnimatedView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

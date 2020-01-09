@@ -56,9 +56,13 @@ You will notice a LSDocumentDropCount & LSDocumentDropIndex key, these are speci
 ```
 This [Info.plist](https://github.com/lechium/RetroArch/blob/master/pkg/apple/tvOS/Info.plist#L9) will give you the info necessary to see how "all documents" support was added (not recommended to add ALL documents) 
 
-You can also reference the file in this repo: [VLC-tvOS-Info.plist](../master/VLC-tvOS-Info.plist) to see how I took the Info.plist from VLC for iOS and grabbed the necessary keys and added them to the tvOS version. Just replaced the old Info.plist inside the original with this one, ran uicache and was good to go!
+***NOTE: Obsolete Legacy Instructions***
 
-Currently there is a stop gap implementation to get VLC to support AirDropped files through code injection & piggybacking off the files that Ethereal supports. This is thoroughly documented inside [Breezy.xm](../master/Breezy.xm#L158)
+You can also reference the file in this repo: [VLC-tvOS-Info.plist](../master/VLC-tvOS-Info.plist) to see how I took the Info.plist from VLC for iOS and grabbed the necessary keys and added them to the tvOS version. Just replaced the old Info.plist inside the original with this one, ran uicache and was good to go! 
+
+***NEW HOTNESS***
+
+To add VLC support (to show in the listings of Applications available- more work is needed for handling openURL:) there is a new key added to the preferences file in /var/mobile/Library/Preferences/com.nito.Breezy.plist called 'appMimicMap' which is a dictionary of arrays. The keys of the dictionary are the applications you want to mimic the AirDrop settings of, ie @{@"com.nito.Ethereal":@[@"org.videolan.vlc-ios"]} are the default values. This means that org.videolan.vlc-ios will mimic the settings of Ethereal.  [Breezy.xm](../master/Breezy.xm#L101-L138)
 
 ## Exporting files using AirDrop
 

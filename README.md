@@ -62,7 +62,7 @@ You can also reference the file in this repo: [VLC-tvOS-Info.plist](../master/VL
 
 ### NEW HOTNESS
 
-To add VLC support (to show in the listings of Applications available- more work is needed for handling openURL:) there is a new key added to the preferences file in /var/mobile/Library/Preferences/com.nito.Breezy.plist called 'appMimicMap' which is a dictionary of arrays. The keys of the dictionary are the applications you want to mimic the AirDrop settings of, ie @{@"com.nito.Ethereal":@[@"org.videolan.vlc-ios"]} are the default values. This means that org.videolan.vlc-ios will mimic the settings of Ethereal.  [Breezy.xm](../master/Breezy.xm#L101-L138)
+To add VLC support (to show in the listings of Applications available- more work is needed for handling openURL:) there is a new key added to the preferences file in ***/var/mobile/Library/Preferences/com.nito.Breezy.plist*** called ***appMimicMap*** which is a dictionary of arrays. The keys of the dictionary are the applications you want to mimic the AirDrop settings of, ie ***@{@"com.nito.Ethereal":@[@"org.videolan.vlc-ios"]}** are the default values. This means that ***org.videolan.vlc-ios*** will mimic the settings of Ethereal.  [Breezy.xm](../master/Breezy.xm#L101-L138)
 
 ## Exporting files using AirDrop
 

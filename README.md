@@ -256,7 +256,16 @@ There are various reasons we need to inject into PineBoard to get this process t
 ```Objective-C 
 %new - (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy
 ```
+
+To accomodate differing sandbox permissions and patches in chimera vs checkra1n, we now import the files into a different directory to make sure they can be read by the receiving application.
+
+```Objective-C
+%new - (NSString *)importFile:(NSString *)inputFile withApp:(id)proxy 
+```
+
  A combination of **FrontBoard(Services)** framework and **PineBoard** application are used to open the URLs in their target applications. A ***FBSystemServiceOpenApplicationRequest*** is created from a special ***NSDictionary*** that is crafted into an instance of ***FBSOpenApplicationOptions***. from there ***PBProcessManager*** is utilized in different ways depending on OS version to open the files / URLs in the targeted application.
+ 
+ Using these custom calls from within PineBoard enables us to bypass restrictions in launch services on which applications can open certain file types, but it also makes this project less 'portable' to iOS to augment any of the features missing over there, i think this is a worthwhile sacrifice personally.
 
 
 ## Preference loader bundle

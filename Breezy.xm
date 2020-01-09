@@ -126,7 +126,10 @@
                id foundProx = [LSApplicationProxy applicationProxyForIdentifier:obj];
                if (foundProx){
                     HBLogDebug(@"found application: %@", foundProx);
-                    [newApps addObject:foundProx];
+                   if (![newApps containsObject:foundProx]){
+                       [newApps addObject:foundProx];
+                       
+                   }
                }
             }];
         }

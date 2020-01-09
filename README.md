@@ -60,7 +60,7 @@ This [Info.plist](https://github.com/lechium/RetroArch/blob/master/pkg/apple/tvO
 
 You can also reference the file in this repo: [VLC-tvOS-Info.plist](../master/VLC-tvOS-Info.plist) to see how I took the Info.plist from VLC for iOS and grabbed the necessary keys and added them to the tvOS version. Just replaced the old Info.plist inside the original with this one, ran uicache and was good to go! 
 
-***NEW HOTNESS***
+### NEW HOTNESS
 
 To add VLC support (to show in the listings of Applications available- more work is needed for handling openURL:) there is a new key added to the preferences file in /var/mobile/Library/Preferences/com.nito.Breezy.plist called 'appMimicMap' which is a dictionary of arrays. The keys of the dictionary are the applications you want to mimic the AirDrop settings of, ie @{@"com.nito.Ethereal":@[@"org.videolan.vlc-ios"]} are the default values. This means that org.videolan.vlc-ios will mimic the settings of Ethereal.  [Breezy.xm](../master/Breezy.xm#L101-L138)
 

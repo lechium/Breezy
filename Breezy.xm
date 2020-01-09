@@ -399,56 +399,11 @@
 
 %end
 %end //PineBoard Group
-id (*__OG_UTTypeAddWithDeclarationDictionary13)(id lsdatabase, NSDictionary *utiDict, NSDictionary *unknownDict, int unk);
-id (*__OG_UTTypeAddWithDeclarationDictionary12)(id lsdatabase, NSDictionary *utiDict, int arg2, int arg3);
-//default    20:57:42.827081 -0700    lsd    [Breezy] __UTTypeAddWithDeclarationDictionary() called with 0: _LSDatabase 1: __NSDictionaryM 3: __NSFrozenDictionaryM 4: 116
-
-/*
- 
- [Breezy] __UTTypeAddWithDeclarationDictionary() called with 0: <LSDatabase 0x101817200> { path = '/private/var/containers/Data/System/7212BC67-20CD-4982-99E0-711EB95AB895/Library/Caches/com.apple.LaunchServices-231-v2.csstore' } 1: {
- UTTypeConformsTo = "public.movie";
- UTTypeDescription = RealMedia;
- UTTypeIdentifier = "com.real.realmedia";
- UTTypeTagSpecification =     {
- "com.apple.ostype" = PNRM;
- "public.filename-extension" = rm;
- "public.mime-type" = "application/vnd.rn-realmedia";
- };
- } 2: 100 3: 4
- 
- */
-
-id ___UTTypeAddWithDeclarationDictionary13(id lsdatabase, NSDictionary *utiDict, NSDictionary *targetDict, int arg3)
-{
-    NSLog(@"[Breezy] __UTTypeAddWithDeclarationDictionary() called with 0: %@ 1: %@ 2: %i 3: %i", lsdatabase, utiDict, targetDict, arg3);
-    //int retv = __OG_UTTypeAddWithDeclarationDictionary13(lsdatabase, utiDict, targetDict, arg3);
-    return nil;
-}
-
-//id (*__OG_UTTypeAddWithDeclarationDictionary)(id arg0, id arg1, int arg2, int arg3);
-id ___UTTypeAddWithDeclarationDictionary12(id lsdatabase, NSDictionary *utiDict, int arg2, int arg3)
-{
-    NSLog(@"[Breezy] __UTTypeAddWithDeclarationDictionary() called with 0: %@ 1: %@ 2: %i 3: %i", lsdatabase, utiDict, arg2, arg3);
-    //int retv = __OG_UTTypeAddWithDeclarationDictionary12(arg0, arg1, arg2, arg3);
-    return nil;
-}
 
 %ctor {
     
     NSString *processName = [[[[NSProcessInfo processInfo] arguments] lastObject] lastPathComponent];
     //HBLogDebug(@"Process name: %@", processName);
-    if ([processName isEqualToString:@"lsd"]){
-        HBLogDebug(@"[Breezy] tripping bro");
-        //int __UTTypeAddWithDeclarationDictionary(int arg0, int arg1, int arg2, int arg3)
-        MSImageRef cs = MSGetImageByName("/System/Library/Frameworks/CoreServices.framework/CoreServices");
-        void* weouthere = MSFindSymbol(cs, "__UTTypeAddWithDeclarationDictionary");
-        NSLog(@"[Breezy] hooking %p", weouthere);
-        
-        if (weouthere){
-            //MSHookFunction((void*)weouthere, (void*)___UTTypeAddWithDeclarationDictionary12, (void**)&__OG_UTTypeAddWithDeclarationDictionary12);
-        }
-      
-    }
     if ([processName isEqualToString:@"PineBoard"]){
         %init(PineBoard);
 

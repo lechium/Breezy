@@ -41,7 +41,6 @@
     NSArray <NSURL *> *items = arg[@"Items"];
     if (items.count > 0 && [prog isFinished]){
         HBLogDebug(@"info: %@", arg);
-        //HBLogDebug(@"handler: %@", [self handler]);
         NSMutableArray *paths = [NSMutableArray new];
         NSMutableArray *URLS = [NSMutableArray new];
         [items enumerateObjectsUsingBlock:^(NSURL * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -83,7 +82,7 @@
     id meta = [transfer metaData];
     [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_verifiableIdentity"];
     [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_canAutoAccept"];
-    id genericHandler = [[objc_getClass("SDAirDropHandlerGenericFiles") alloc] initWithTransfer:transfer bundleIdentifier:@"com.nito.nitoTV4"];
+    id genericHandler = [[%c(SDAirDropHandlerGenericFiles) alloc] initWithTransfer:transfer bundleIdentifier:@"com.nito.nitoTV4"];
     [genericHandler activate];
     return genericHandler;
     //} else {
@@ -104,11 +103,11 @@
     BOOL thirteenPlus = (kCFCoreFoundationVersionNumber > 1585.17); //12.4 is 1575.17, not sure what 12.4.1 is but this should be safe enough bump up
     __block id dialogManager; //13+ only
     if (thirteenPlus){
-        dialogManager = [objc_getClass("PBDialogManager") sharedInstance]; //get this out of the way
+        dialogManager = [%c(PBDialogManager) sharedInstance]; //get this out of the way
     }
     NSLog(@"[Breezy] CFVersion %.2f\n", kCFCoreFoundationVersionNumber);
     NSLog(@"[Breezy] showSystemAlertFromAlert: %@", alert);
-    id windowManager = [objc_getClass("PBWindowManager") sharedInstance];
+    id windowManager = [%c(PBWindowManager) sharedInstance];
     LSApplicationWorkspace *ws = [LSApplicationWorkspace defaultWorkspace];
     __block id context; //13+ only
     NSDictionary *userInfo = [alert userInfo];
@@ -151,7 +150,7 @@
     }
 
     //create the alert, we may not end up using it if theres only one application
-    id applicationAlert = [[objc_getClass("PBUserNotificationViewControllerAlert") alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", appList]];
+    id applicationAlert = [[%c(PBUserNotificationViewControllerAlert) alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", appList]];
     NSLog(@"[Breezy] available applications: %@", applications);
     NSString *cancelButtonTitle = @"Cancel";
     /*
@@ -249,7 +248,7 @@
     //done all our processing, time to show the alert!
     dispatch_async(dispatch_get_main_queue(), ^{
         if (thirteenPlus){
-            context = [objc_getClass("PBDialogContext") contextWithViewController:applicationAlert];
+            context = [%c(PBDialogContext) contextWithViewController:applicationAlert];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [dialogManager presentDialogWithContext:context options:@{@"PBDialogOptionPresentForcedKey": @1, @"PBDialogOptionPresentWhileScreenSaverActiveKey": @1} completion:nil];
             });
@@ -282,26 +281,46 @@
  
  */
 
+%new - (NSURL *)inboxForIdentifier:(NSString *)identifier {
+    //dlopen("/System/Library/Frameworks/CoreServices.framework/CoreServices", RTLD_LAZY);
+    MSImageRef cs = MSGetImageByName("/System/Library/Frameworks/CoreServices.framework/CoreServices");
+    void *(*LSGetInboxURLForAppIdentifier)(id identifier);
+    LSGetInboxURLForAppIdentifier = (void *(*)(id identifier)) MSFindSymbol(cs, "__LSGetInboxURLForAppIdentifier");
+    NSLog(@"[Breezy] %p", LSGetInboxURLForAppIdentifier);
+    if (LSGetInboxURLForAppIdentifier){
+        NSURL *inbox = (__bridge NSURL *)(*LSGetInboxURLForAppIdentifier)(identifier);
+        return inbox;
+    }
+    return nil;
+}
+
 %new - (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy {
     
-    Class FBSOpenApplicationOptions = NSClassFromString(@"FBSOpenApplicationOptions");
-    Class FBSystemServiceOpenApplicationRequest = NSClassFromString(@"FBSystemServiceOpenApplicationRequest");
-    id pbProcMan = [NSClassFromString(@"PBProcessManager") sharedInstance];
-    id _fbProcMan = [NSClassFromString(@"FBProcessManager") sharedInstance];
+    Class FBSOpenApplicationOptions = %c(FBSOpenApplicationOptions);
+    Class FBSystemServiceOpenApplicationRequest = %c(FBSystemServiceOpenApplicationRequest);
+    id pbProcMan = [%c(PBProcessManager) sharedInstance];
+    id _fbProcMan = [%c(FBProcessManager) sharedInstance];
+    NSString *bundleID = [proxy bundleIdentifier];
+    //[self performSelector:@selector(bro)];
+    NSString *inbox = [self inboxForIdentifier:bundleID].path;
+    NSLog(@"[Breezy] Inbizzle; %@", inbox);
     __block id pbProcess = [_fbProcMan systemApplicationProcess]; //Our process reference to PineBoard
     [items enumerateObjectsUsingBlock:^(NSString * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
         NSMutableDictionary *_options = [NSMutableDictionary new];
         _options[FBSOpenApplicationOptionKeyActivateSuspended] = @0;
         _options[FBSOpenApplicationOptionKeyDocumentOpen4LS] = @1;
-        //_options[@"LSBlockUntilComplete"] = @1; //13.0+ shouldnt hurt anything
+        _options[@"LSBlockUntilComplete"] = @1; //13.0+ shouldnt hurt anything
         _options[FBSOpenApplicationOptionKeyPayloadAnnotation] = @{@"LSMoveDocumentOnOpen": @0, @"LSDocumentDropCount": [NSNumber numberWithInteger:items.count], @"LSDocumentDropIndex": [NSNumber numberWithInteger:idx]};
         _options[FBSOpenApplicationOptionKeyPayloadOptions] = @{@"UIApplicationLaunchOptionsSourceApplicationKey": @"com.apple.PineBoard"};
         if (fileType == KBBreezyFileTypeLink){
             _options[FBSOpenApplicationOptionKeyPayloadURL] = [NSURL URLWithString:item];
         } else {
+            NSLog(@"[Breezy] og item: %@", item);
+            NSString *importedItem = [inbox stringByAppendingPathComponent:item.lastPathComponent];
+            NSLog(@"[Breezy] imported item: %@", importedItem);
             _options[FBSOpenApplicationOptionKeyPayloadURL] = [NSURL fileURLWithPath:item];
         }
-        NSString *bundleID = [proxy bundleIdentifier];
+        
         id options = [FBSOpenApplicationOptions optionsWithDictionary:_options];
         id openAppRequest = [FBSystemServiceOpenApplicationRequest request];
         [openAppRequest setTrusted:TRUE];
@@ -342,7 +361,10 @@
 %end
 %end //PineBoard Group
 
+//id (*_LSGetInboxURLForAppIdentifier)(id b);
+
 %ctor {
+    
     NSString *processName = [[[[NSProcessInfo processInfo] arguments] lastObject] lastPathComponent];
     //HBLogDebug(@"Process name: %@", processName);
     if ([processName isEqualToString:@"PineBoard"]){

@@ -5,8 +5,6 @@ Jailbreak implementation &amp; research for AirDrop on tvOS.
 
 In the latest updated the implementation has been improved and standardized to be more consistent with what you expect / experience on iOS and macOS when adding AirDrop support. Utilizing [UTI types](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/understanding_utis/understand_utis_intro/understand_utis_intro.html#//apple_ref/doc/uid/TP40001319-CH201-SW1) and Document types to enable users to discern what application (if there are multiple) will open / import the files.
 
-tldr: it is no longer necessary to listen for distributed notifications to get AirDrop server support added to your application! 
-
 Below you will find some resources on how to edit your Info.plist file to add AirDrop receiver support to your app.
 
 It is also necessary to handle opening file URL's (done the same way it is in iOS) to handle the files being fed to your through launch services.
@@ -135,7 +133,7 @@ airdropper:// is the custom scheme AirDropHelper listens for. From there its as 
     NSURL *url = [NSURL fileURLWithPath:filePath];
     NSLog(@"url: %@", url);
 
-    id sharingView = [[NSClassFromString(@"SFAirDropSharingViewControllerTV") alloc] initWithSharingItems:@[url]];
+    id sharingView = [[objc_getClass("SFAirDropSharingViewControllerTV") alloc] initWithSharingItems:@[url]];
     [sharingView setCompletionHandler:^(NSError *error) {
 
         NSLog(@"complete with error: %@", error);
@@ -152,6 +150,14 @@ illustrated in [AppDelegate.m](../master/AirDropHelper/AirDropHelper/AppDelegate
 
 The only other missing piece of the puzzle is signing the application with our own special entitlements specifically
 "com.apple.private.airdrop.discovery"
+
+## Provenance support (provscience folder)
+
+Due to the fact Provenance is written in swift and has tons of dependencies both managed by cocoapods and carthage and is very difficult & time consuming to build, I have opted to add AirDrop support through tweaking the application. The copies that I distribute have the Info.plist files augmented to support all the BIOS and ROM files, and then Tweak.x takes care of the rest, (handling the openURL:... calls)
+
+## VLC Support (vlcscience folder)
+
+Due to the fact VLC is an App Store app, we NEED to tweak it to inject support, and due to the fact this is such a popular app I didn't mind including this as part of Breezy (it should probably be a separate module) Same thing applies here, using code injection to add openURL: calls and moving the files into the folder where VLC will detect them. The other injection is done in Breezy.xm to avoid needing to modify the Info.plist file to advertise what UTI's are support (covered elsewhere in this README)
 
 ## Abusing sharingd
 
@@ -188,7 +194,7 @@ There's an issue with consent to receive files to your AppleTV from other AirDro
 If we are getting a nil handler in ***- (id)determineHandlerForTransfer:(id)transfer*** then we construct our own and return it, therefore the exception is no longer thrown from ***- (void)askEventForRecordID:(id)recordID withResults:(id)results*** in ***SDAirDropTransferManager***
 
 ```Objective-C
-    id genericHandler = [[NSClassFromString(@"SDAirDropHandlerGenericFiles") alloc] initWithTransfer:transfer bundleIdentifier:@"com.nito.nitoTV4"];
+    id genericHandler = [[objc_getClass("SDAirDropHandlerGenericFiles") alloc] initWithTransfer:transfer bundleIdentifier:@"com.nito.nitoTV4"];
     [genericHandler activate];
     return genericHandler;
 ```
@@ -228,6 +234,12 @@ From there we cycle through the items and convert them to NSString's (URL's can'
 
 ## PineBoard 
 
+There are various reasons we need to inject into PineBoard to get this process to work. 
+
+1. Presenting Alert Views system wide (this may be possible other ways, but this works for now)
+2. Interacting with PBProcessManager to open documents inside their targeted applications.
+
+
 ```Objective-C 
 - (_Bool)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2 {
     _Bool orig = %orig;
@@ -239,22 +251,22 @@ From there we cycle through the items and convert them to NSString's (URL's can'
 }
 ```
 
-***showSystemAlertFromAlert*** will show an alert if there is more than one application that is capable of opening the files / urls that were airdropped, otherwise it will automatically open URL's (tested 12.4-13.2) as necessary in the targeted application in a new function added
+***- (void)showSystemAlertFromAlert:(id)alert*** will show an alert if there is more than one application that is capable of opening the files / urls that were airdropped, otherwise it will automatically open URL's (tested 12.4-13.2) as necessary in the targeted application in a new function added
 
 ```Objective-C 
 %new - (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy
 ```
-there a combination of **FrontBoard(Services)** and **PineBoard** are used to actually open the urls in their target applications. A ***FBSystemServiceOpenApplicationRequest*** is created from a special ***NSDictionary*** that is crafted into an instance of ***FBSOpenApplicationOptions***. from there ***PBProcessManager*** is utlized in different ways depending on OS version to open the files / URLs in the targeted application.
+ A combination of **FrontBoard(Services)** framework and **PineBoard** application are used to open the URLs in their target applications. A ***FBSystemServiceOpenApplicationRequest*** is created from a special ***NSDictionary*** that is crafted into an instance of ***FBSOpenApplicationOptions***. from there ***PBProcessManager*** is utilized in different ways depending on OS version to open the files / URLs in the targeted application.
 
 
 ## Preference loader bundle
 
 Handles whether or not AirDrop sharing is turned on or off, and gives ability to restart sharingd in case injection didn't happen properly during installation. (bundle/BreezySettngs.m)
 
-Preferences are synced using a DistributedSynchronizationHandler, this is done as follows:
+Preferences are synced using a ***DistributedSynchronizationHandler***, this is done as follows:
 
 ```Objective-C
-    id facade = [[NSClassFromString(@"TVSettingsPreferenceFacade") alloc] initWithDomain:@"com.nito.Breezy" notifyChanges:TRUE];
+    id facade = [[objc_getClass("TVSettingsPreferenceFacade") alloc] initWithDomain:@"com.nito.Breezy" notifyChanges:TRUE];
    ...
    TSKSettingItem *settingsItem = [TSKSettingItem toggleItemWithTitle:@"Toggle AirDrop Server" description:@"Turn on AirDrop to receive files through AirDrop from supported devices" representedObject:facade keyPath:@"airdropServerState" onTitle:nil offTitle:nil];
 

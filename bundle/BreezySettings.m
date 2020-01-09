@@ -5,7 +5,7 @@
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
 #import "NSTask.h"
-
+#import <objc/runtime.h>
 
 @interface LSApplicationProxy (More)
 +(id)applicationProxyForIdentifier:(id)arg1;
@@ -51,7 +51,7 @@
 - (id)loadSettingGroups {
 
 
-    id facade = [[NSClassFromString(@"TVSettingsPreferenceFacade") alloc] initWithDomain:@"com.nito.Breezy" notifyChanges:TRUE];
+    id facade = [[objc_getClass("TVSettingsPreferenceFacade") alloc] initWithDomain:@"com.nito.Breezy" notifyChanges:TRUE];
     NSMutableArray *_backingArray = [NSMutableArray new];
     TSKSettingItem *settingsItem = [TSKSettingItem toggleItemWithTitle:@"Toggle AirDrop Server" description:@"Turn on AirDrop to receive files through AirDrop from supported devices" representedObject:facade keyPath:@"airdropServerState" onTitle:nil offTitle:nil];
     //NSLog(@"created settings item: %@", settingsItem);

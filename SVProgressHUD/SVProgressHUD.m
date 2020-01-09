@@ -12,6 +12,7 @@
 #import "SVProgressHUD.h"
 #import "SVIndefiniteAnimatedView.h"
 #import "SVRadialGradientLayer.h"
+#import <objc/runtime.h>
 
 NSString * const SVProgressHUDDidReceiveTouchEventNotification = @"SVProgressHUDDidReceiveTouchEventNotification";
 NSString * const SVProgressHUDDidTouchDownInsideNotification = @"SVProgressHUDDidTouchDownInsideNotification";
@@ -517,7 +518,7 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
 
 - (void)updateBlurBounds{
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-    if(NSClassFromString(@"UIBlurEffect")){
+    if(objc_getClass("UIBlurEffect")){
         // Remove background color, else the effect would not work
         self.hudView.backgroundColor = [UIColor clearColor];
         
@@ -1215,11 +1216,11 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
     }
     
     for (__strong UIView *possibleKeyboard in [keyboardWindow subviews]){
-        if([possibleKeyboard isKindOfClass:NSClassFromString(@"UIPeripheralHostView")] || [possibleKeyboard isKindOfClass:NSClassFromString(@"UIKeyboard")]){
+        if([possibleKeyboard isKindOfClass:objc_getClass("UIPeripheralHostView")] || [possibleKeyboard isKindOfClass:objc_getClass("UIKeyboard")]){
             return CGRectGetHeight(possibleKeyboard.bounds);
-        } else if([possibleKeyboard isKindOfClass:NSClassFromString(@"UIInputSetContainerView")]){
+        } else if([possibleKeyboard isKindOfClass:objc_getClass("UIInputSetContainerView")]){
             for (__strong UIView *possibleKeyboardSubview in [possibleKeyboard subviews]){
-                if([possibleKeyboardSubview isKindOfClass:NSClassFromString(@"UIInputSetHostView")]){
+                if([possibleKeyboardSubview isKindOfClass:objc_getClass("UIInputSetHostView")]){
                     return CGRectGetHeight(possibleKeyboardSubview.bounds);
                 }
             }

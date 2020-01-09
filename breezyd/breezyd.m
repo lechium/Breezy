@@ -3,21 +3,8 @@
 #import <UIKit/UIKit.h>
 #import "../MediaRemote/MediaRemote.h"
 #import "TVSPreferences.h"
-/*
-@interface TVSPreferences : NSObject
-+(id)preferencesWithDomain:(id)arg1;
-+(id)addObserverForDomain:(id)arg1 withDistributedSynchronizationHandler:(void (^)(id object))arg1;
- 
-@end
-*/
+#import <objc/runtime.h>
 
-
- @interface NSDistributedNotificationCenter : NSNotificationCenter
-+ (id)defaultCenter;
-- (void)removeObserver:(id)observer;
-- (void)addObserver:(id)arg1 selector:(SEL)arg2 name:(id)arg3 object:(id)arg4;
-- (void)postNotificationName:(id)arg1 object:(id)arg2 userInfo:(id)arg3;
-@end
 
 typedef enum : NSUInteger {
     SDAirDropDiscoverableModeOff,
@@ -44,13 +31,10 @@ typedef enum : NSUInteger {
 
 @implementation breezyHelper
 
-
-
 - (void)reloadSettings {
     // Reload settings.
     NSLog(@"*** [breezyd] :: Reloading settings");
     CFPreferencesAppSynchronize(CFSTR(APPLICATION_IDENTIFIER));
-    
     CFArrayRef keyList = CFPreferencesCopyKeyList(CFSTR(APPLICATION_IDENTIFIER), kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
     
     if (!keyList) {
@@ -72,7 +56,6 @@ typedef enum : NSUInteger {
 - (void)disableAirDrop {
     
     DLog(@"AirDrop Disabled!");
-    [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
     [self.discoveryController setDiscoverableMode:SDAirDropDiscoverableModeOff];
 }
 
@@ -86,7 +69,7 @@ typedef enum : NSUInteger {
     if ([self.discoveryController discoverableMode] == SDAirDropDiscoverableModeEveryone) return;
     DLog(@"AirDrop Enabled!");
 
-    self.discoveryController = [[NSClassFromString(@"SFAirDropDiscoveryController") alloc] init] ;
+    self.discoveryController = [[objc_getClass("SFAirDropDiscoveryController") alloc] init] ;
     [self.discoveryController setDiscoverableMode:SDAirDropDiscoverableModeEveryone];
     
 }
@@ -108,14 +91,10 @@ typedef enum : NSUInteger {
     [TVSPreferences addObserverForDomain:@"com.nito.Breezy" withDistributedSynchronizationHandler:^(id object) {
         [self preferencesUpdated];
     }];
-    
 }
 
-
-+ (id)sharedHelper
-{
++ (id)sharedHelper{
     static dispatch_once_t onceToken;
-    
     static breezyHelper *shared = nil;
     if(shared == nil)
     {
@@ -129,19 +108,13 @@ typedef enum : NSUInteger {
     return shared;
 }
 
-
 @end
-
 
 int main(int argc, char* argv[])
 {
     DLog(@"\breezyd: LOADED\n\n");
-    
     breezyHelper *helper = [breezyHelper sharedHelper];
-  
     [helper setupAirDrop];
-    
     CFRunLoopRun();
     return 0;
 }
-

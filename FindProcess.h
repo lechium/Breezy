@@ -17,7 +17,6 @@
 + (int)pidFromItemDescription:(NSString *)desc;
 + (pid_t) find_process:(const char*) name;
 + (boolean_t) process:(pid_t)ppid matches:(const char* )name;
-+ (void)classDumpObject:(id)obj;
 @end
 
 

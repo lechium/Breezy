@@ -1,4 +1,5 @@
 
+extern id __LSGetInboxURLForAppIdentifier(id);
 
 extern NSString * const FBSOpenApplicationOptionKeyDocumentOpen4LS; //@"__DocumentOpen4LS"
 extern NSString * const FBSOpenApplicationOptionKeyActivateSuspended; //@"__ActivateSuspended"
@@ -70,7 +71,7 @@ typedef enum : NSUInteger {
 - (void)postBulletinForFile:(NSString *)file;
 - (void)sendBulletinWithMessage:(NSString *)message title:(NSString *)title;
 - (void)openItems:(NSArray *)items ofType:(KBBreezyFileType)fileType withApplication:(id)proxy;
-
+- (NSURL *)inboxForIdentifier:(NSString *)identifier;
 @end
 
 @interface LSApplicationWorkspace: NSObject

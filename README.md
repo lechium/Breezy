@@ -175,11 +175,11 @@ The only other missing piece of the puzzle is signing the application with our o
 
 ## Provenance support (provscience folder)
 
-Due to the fact Provenance is written in swift and has tons of dependencies both managed by cocoapods and carthage and is very difficult & time consuming to build, I have opted to add AirDrop support through tweaking the application. The copies that I distribute have the Info.plist files augmented to support all the BIOS and ROM files, and then Tweak.x takes care of the rest, (handling the openURL:... calls)
+There are a few reasons I opted for code injection to add support to Provenance, its written in swift and has tons of dependencies both managed by cocoapods and carthage and is very difficult & time consuming to build, I have opted to add AirDrop support through tweaking the application. The copies that I distribute have the Info.plist files augmented to support all the BIOS and ROM files, and then Tweak.x takes care of the rest, (handling the openURL:... calls)
 
 ## VLC Support (vlcscience folder)
 
-Due to the fact VLC is an App Store app, we NEED to tweak it to inject support, and due to the fact this is such a popular app I didn't mind including this as part of Breezy (it should probably be a separate module) Same thing applies here, using code injection to add openURL: calls and moving the files into the folder where VLC will detect them. The other injection is done in Breezy.xm to avoid needing to modify the Info.plist file to advertise what UTI's are support (covered elsewhere in this README)
+Due to the fact VLC is an App Store app, we NEED to tweak it to inject support, plus this is such a popular app I didn't mind including this as part of Breezy (it should probably be a separate module) Same thing applies here, using code injection to add openURL: calls and moving the files into the folder where VLC will detect them. The other injection is done in Breezy.xm to avoid needing to modify the Info.plist file to advertise what UTI's are support (covered elsewhere in this README)
 
 ## Abusing sharingd
 
@@ -201,7 +201,7 @@ tl;dr the transfer needs a "handler" to determine what to do with the file once 
 - (id)determineHandlerForTransfer:(id)transfer
 ```
 
-Is where this handler is determined, so I target [here](../master/Breezy.xm#L101) first 
+Is where this handler is determined, so I target [here](../master/Breezy.xm#L75) first 
 
 There's an issue with consent to receive files to your AppleTV from other AirDropped devices, this is handled by a read only properties in **SFAirDropTransferMetaData**
 

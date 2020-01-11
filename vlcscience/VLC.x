@@ -14,6 +14,7 @@
 @end
 
 %hook VLCOpenNetworkStreamTVViewController
+//<3 to other open source projects https://github.com/videolan/vlc-ios/blob/master/Apple-TV/VLCOpenNetworkStreamTVViewController.m#L130
 
 %new - (void)outHere:(NSString *)urlToPlay {
     

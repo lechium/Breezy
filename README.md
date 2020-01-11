@@ -328,6 +328,10 @@ This is how to listen for changes from a preferenceloader bundle
 ```
 and preferenceUpdates tracks what the discovery mode is set to and either turns AirDrop on or off and updates the preferences accordingly.
 
+## More tvOS AirDrop Info 
+
+[Go Here](https://wiki.awkwardtv.org/wiki/AirDrop_Central)
+
 **The information listed below is for posterity / explaining how the daemon works, you don't need to listen for this manually at all.**
 
 ### Discovering AirDrop in the background

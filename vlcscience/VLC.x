@@ -2,17 +2,16 @@
 #import <UIKit/UIKit.h>
 
 @interface VLCOpenNetworkStreamTVViewController:  UIViewController
-@property (readwrite, nonatomic, weak) IBOutlet UITextField *playURLField;
+@property UITextField *playURLField;
 - (void)URLEnteredInField:(id)sender;
 - (void)outHere:(NSString *)urlStringToPlay;
 @end
 
 @interface AppleTVAppDelegate: UIResponder <UIApplicationDelegate>
-- (void)_openURLStringAndDismiss:(NSString *)urlString;
 - (void)importFileAtURL:(NSURL *)url;
 - (NSString *)uploadDirectory;
 @end
-
+//TODO future incorp downloading links? ffmpeg -user_agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/601.7.8 (KHTML, like Gecko) Version/9.1.3 Safari/537.86.7" -i http://185.38.12.60/sec/1503173737/363333397f6b65370bfc740ca4dea8c3f8dd2a93419f7748/ivs/12/b1/2ec5e15ba2a6/hls/tracks-4,5/index.m3u8 -c copy pd.mkv
 %hook VLCOpenNetworkStreamTVViewController
 //<3 to other open source projects https://github.com/videolan/vlc-ios/blob/master/Apple-TV/VLCOpenNetworkStreamTVViewController.m#L130
 
@@ -56,25 +55,20 @@
     return cache;
 }
 
-%new - (void)_openURLStringAndDismiss:(NSString *)urlString
-{
-    UITabBarController *tbc = (UITabBarController*)[[self window] rootViewController];
-    if (tbc.viewControllers.count > 2){
-        [tbc setSelectedIndex: 2];
-        UINavigationController *networkNavigationController = tbc.viewControllers[2];
-        //VLCOpenNetworkStreamTVViewController
-        UIViewController *topViewController = [networkNavigationController topViewController];
-        if ([topViewController respondsToSelector:@selector(outHere:)]){
-            [topViewController performSelector:@selector(outHere:) withObject:urlString];
-        }
-    }
-}
 
 %new - (void)importFileAtURL:(NSURL *)url {
 
+        UITabBarController *tabBarController = (UITabBarController*)[[self window] rootViewController];
         if (![url isFileURL]){
-            [self _openURLStringAndDismiss:url.absoluteString];
+            [tabBarController setSelectedIndex: 2];
+            UINavigationController *networkNavigationController = tabBarController.viewControllers[2];
+            //VLCOpenNetworkStreamTVViewController
+            UIViewController *topViewController = [networkNavigationController topViewController];
+            if ([topViewController respondsToSelector:@selector(outHere:)]){
+                [topViewController performSelector:@selector(outHere:) withObject:url];
+            }
         } else {
+            [tabBarController setSelectedIndex: 1];
             NSFileManager *man = [NSFileManager defaultManager];
             HBLogDebug(@"[VLC] host: %@ path: %@", url.host, url.path);
             NSString *cache = [self uploadDirectory];

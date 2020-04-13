@@ -189,7 +189,8 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         }
     }
 
-    BOOL shouldCleanup = true;
+    // when false, sharingd will not delete the transferred files.
+    BOOL shouldCleanup = false;
     ((void (*)(id, SEL, id, BOOL))objc_msgSend)(self, NSSelectorFromString(@"removeTransfer:shouldCleanup:"), transfer, shouldCleanup);
     %orig;
 }

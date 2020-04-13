@@ -184,6 +184,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             sent[@"Files"] = arg[@"Files"];
             sent[@"LocalFiles"] = paths;
             sent[@"URLS"] = URLS;
+            sent[KBBreezyAlertTitle] = @"AirDrop";
             HBLogDebug(@"Breezy: sending user info: %@", sent);
             [[NSDistributedNotificationCenter defaultCenter] postNotificationName:KBBreezyAirdropPresentAlert object:KBBreezyOpenAirDropFiles userInfo:blessPayload((NSDictionary *)sent)];
         }
@@ -393,6 +394,8 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         if (names.length > 400){
             appList = [NSString stringWithFormat:@"%@...", [names substringToIndex:400]];
         }
+        [applicationAlert setText:[NSString stringWithFormat:@"Open '%@' with...", appList]];
+
         NSArray  *applications = [ws applicationsAvailableForOpeningDocument:doxy];
         //NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
         //applications = [applications filteredArrayUsingPredicate: pred];

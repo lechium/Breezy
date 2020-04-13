@@ -411,7 +411,19 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         NSLog(@"[Breezy] available applications: %@", applications);
         NSString *cancelButtonTitle = @"Cancel";
         //let applications mimic one another to easily add AirDrop support
+
+        // EA: not sure if intentional, but when VLC is not installed, this ends up adding a VLC app entry to the 
+        // applications array. That causes this alert to contain multiple buttons (because there is multiple apps),
+        // with a blank button representing the phantom VLC app.
+        // I'll work around it by ignoring apps that dont have a localizedName
         applications = [self updatedApplicationsWithMimes:applications];
+        NSMutableArray *realApplicationa = [[NSMutableArray alloc] init];
+        for (id application in applications) {
+            if ([application localizedName] != nil) {
+                [realApplicationa addObject:application];
+            }
+        }
+        applications = [realApplicationa copy];
         
         //this is to work around old bug that may or may not still be present for ReProvision not registering
         //for IPA support properly.
@@ -465,6 +477,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         [applicationAlert addButtonWithTitle:cancelButtonTitle type:0 handler:^{
             
             dismissAlert();
+            // TODO: cleanup the airdropped files
         }];
         
         //done all our processing, time to show the alert!

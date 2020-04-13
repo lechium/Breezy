@@ -417,13 +417,13 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         // with a blank button representing the phantom VLC app.
         // I'll work around it by ignoring apps that dont have a localizedName
         applications = [self updatedApplicationsWithMimes:applications];
-        NSMutableArray *realApplicationa = [[NSMutableArray alloc] init];
+        NSMutableArray *realApplications = [[NSMutableArray alloc] init];
         for (id application in applications) {
             if ([application localizedName] != nil) {
-                [realApplicationa addObject:application];
+                [realApplications addObject:application];
             }
         }
-        applications = [realApplicationa copy];
+        applications = [realApplications copy];
         
         //this is to work around old bug that may or may not still be present for ReProvision not registering
         //for IPA support properly.

@@ -290,7 +290,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
     }
 
     // Only sharingd is expected to communicate
-    if (!isPayloadBlessed(payload, @"com.apple.private.airdrop.discovery")) {
+    if (!isPayloadBlessed(payload, @"com.apple.sharing.RemoteInteractionSession")) {
         return;
     }
 

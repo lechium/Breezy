@@ -402,7 +402,11 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             if (!doxy) {
                 doxy = [LSDocumentProxy documentProxyForName:fileName type:fileType MIMEType:nil];
             }
-            [names appendFormat:@"%@, ", fileName];
+            // Add comma if there are more files after this one
+            [names appendString:fileName];
+            if (idx < [files count] - 1) {
+                [names appendString:@", "];
+            }
         }];
    
         NSString *appList = names;

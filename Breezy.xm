@@ -336,14 +336,13 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
     
     if ([alertContext isEqualToString:KBBreezyRequestPermission]) {
 
-        __block NSString *recordID = payload[KBBreezyAirdropTransferRecordID];
         // Construct the buttons
         for (NSDictionary *buttonDefinition in payload[KBBreezyButtonDefinitions])
         {
             [applicationAlert addButtonWithTitle:buttonDefinition[KBBreezyButtonTitle] type:0 handler:^{
                 // Send the answer back
                 NSDictionary *responsePayload = @{
-                    KBBreezyAirdropTransferRecordID: recordID,
+                    KBBreezyAirdropTransferRecordID: payload[KBBreezyAirdropTransferRecordID],
                     KBBreezyAlertSelectedAction: buttonDefinition[KBBreezyButtonAction]
                 };
                 [[NSDistributedNotificationCenter defaultCenter] postNotificationName:KBBreezyAirdropPresentAlert object:KBBreezyRespondToPermission userInfo:responsePayload];
@@ -454,7 +453,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             if (hasIPA){
                 NSLog(@"[Breezy] no applications and its an IPA file, check for ReProvision!");
                 id reproCheck = [LSApplicationProxy applicationProxyForIdentifier:@"com.matchstic.reprovision.tvos"];
-                if (reproCheck){
+                if (reproCheck && [reproCheck localizedName]){
                     NSLog(@"[Breezy] found ReProvision: %@", reproCheck );
                     applications = @[reproCheck];
                 }

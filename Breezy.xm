@@ -412,7 +412,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         if (names.length > 400){
             appList = [NSString stringWithFormat:@"%@...", [names substringToIndex:400]];
         }
-        [applicationAlert setText:[NSString stringWithFormat:@"Open '%@' with...", appList]];
+        [applicationAlert setText:[NSString stringWithFormat:@"Open \"%@\" with...", appList]];
 
         NSArray *applications = [ws applicationsAvailableForOpeningDocument:doxy];
         //NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
@@ -468,6 +468,8 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
                     //process files
                     [self openItems:localFiles ofType:KBBreezyFileTypeLocal withApplication:launchApp];
                 }
+                // Make sure the entire airdrop container is cleaned up, not just the transferred files
+                cleanupFiles();
             return; //returning here because we dont want to show a dialog, we are done.
         } else if (applications.count > 1){  //multiple applications available, build up the menu
 
@@ -483,6 +485,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
                         //process files
                         [self openItems:localFiles ofType:KBBreezyFileTypeLocal withApplication:currentApp];
                     }
+                    cleanupFiles();
                     // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                     //     //leaving this here in case any of our processing actually needs to be in here..
                     // });
@@ -491,7 +494,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         } else { //no applications found
             cancelButtonTitle = @"OK";
             NSLog(@"no applications found to open these file(s)");
-            NSString *newMessage = [NSString stringWithFormat:@"Failed to find any applications to open '%@' with", names];
+            NSString *newMessage = [NSString stringWithFormat:@"Failed to find any applications to open \"%@\" with", names];
             [applicationAlert setText:newMessage];
 
             cleanupFiles();

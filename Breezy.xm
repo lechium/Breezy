@@ -180,11 +180,17 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 
         if (paths.count > 0 || URLS.count > 0) {
             
+            // The container for the transferred files. In some scenarios, PineBoard will be responsible for
+            // cleaning this up.
+            NSURL *containerLocation = ((NSURL * (*)(id, SEL, id))objc_msgSend)(self, NSSelectorFromString(@"transferURLForTransfer:"), transfer);
+
             NSMutableDictionary *sent = [NSMutableDictionary new];
             sent[@"Files"] = arg[@"Files"];
             sent[@"LocalFiles"] = paths;
             sent[@"URLS"] = URLS;
             sent[KBBreezyAlertTitle] = @"AirDrop";
+            sent[KBBreezyAirdropCustomDestination] = [containerLocation path];
+
             HBLogDebug(@"Breezy: sending user info: %@", sent);
             [[NSDistributedNotificationCenter defaultCenter] postNotificationName:KBBreezyAirdropPresentAlert object:KBBreezyOpenAirDropFiles userInfo:blessPayload((NSDictionary *)sent)];
         }
@@ -375,6 +381,15 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         NSArray <NSString *> *URLS = userInfo[@"URLS"];
         __block NSMutableString *names = [NSMutableString new];
         __block id doxy = nil;
+
+        // If the alert is cancelled or no compatible apps are installed, this handler will delete the airdropped files
+        void (^cleanupFiles)(void) = ^void(void) {
+            NSString *airdropContainer = payload[KBBreezyAirdropCustomDestination];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:airdropContainer]) {
+                [[NSFileManager defaultManager] removeItemAtPath:airdropContainer error:nil];
+            }
+        };
+
         //TODO: this could smarter, its possible the files selected dont all work in one app, need to accomodate that
         __block BOOL hasIPA = FALSE; //kinda of a hacky check to make sure IPA's go through ReProvision if its avail.
         [files enumerateObjectsUsingBlock:^(NSDictionary  * adFile, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -396,7 +411,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         }
         [applicationAlert setText:[NSString stringWithFormat:@"Open '%@' with...", appList]];
 
-        NSArray  *applications = [ws applicationsAvailableForOpeningDocument:doxy];
+        NSArray *applications = [ws applicationsAvailableForOpeningDocument:doxy];
         //NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
         //applications = [applications filteredArrayUsingPredicate: pred];
         if (URLS.count > 0){ //we take a different path here
@@ -475,12 +490,14 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             NSLog(@"no applications found to open these file(s)");
             NSString *newMessage = [NSString stringWithFormat:@"Failed to find any applications to open '%@' with", names];
             [applicationAlert setText:newMessage];
+
+            cleanupFiles();
         }
 
         [applicationAlert addButtonWithTitle:cancelButtonTitle type:0 handler:^{
             
             dismissAlert();
-            // TODO: cleanup the airdropped files
+            cleanupFiles();
         }];
         
         //done all our processing, time to show the alert!

@@ -22,6 +22,7 @@ NSString *KBBreezyButtonAction = @"KBBreezyButtonAction";
 NSString *KBBreezyButtonActionAccept = @"KBBreezyButtonActionAccept";
 NSString *KBBreezyButtonActionDeny = @"KBBreezyButtonActionDeny";
 NSString *KBBreezyAlertSelectedAction = @"KBBreezyAlertSelectedAction";
+NSString *KBBreezyAirdropCustomDestination = @"KBBreezyAirdropCustomDestination";
 
 extern "C" NSString *UTTypeCopyDescription(NSString *);
 extern "C" CFStringRef UTTypeCreatePreferredIdentifierForTag(CFStringRef inTagClass, CFStringRef inTag, CFStringRef inConformingToUTI);

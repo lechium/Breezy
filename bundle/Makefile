@@ -1,5 +1,5 @@
 ARCHS = arm64
-TARGET = appletv:10.1:9.0
+TARGET = appletv::9.0
 export GO_EASY_ON_ME=1
 export SDKVERSION=10.2
 THEOS_DEVICE_IP=twelve.local

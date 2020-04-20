@@ -152,6 +152,10 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
     };
     payload = blessPayload(payload);
 
+    NSLog(@"transfer preview image data %@", previewImage);
+    NSLog(@"preview image as nsdata %d bytes", (int)[previewImageData length]);
+    NSLog(@"notification to pineboard: %@", payload);
+
     // Ask Pineboard to present it
     [[NSDistributedNotificationCenter defaultCenter] postNotificationName:KBBreezyAirdropPresentAlert object:KBBreezyRequestPermission userInfo:payload];
 }
@@ -353,6 +357,10 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 
         // Handle preview image if needed
         NSData *previewImageData = payload[KBBreezyAlertPreviewImage];
+
+        NSLog(@"pineboard received notification: %@", payload);
+        NSLog(@"pineboard preview image: %d bytes", (int)[previewImageData length]);
+
         if (previewImageData) {
 
             // Construct UIImage from data
@@ -360,9 +368,14 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             CGImageRef imageRef = CGImageCreateWithPNGDataProvider(imgDataProvider, NULL, true, kCGRenderingIntentDefault);
             UIImage *previewImage = [[UIImage alloc] initWithCGImage:imageRef];
 
+            NSLog(@"pineboard constructed uiimage %@", previewImage);
+
             // Add it to the alert
             // [applicationAlert setHeaderImage:previewImage];
             ((void (*)(id, SEL, id))objc_msgSend)(applicationAlert, NSSelectorFromString(@"setHeaderImage:"), previewImage);
+
+            id headerImage = ((id (*)(id, SEL))objc_msgSend)(applicationAlert, NSSelectorFromString(@"headerImage"));
+            NSLog(@"pineboard alert's header image: %@", headerImage);
         }
 
         dispatch_async(dispatch_get_main_queue(), ^{

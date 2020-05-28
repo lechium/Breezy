@@ -1,12 +1,43 @@
 #import "FindProcess.h"
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
-#import "FBSystemServiceOpenApplicationRequest.h"
+#import <objc/message.h>
 #import "breezy.h"
 #import "CTBlockDescription.h"
 #include <CoreFoundation/CoreFoundation.h>
 
 @class BindingEvaluator, LSContext, LSBundleData;
+
+
+static NSDictionary *blessPayload(NSDictionary *payload) {
+    NSMutableDictionary *blessed = [payload mutableCopy];
+    // Compiler will warn about NSKeyedArchiver being ios11+ without this guard
+    if (@available(tvOS 11.0, *)) {
+        // Create audittoken to verify identity
+        id auditToken = ((id (*)(id, SEL))objc_msgSend)(NSClassFromString(@"BSAuditToken"), NSSelectorFromString(@"tokenForCurrentProcess"));
+        NSData *token = [NSKeyedArchiver archivedDataWithRootObject:auditToken];
+        [blessed setValue:token forKey:KBBreezyAuditToken];
+    }
+
+    return blessed;
+}
+
+static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlement) {
+    // Verify the authenticity of the notifications origin
+    if (@available(tvOS 11.0, *)) {
+        NSData *auditTokenArchive = (NSData *)payload[KBBreezyAuditToken];
+        id auditToken = [NSKeyedUnarchiver unarchivedObjectOfClass:NSClassFromString(@"BSAuditToken") fromData:auditTokenArchive error:nil];
+
+        BOOL senderHasEntitlement = ((BOOL * (*)(id, SEL, NSString *))objc_msgSend)(auditToken, NSSelectorFromString(@"hasEntitlement:"), expectedEntitlement);
+        if (!senderHasEntitlement)
+        {
+            NSLog(@"failed to verify sender: %d, expected: %@", senderHasEntitlement, expectedEntitlement);
+            return false;
+        }
+    }
+
+    return true;
+}
 
 //start actual code
 %group Sharingd
@@ -30,22 +61,116 @@
 
 %end
 
-%hook SFAirDropTransfer
 
 //all of this code is thoroughly documented in the README if you are having trouble understanding it.
+%hook SDAirDropTransferManager
 
--(void)updateWithInformation:(id)arg {
+- (id)init {
+    id _self = %orig;
+    // Observer for responses from PineBoard - containing what the user selected on the alert
+    id notificationCenter = [NSDistributedNotificationCenter defaultCenter];
+    [notificationCenter addObserver:self  selector:NSSelectorFromString(@"handleBreezyAirdropPermissionResponse:") name:KBBreezyAirdropPresentAlert object:KBBreezyRespondToPermission];
+
+    return _self;
+}
+
+- (id)determineHandlerForTransfer:(id)transfer { 
     %log;
-    NSProgress *prog = [self transferProgress];
-    //HBLogDebug(@"progress: %@", prog);
+
+    id genericHandler = [[%c(SDAirDropHandlerGenericFiles) alloc] initWithTransfer:transfer bundleIdentifier:@"com.nito.nitoTV4"];
+    // [genericHandler prepareOrPerformOpenAction];
+    // [genericHandler updatePossibleActions];
+    ((void (*)(id, SEL))objc_msgSend)(genericHandler, NSSelectorFromString(@"prepareOrPerformOpenAction"));
+    ((void (*)(id, SEL))objc_msgSend)(genericHandler, NSSelectorFromString(@"updatePossibleActions"));
+    [genericHandler activate];
+    
+    return genericHandler;
+}
+
+- (void)askEventForRecordID:(id)recordID withResults:(id)results {
+    
+    %orig;
+
+    SFAirDropTransfer *transfer = ((NSDictionary *(*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"transferIdentifierToTransfer"))[recordID];
+    // Requests from trusted devices don't need the alert
+    if ([[[transfer metaData] valueForKey:@"_canAutoAccept"] boolValue] == true) {
+        return;
+    }
+
+    // Sending device's name
+    NSString *sender = [[transfer metaData] valueForKey:@"_senderComputerName"];
+
+    NSArray *transferItems = [[[transfer metaData] valueForKey:@"_items"] allObjects];
+    NSString *alertText;
+    if ([transferItems count] == 1) {
+        // One file being transfered. Try to determine what kind of file it is
+        NSString *type = [transferItems[0] valueForKey:@"_type"];
+        NSString *fileDescription = UTTypeCopyDescription(type);
+        if (fileDescription) {
+            alertText = [NSString stringWithFormat:@"\"%@\" would like to share a %@ file.", sender, fileDescription];
+        }
+        else {
+            // Unknown file type
+            alertText = [NSString stringWithFormat:@"\"%@\" would like to share a file.", sender];
+        }
+    }
+    else {
+        // Multiple files
+        alertText = [NSString stringWithFormat:@"\"%@\" would like to share multiple files.", sender];
+    }
+
+    // Construct serializable preview image if needed
+    NSData *previewImageData = [NSData new];
+    CGImageRef previewImage = (__bridge CGImageRef)[[transfer metaData] valueForKey:@"_previewImage"];
+    if (previewImage) {
+
+        NSDictionary *properties;
+        CFMutableDataRef newImageData = CFDataCreateMutable(NULL, 0);
+        CFStringRef type = UTTypeCreatePreferredIdentifierForTag(CFSTR("public.mime-type"), (__bridge CFStringRef) @"image/png", CFSTR("public.image"));
+        CGImageDestinationRef destination = CGImageDestinationCreateWithData(newImageData, type, 1, NULL);
+        CGImageDestinationAddImage(destination, previewImage, (__bridge CFDictionaryRef) properties);
+        CGImageDestinationFinalize(destination);
+        previewImageData = (__bridge NSData *)newImageData;
+    }
+
+    // Construct the alert request
+    NSDictionary *payload = @{
+        KBBreezyAirdropTransferRecordID: recordID,
+        KBBreezyAlertTitle: @"AirDrop",
+        KBBreezyAlertDetail: alertText,
+        KBBreezyAlertPreviewImage: previewImageData,
+        KBBreezyButtonDefinitions: @[
+            @{
+                KBBreezyButtonTitle: @"Accept",
+                KBBreezyButtonAction: KBBreezyButtonActionAccept,
+            },
+            @{
+                KBBreezyButtonTitle: @"Decline",
+                KBBreezyButtonAction: KBBreezyButtonActionDeny,
+            }
+        ]
+    };
+    payload = blessPayload(payload);
+
+    NSLog(@"transfer preview image data %@", previewImage);
+    NSLog(@"preview image as nsdata %d bytes", (int)[previewImageData length]);
+    NSLog(@"notification to pineboard: %@", payload);
+
+    // Ask Pineboard to present it
+    [[NSDistributedNotificationCenter defaultCenter] postNotificationName:KBBreezyAirdropPresentAlert object:KBBreezyRequestPermission userInfo:payload];
+}
+
+-(void)finishedEventForRecordID:(id)recordID withResults:(id)arg
+{
+    SFAirDropTransfer *transfer = ((NSDictionary *(*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"transferIdentifierToTransfer"))[recordID];
     NSArray <NSURL *> *items = arg[@"Items"];
-    if (items.count > 0 && [prog isFinished]){
-        HBLogDebug(@"info: %@", arg);
+    if (items.count > 0) {
+
         NSMutableArray *paths = [NSMutableArray new];
         NSMutableArray *URLS = [NSMutableArray new];
-        [items enumerateObjectsUsingBlock:^(NSURL * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj respondsToSelector:(@selector(isFileURL))]){
-                if ([obj isFileURL]){
+        for (NSURL *obj in items) {
+            if ([obj respondsToSelector:(@selector(isFileURL))]) {
+                if ([obj isFileURL]) {
                     [paths addObject:[obj path]];
                 } else {
                     HBLogDebug(@"obj isnt a file path: %@", obj);
@@ -55,41 +180,67 @@
                 HBLogDebug(@"doesnt respond to isFileURL: %@", obj);
                 [paths addObject:[obj path]];
             }
-        }];
-        if (paths.count > 0 || URLS.count > 0){
+        }
+
+        if (paths.count > 0 || URLS.count > 0) {
             
+            // The container for the transferred files. In some scenarios, PineBoard will be responsible for
+            // cleaning this up.
+            NSURL *containerLocation = ((NSURL * (*)(id, SEL, id))objc_msgSend)(self, NSSelectorFromString(@"transferURLForTransfer:"), transfer);
+
             NSMutableDictionary *sent = [NSMutableDictionary new];
             sent[@"Files"] = arg[@"Files"];
             sent[@"LocalFiles"] = paths;
             sent[@"URLS"] = URLS;
-            sent[@"SenderCompositeName"] = arg[@"SenderCompositeName"];
-            sent[@"SenderComputerName"] = arg[@"SenderComputerName"];
+            sent[KBBreezyAlertTitle] = @"AirDrop";
+            sent[KBBreezyAirdropCustomDestination] = [containerLocation path];
+
             HBLogDebug(@"Breezy: sending user info: %@", sent);
-            [[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"com.breezy.kludgeh4x" object:nil userInfo:sent];
+            [[NSDistributedNotificationCenter defaultCenter] postNotificationName:KBBreezyAirdropPresentAlert object:KBBreezyOpenAirDropFiles userInfo:blessPayload((NSDictionary *)sent)];
         }
     }
+
+    // when false, sharingd will not delete the transferred files.
+    BOOL shouldCleanup = false;
+    ((void (*)(id, SEL, id, BOOL))objc_msgSend)(self, NSSelectorFromString(@"removeTransfer:shouldCleanup:"), transfer, shouldCleanup);
     %orig;
 }
-%end
 
-%hook SDAirDropTransferManager
+%new
+- (void)handleBreezyAirdropPermissionResponse:(id)notification {
+    NSDictionary *payload = [notification userInfo];
 
-- (id)determineHandlerForTransfer:(id)transfer { 
-    %log;
-    id  r = %orig;
-    //  if (!r){
-    //For now, force all transfers to be acceptable.
-    id meta = [transfer metaData];
-    [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_verifiableIdentity"];
-    [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_canAutoAccept"];
-    id genericHandler = [[%c(SDAirDropHandlerGenericFiles) alloc] initWithTransfer:transfer bundleIdentifier:@"com.nito.nitoTV4"];
-    [genericHandler activate];
-    return genericHandler;
-    //} else {
-    //  HBLogDebug(@"Breezy: %@ created for transfer: %@", r, transfer);
-    //}
-    return r;
+    // Sharingd does not have the entitlement to perform this :(
+    // i would like to figure out some sort of check, so rogue process can't send an accept request in
+    // if (!isPayloadBlessed(payload, @"com.apple.backboard.client")) {
+    //     return;
+    // }
+
+    NSString *recordID = payload[KBBreezyAirdropTransferRecordID];
+    if (!recordID) {
+        return;
+    }
+
+    NSString *selectedActionIdentifier = payload[KBBreezyAlertSelectedAction];
+    id selectedAction = nil;
+
+    SFAirDropTransfer *transfer = ((NSDictionary *(*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"transferIdentifierToTransfer"))[recordID];
+    NSArray *possibleActions = ((NSArray *(*)(id, SEL))objc_msgSend)(transfer, NSSelectorFromString(@"possibleActions"));
+
+    // Determine which action is intended
+    if ([selectedActionIdentifier isEqualToString:KBBreezyButtonActionAccept]) {
+        // Accept is the first "possible action"
+        selectedAction = possibleActions[0];
+    }
+    else if ([selectedActionIdentifier isEqualToString:KBBreezyButtonActionDeny]) {
+        selectedAction = [transfer valueForKey:@"_cancelAction"];
+    }
+
+    // Perform selected action
+    ((void (*)(id, SEL, id, id))objc_msgSend)(self, NSSelectorFromString(@"transfer:actionTriggeredForAction:"), transfer, selectedAction);
+    ((void (*)(id, SEL, id))objc_msgSend)(self, NSSelectorFromString(@"transferUserResponseUpdated:"), transfer);
 }
+
 %end
 
 %end //Sharingd Group
@@ -137,145 +288,253 @@
     return newApps;
 }
 
-%new - (void)showSystemAlertFromAlert:(id)alert {
+%new - (void)showSystemAlertFromAlert:(id)alert
+{
     %log;
-    BOOL thirteenPlus = (kCFCoreFoundationVersionNumber > 1585.17); //12.4 is 1575.17, not sure what 12.4.1 is but this should be safe enough bump up
-    __block id dialogManager; //13+ only
-    if (thirteenPlus){
-        dialogManager = [%c(PBDialogManager) sharedInstance]; //get this out of the way
-    }
-    NSLog(@"[Breezy] CFVersion %.2f\n", kCFCoreFoundationVersionNumber);
-    NSLog(@"[Breezy] showSystemAlertFromAlert: %@", alert);
-    id windowManager = [%c(PBWindowManager) sharedInstance];
-    LSApplicationWorkspace *ws = [LSApplicationWorkspace defaultWorkspace];
-    __block id context; //13+ only
-    NSDictionary *userInfo = [alert userInfo];
-    NSArray <NSDictionary *> *files = userInfo[@"Files"];
-    NSArray <NSString *> *localFiles = userInfo[@"LocalFiles"];
-    NSArray <NSString *> *URLS = userInfo[@"URLS"];
-    __block NSMutableString *names = [NSMutableString new];
-    __block id doxy = nil;
-    //TODO: this could smarter, its possible the files selected dont all work in one app, need to accomodate that
-    __block BOOL hasIPA = FALSE; //kinda of a hacky check to make sure IPA's go through ReProvision if its avail.
-    [files enumerateObjectsUsingBlock:^(NSDictionary  * adFile, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSString *fileName = adFile[@"FileName"];
-        NSString *fileType = adFile[@"FileType"];
-        if ([[[fileType pathExtension] lowercaseString] isEqualToString:@"ipa"] || [[[fileName pathExtension] lowercaseString] isEqualToString:@"ipa"]){
-            hasIPA = TRUE;
-        }
-        //h4x, we are only creating doxy if it doesnt already exist, so that means we are only taking into account the file type of the first file in the list.
-        if (!doxy) {
-            doxy = [LSDocumentProxy documentProxyForName:fileName type:fileType MIMEType:nil];
-        }
-        [names appendFormat:@"%@, ", fileName];
-    }];
-   
-    NSString *appList = names;
-    if (names.length > 400){
-        appList = [NSString stringWithFormat:@"%@...", [names substringToIndex:400]];
-    }
-    NSArray  *applications = [ws applicationsAvailableForOpeningDocument:doxy];
-    //NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
-    //applications = [applications filteredArrayUsingPredicate: pred];
-    if (URLS.count > 0){ //we take a different path here
-        NSString *firstURL = URLS[0];
-        [names appendString:firstURL];
-        NSString *scheme = [[NSURL URLWithString:firstURL] scheme];
-        NSLog(@"[Breezy] scheme: %@", scheme);
-        applications = [ws applicationsAvailableForHandlingURLScheme:[[NSURL URLWithString:firstURL] scheme]];
-        //PBLinkHandler is useless and we dont want to list it as an option.
-        NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.apple.PBLinkHandler'"];
-        applications = [applications filteredArrayUsingPredicate: pred];
+    NSDictionary *payload = [alert userInfo];
+    NSString *alertContext = [alert object];
+
+    if ([alertContext isEqualToString:KBBreezyRespondToPermission])
+    {
+        return;
     }
 
-    //create the alert, we may not end up using it if theres only one application
-    id applicationAlert = [[%c(PBUserNotificationViewControllerAlert) alloc] initWithTitle:@"AirDrop" text:[NSString stringWithFormat:@"Open '%@' with...", appList]];
-    NSLog(@"[Breezy] available applications: %@", applications);
-    NSString *cancelButtonTitle = @"Cancel";
-    //let applications mimic one another to easily add AirDrop support
-    applications = [self updatedApplicationsWithMimes:applications];
+    // Only sharingd is expected to communicate
+    if (!isPayloadBlessed(payload, @"com.apple.sharing.RemoteInteractionSession")) {
+        return;
+    }
+
+    // Construct the alert
+    id applicationAlert = [[%c(PBUserNotificationViewControllerAlert) alloc] initWithTitle:payload[KBBreezyAlertTitle] text:payload[KBBreezyAlertDetail]];
+    __weak typeof(applicationAlert) weakApplicationAlert = applicationAlert;
+
+    // Dismiss handler has special behavior depending on os version
+    void (^dismissAlert)(void) = nil;
+    void (^presentAlert)(void) = nil;
+
+    if (kCFCoreFoundationVersionNumber > 1585.17)
+    {
+        // iOS 13+
+        __block id ios13AlertContext = nil;
+        presentAlert = ^(void) {
+            ios13AlertContext = [%c(PBDialogContext) contextWithViewController:applicationAlert];
+            [[%c(PBDialogManager) sharedInstance] presentDialogWithContext:ios13AlertContext options:@{@"PBDialogOptionPresentForcedKey": @1, @"PBDialogOptionPresentWhileScreenSaverActiveKey": @1} completion:nil];
+        };
+
+        dismissAlert = ^void(void) {
+            [[%c(PBDialogManager) sharedInstance] dismissDialogWithContext:ios13AlertContext options:nil completion:nil];
+        };
+    }
+    else
+    {
+        // iOS 12 and under
+        id windowManager = [%c(PBWindowManager) sharedInstance];
+        presentAlert = ^(void) {
+            [windowManager presentDialogViewController:applicationAlert];
+        };
+
+        dismissAlert = ^void(void) {
+            [windowManager dismissDialogViewController:weakApplicationAlert];
+        };
+    }
     
-    //this is to work around old bug that may or may not still be present for ReProvision not registering
-    //for IPA support properly.
-    
-    if (applications.count == 0){
-        if (hasIPA){
-            NSLog(@"[Breezy] no applications and its an IPA file, check for ReProvision!");
-            id reproCheck = [LSApplicationProxy applicationProxyForIdentifier:@"com.matchstic.reprovision.tvos"];
-            if (reproCheck){
-                NSLog(@"[Breezy] found ReProvision: %@", reproCheck );
-                applications = @[reproCheck];
+    if ([alertContext isEqualToString:KBBreezyRequestPermission]) {
+
+        // Construct the buttons
+        for (NSDictionary *buttonDefinition in payload[KBBreezyButtonDefinitions])
+        {
+            [applicationAlert addButtonWithTitle:buttonDefinition[KBBreezyButtonTitle] type:0 handler:^{
+                // Send the answer back
+                NSDictionary *responsePayload = @{
+                    KBBreezyAirdropTransferRecordID: payload[KBBreezyAirdropTransferRecordID],
+                    KBBreezyAlertSelectedAction: buttonDefinition[KBBreezyButtonAction]
+                };
+                [[NSDistributedNotificationCenter defaultCenter] postNotificationName:KBBreezyAirdropPresentAlert object:KBBreezyRespondToPermission userInfo:responsePayload];
+                // Dismiss the alert
+                dismissAlert();
+            }];
+        }
+
+        // Handle preview image if needed
+        NSData *previewImageData = payload[KBBreezyAlertPreviewImage];
+
+        NSLog(@"pineboard received notification: %@", payload);
+        NSLog(@"pineboard preview image: %d bytes", (int)[previewImageData length]);
+
+        if (previewImageData) {
+
+            // Construct UIImage from data
+            CGDataProviderRef imgDataProvider = CGDataProviderCreateWithCFData((__bridge CFDataRef)previewImageData);
+            CGImageRef imageRef = CGImageCreateWithPNGDataProvider(imgDataProvider, NULL, true, kCGRenderingIntentDefault);
+            UIImage *previewImage = [[UIImage alloc] initWithCGImage:imageRef];
+
+            NSLog(@"pineboard constructed uiimage %@", previewImage);
+
+            // Add it to the alert
+            // [applicationAlert setHeaderImage:previewImage];
+            ((void (*)(id, SEL, id))objc_msgSend)(applicationAlert, NSSelectorFromString(@"setHeaderImage:"), previewImage);
+
+            id headerImage = ((id (*)(id, SEL))objc_msgSend)(applicationAlert, NSSelectorFromString(@"headerImage"));
+            NSLog(@"pineboard alert's header image: %@", headerImage);
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            presentAlert();
+        });
+    }
+    else if ([alertContext isEqualToString:KBBreezyOpenAirDropFiles]) {
+        NSLog(@"[Breezy] CFVersion %.2f\n", kCFCoreFoundationVersionNumber);
+        NSLog(@"[Breezy] showSystemAlertFromAlert: %@", alert);
+
+        LSApplicationWorkspace *ws = [LSApplicationWorkspace defaultWorkspace];
+        NSDictionary *userInfo = [alert userInfo];
+        NSArray <NSDictionary *> *files = userInfo[@"Files"];
+        NSArray <NSString *> *localFiles = userInfo[@"LocalFiles"];
+        NSArray <NSString *> *URLS = userInfo[@"URLS"];
+        __block NSMutableString *names = [NSMutableString new];
+        __block id doxy = nil;
+
+        // If the alert is cancelled or no compatible apps are installed, this handler will delete the airdropped files
+        void (^cleanupFiles)(void) = ^void(void) {
+            NSString *airdropContainer = payload[KBBreezyAirdropCustomDestination];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:airdropContainer]) {
+                [[NSFileManager defaultManager] removeItemAtPath:airdropContainer error:nil];
+            }
+        };
+
+        //TODO: this could smarter, its possible the files selected dont all work in one app, need to accomodate that
+        __block BOOL hasIPA = FALSE; //kinda of a hacky check to make sure IPA's go through ReProvision if its avail.
+        [files enumerateObjectsUsingBlock:^(NSDictionary  * adFile, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *fileName = adFile[@"FileName"];
+            NSString *fileType = adFile[@"FileType"];
+            if ([[[fileType pathExtension] lowercaseString] isEqualToString:@"ipa"] || [[[fileName pathExtension] lowercaseString] isEqualToString:@"ipa"]){
+                hasIPA = TRUE;
+            }
+            //h4x, we are only creating doxy if it doesnt already exist, so that means we are only taking into account the file type of the first file in the list.
+            if (!doxy) {
+                doxy = [LSDocumentProxy documentProxyForName:fileName type:fileType MIMEType:nil];
+            }
+            // Add comma if there are more files after this one
+            [names appendString:fileName];
+            if (idx < [files count] - 1) {
+                [names appendString:@", "];
+            }
+        }];
+   
+        NSString *appList = names;
+        if (names.length > 400){
+            appList = [NSString stringWithFormat:@"%@...", [names substringToIndex:400]];
+        }
+        [applicationAlert setText:[NSString stringWithFormat:@"Open \"%@\" with...", appList]];
+
+        NSArray *applications = [ws applicationsAvailableForOpeningDocument:doxy];
+        //NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
+        //applications = [applications filteredArrayUsingPredicate: pred];
+        if (URLS.count > 0){ //we take a different path here
+            NSString *firstURL = URLS[0];
+            [names appendString:firstURL];
+            NSString *scheme = [[NSURL URLWithString:firstURL] scheme];
+            NSLog(@"[Breezy] scheme: %@", scheme);
+            applications = [ws applicationsAvailableForHandlingURLScheme:[[NSURL URLWithString:firstURL] scheme]];
+            //PBLinkHandler is useless and we dont want to list it as an option.
+            NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.apple.PBLinkHandler'"];
+            applications = [applications filteredArrayUsingPredicate: pred];
+        }
+
+        // create the alert, we may not end up using it if theres only one application
+        NSLog(@"[Breezy] available applications: %@", applications);
+        NSString *cancelButtonTitle = @"Cancel";
+        //let applications mimic one another to easily add AirDrop support
+
+        // EA: not sure if intentional, but when VLC is not installed, this ends up adding a VLC app entry to the 
+        // applications array. That causes this alert to contain multiple buttons (because there is multiple apps),
+        // with a blank button representing the phantom VLC app.
+        // I'll work around it by ignoring apps that dont have a localizedName
+        applications = [self updatedApplicationsWithMimes:applications];
+        NSMutableArray *realApplications = [[NSMutableArray alloc] init];
+        for (id application in applications) {
+            if ([application localizedName] != nil) {
+                [realApplications addObject:application];
             }
         }
-    }
-    if (applications.count == 1){ //Theres only one application, just open it automatically
-        id launchApp = applications[0];
-            if (URLS.count > 0){
-                //process URLs
-                [self openItems:URLS ofType:KBBreezyFileTypeLink withApplication:launchApp];
-            } else {
-                //process files
-                [self openItems:localFiles ofType:KBBreezyFileTypeLocal withApplication:launchApp];
-            }
-        return; //returning here because we dont want to show a dialog, we are done.
-    } else if (applications.count > 1){  //multiple applications available, build up the menu
-        __weak typeof(applicationAlert) weakAlert = applicationAlert;
-        [applications enumerateObjectsUsingBlock:^(id  _Nonnull currentApp, NSUInteger idx, BOOL * _Nonnull stop) {
-            [applicationAlert addButtonWithTitle:[currentApp localizedName] type:0 handler:^{
-                if (thirteenPlus) {
-                    [dialogManager dismissDialogWithContext:context options:nil completion:nil];
-                } else {
-                    [windowManager dismissDialogViewController:weakAlert];
+        applications = [realApplications copy];
+        
+        //this is to work around old bug that may or may not still be present for ReProvision not registering
+        //for IPA support properly.
+        
+        if (applications.count == 0){
+            if (hasIPA){
+                NSLog(@"[Breezy] no applications and its an IPA file, check for ReProvision!");
+                id reproCheck = [LSApplicationProxy applicationProxyForIdentifier:@"com.matchstic.reprovision.tvos"];
+                if (reproCheck && [reproCheck localizedName]){
+                    NSLog(@"[Breezy] found ReProvision: %@", reproCheck );
+                    applications = @[reproCheck];
                 }
+            }
+        }
+        if (applications.count == 1){ //Theres only one application, just open it automatically
+            id launchApp = applications[0];
                 if (URLS.count > 0){
                     //process URLs
-                    [self openItems:URLS ofType:KBBreezyFileTypeLink withApplication:currentApp];
+                    [self openItems:URLS ofType:KBBreezyFileTypeLink withApplication:launchApp];
                 } else {
                     //process files
-                    [self openItems:localFiles ofType:KBBreezyFileTypeLocal withApplication:currentApp];
+                    [self openItems:localFiles ofType:KBBreezyFileTypeLocal withApplication:launchApp];
                 }
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                    //leaving this here in case any of our processing actually needs to be in here..
-                });
+                // Make sure the entire airdrop container is cleaned up, not just the transferred files
+                cleanupFiles();
+            return; //returning here because we dont want to show a dialog, we are done.
+        } else if (applications.count > 1){  //multiple applications available, build up the menu
+
+            [applications enumerateObjectsUsingBlock:^(id  _Nonnull currentApp, NSUInteger idx, BOOL * _Nonnull stop) {
+                [applicationAlert addButtonWithTitle:[currentApp localizedName] type:0 handler:^{
+                    
+                    dismissAlert();
+
+                    if (URLS.count > 0){
+                        //process URLs
+                        [self openItems:URLS ofType:KBBreezyFileTypeLink withApplication:currentApp];
+                    } else {
+                        //process files
+                        [self openItems:localFiles ofType:KBBreezyFileTypeLocal withApplication:currentApp];
+                    }
+                    cleanupFiles();
+                    // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                    //     //leaving this here in case any of our processing actually needs to be in here..
+                    // });
+                }];
             }];
+        } else { //no applications found
+            cancelButtonTitle = @"OK";
+            NSLog(@"no applications found to open these file(s)");
+            NSString *newMessage = [NSString stringWithFormat:@"Failed to find any applications to open \"%@\" with", names];
+            [applicationAlert setText:newMessage];
+
+            cleanupFiles();
+        }
+
+        [applicationAlert addButtonWithTitle:cancelButtonTitle type:0 handler:^{
+            
+            dismissAlert();
+            cleanupFiles();
         }];
-    } else { //no applications found
-        cancelButtonTitle = @"OK";
-        NSLog(@"no applications found to open these file(s)");
-        NSString *newMessage = [NSString stringWithFormat:@"Failed to find any applications to open '%@' with", names];
-        [applicationAlert setText:newMessage];
+        
+        //done all our processing, time to show the alert!
+        presentAlert();
+
+        HBLogDebug(@"file: %@ of type: %@ can open in the following applications: %@",fileName, fileType, applications);
     }
-    __weak typeof(applicationAlert) weakAlert = applicationAlert;
-    [applicationAlert addButtonWithTitle:cancelButtonTitle type:0 handler:^{
-        if (thirteenPlus) {
-            [dialogManager dismissDialogWithContext:context options:nil completion:nil];
-        } else {
-            [windowManager dismissDialogViewController:weakAlert];
-        }
-    }];
-    
-    //done all our processing, time to show the alert!
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (thirteenPlus){
-            context = [%c(PBDialogContext) contextWithViewController:applicationAlert];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [dialogManager presentDialogWithContext:context options:@{@"PBDialogOptionPresentForcedKey": @1, @"PBDialogOptionPresentWhileScreenSaverActiveKey": @1} completion:nil];
-            });
-        } else {
-            [windowManager presentDialogViewController:applicationAlert];
-        }
-    });
-    //HBLogDebug(@"file: %@ of type: %@ can open in the following applications: %@",fileName, fileType, applications);
 }
 
-//eyesore! one of the last remaining hacky things i'd like to do better - this is the
-//communication channel between sharingd and PineBoard - listen for a notification to show alert / finish process
 - (_Bool)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2 {
     
     _Bool orig = %orig;
     %log;
+    
+    // still need to get rid of this ugly eyesore
     id notificationCenter = [NSDistributedNotificationCenter defaultCenter];
-    [notificationCenter addObserver:self  selector:@selector(showSystemAlertFromAlert:) name:@"com.breezy.kludgeh4x" object:nil]; //still need to get rid of this ugly eyesore
+    [notificationCenter addObserver:self  selector:@selector(showSystemAlertFromAlert:) name:KBBreezyAirdropPresentAlert object:nil];
+
     [self setupPreferences];
     return orig;
     

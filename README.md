@@ -211,7 +211,8 @@ There's an issue with consent to receive files to your AppleTV from other AirDro
    [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_canAutoAccept"];
 ```
 
-**For now this is forcing consent without any user interaction, while its a nice UX it's a bad workaround that will be reconcilled ASAP.**
+This used to be short circuited until a recent PR from Ethan Arbuckle. Consent is now handled properly, but currently undocumented. I will get this up to data as soon as possible, for now the documentation here continues on after consent is received. Consent is only necessary if the user sending the file isn't identical to a user account signed in to your AppleTV.
+
 
 If we are getting a nil handler in ***- (id)determineHandlerForTransfer:(id)transfer*** then we construct our own and return it, therefore the exception is no longer thrown from ***- (void)askEventForRecordID:(id)recordID withResults:(id)results*** in ***SDAirDropTransferManager***
 

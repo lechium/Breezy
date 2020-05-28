@@ -1,7 +1,7 @@
 ARCHS = arm64
-TARGET = appletv::9.0
+TARGET = appletv:12.4
 export GO_EASY_ON_ME=1
-export SDKVERSION=10.2
+export SDKVERSION=12.4
 THEOS_DEVICE_IP=twelve.local
 DEBUG=0
 include $(THEOS)/makefiles/common.mk

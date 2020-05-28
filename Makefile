@@ -1,5 +1,5 @@
 ARCHS = arm64
-target ?= appletv:clang:10.2.2:10.0
+target ?= appletv:clang:12.4
 export GO_EASY_ON_ME=1
 THEOS_DEVICE_IP=guest-room.local
 DEBUG=0

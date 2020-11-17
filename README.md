@@ -3,7 +3,7 @@ Jailbreak implementation &amp; research for AirDrop on tvOS.
 
 ## Unified implementation
 
-In the latest updated the implementation has been improved and standardized to be more consistent with what you expect / experience on iOS and macOS when adding AirDrop support. Utilizing [UTI types](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/understanding_utis/understand_utis_intro/understand_utis_intro.html#//apple_ref/doc/uid/TP40001319-CH201-SW1) and Document types to enable users to discern what application (if there are multiple) will open / import the files.
+In the latest update the implementation has been improved and standardized to be more consistent with what you expect / experience on iOS and macOS when adding AirDrop support. Utilizing [UTI types](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/understanding_utis/understand_utis_intro/understand_utis_intro.html#//apple_ref/doc/uid/TP40001319-CH201-SW1) and Document types to enable users to discern what application (if there are multiple) will open / import the files.
 
 Below you will find some resources on how to edit your Info.plist file to add AirDrop receiver support to your app.
 
@@ -68,7 +68,7 @@ To add VLC support (to show in the listings of Applications available- more work
 
 ### AirDropHelper
 
-AirDropHelper is a headerless application uses a URL scheme (airdropper://) to receive files from any other application / tweak or command line utility on the device and will handle presenting the standard AirDrop sharing UI
+AirDropHelper is a headerless application that uses a URL scheme (airdropper://) to receive files from any other application / tweak or command line utility on the device and will handle presenting the standard AirDrop sharing UI
 
 ### Calling from an application (whether original or tweaked)
 
@@ -201,7 +201,7 @@ tl;dr the transfer needs a "handler" to determine what to do with the file once 
 - (id)determineHandlerForTransfer:(id)transfer
 ```
 
-Is where this handler is determined, so I target [here](../master/Breezy.xm#L75) first 
+Is where this handler is determined, so I target [here](../master/Breezy.xm#L77) first 
 
 There's an issue with consent to receive files to your AppleTV from other AirDropped devices, this is handled by a read only properties in **SFAirDropTransferMetaData**
 
@@ -211,7 +211,7 @@ There's an issue with consent to receive files to your AppleTV from other AirDro
    [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_canAutoAccept"];
 ```
 
-This used to be short circuited until a recent PR from Ethan Arbuckle. Consent is now handled properly, but currently undocumented. I will get this up to data as soon as possible, for now the documentation here continues on after consent is received. Consent is only necessary if the user sending the file isn't identical to a user account signed in to your AppleTV.
+This used to be short circuited until a recent PR from Ethan Arbuckle. Consent is now handled properly, but currently undocumented. I will get this up to date as soon as possible, for now the documentation here continues on after consent is received. Consent is only necessary if the user sending the file isn't identical to a user account signed in to your AppleTV.
 
 
 If we are getting a nil handler in ***- (id)determineHandlerForTransfer:(id)transfer*** then we construct our own and return it, therefore the exception is no longer thrown from ***- (void)askEventForRecordID:(id)recordID withResults:(id)results*** in ***SDAirDropTransferManager***

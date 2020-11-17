@@ -211,16 +211,63 @@ There's an issue with consent to receive files to your AppleTV from other AirDro
    [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_canAutoAccept"];
 ```
 
-This used to be short circuited until a recent PR from Ethan Arbuckle. Consent is now handled properly, but currently undocumented. I will get this up to date as soon as possible, for now the documentation here continues on after consent is received. Consent is only necessary if the user sending the file isn't identical to a user account signed in to your AppleTV.
+This used to be short circuited until a recent PR from Ethan Arbuckle. Consent is now handled properly, but currently undocumented. I will get this up to date as soon as possible, for now the documentation here continues on after consent is received. 
 
+### Handling consent
+
+Consent is only necessary if the user sending the file isn't identical to a user account signed in to your AppleTV.
+
+* Ethan Arbuckle is responsible for the awesome work related to this, I'm writing up how it works post mortem many months after he did it. 
+
+Additional hooks & function additions were necessary inside of ***SDAirDropTransferManager*** to handle file sending consent,  a hook is added in ***- (id)init*** to add a new ***NSDistributedNotificationCenter*** observer specifically for new selector ***- (void)handleBreezyAirdropPermissionResponse:(id)notification***
+
+We will return to this function in a moment after exploring the rest of this process.
 
 If we are getting a nil handler in ***- (id)determineHandlerForTransfer:(id)transfer*** then we construct our own and return it, therefore the exception is no longer thrown from ***- (void)askEventForRecordID:(id)recordID withResults:(id)results*** in ***SDAirDropTransferManager***
 
 ```Objective-C
     id genericHandler = [[objc_getClass("SDAirDropHandlerGenericFiles") alloc] initWithTransfer:transfer bundleIdentifier:@"com.nito.nitoTV4"];
+    ((void (*)(id, SEL))objc_msgSend)(genericHandler, NSSelectorFromString(@"prepareOrPerformOpenAction")); //new consent related additions
+    ((void (*)(id, SEL))objc_msgSend)(genericHandler, NSSelectorFromString(@"updatePossibleActions")); //ditto
     [genericHandler activate];
     return genericHandler;
 ```
+
+From here [- (void)askEventForRecordID:(id)recordID withResults:(id)results](../master/Breezy.xm#L90) will get triggered and a payload dictionary is constructed with the necessary data to send to ***PineBoard's*** [new function](../master/Breezy.xm#L210) mentioned above  
+
+Before sending the data the payload is [blessed](../master/Breezy.xm#L12) to make sure its being sent from ***sharingd*** and not some rogue process. 
+
+Ask for event is where the user is actually presented with the dialog, depending on if the Accepted or Denied it will either send action type ***KBBreezyButtonActionAccept*** or ***KBBreezyButtonActionDeny***
+
+This alert will be presented via the same new function in ***PineBoard*** that we added to present our alert with application choices to open files in when necessary ***- (void)showSystemAlertFromAlert:(id)alert*** sending our the payload that is constructed with ***KBBreezyRequestPermission*** context.
+
+After the action is processed it will fire the notification ***KBBreezyAirdropPresentAlert*** with context type ***KBBreezyRespondToPermission***
+
+***- (void)showSystemAlertFromAlert:(id)alert***  will ignore this context but ***- (void)handleBreezyAirdropPermissionResponse:(id)notification*** will gladly accept it.
+
+```Objective-C
+    NSString *selectedActionIdentifier = payload[KBBreezyAlertSelectedAction];
+    id selectedAction = nil;
+
+    SFAirDropTransfer *transfer = ((NSDictionary *(*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"transferIdentifierToTransfer"))[recordID];
+    NSArray *possibleActions = ((NSArray *(*)(id, SEL))objc_msgSend)(transfer, NSSelectorFromString(@"possibleActions"));
+
+    // Determine which action is intended
+    if ([selectedActionIdentifier isEqualToString:KBBreezyButtonActionAccept]) {
+        // Accept is the first "possible action"
+        selectedAction = possibleActions[0];
+    }
+    else if ([selectedActionIdentifier isEqualToString:KBBreezyButtonActionDeny]) {
+        selectedAction = [transfer valueForKey:@"_cancelAction"];
+    }
+
+    // Perform selected action
+    ((void (*)(id, SEL, id, id))objc_msgSend)(self, NSSelectorFromString(@"transfer:actionTriggeredForAction:"), transfer, selectedAction);
+    ((void (*)(id, SEL, id))objc_msgSend)(self, NSSelectorFromString(@"transferUserResponseUpdated:"), transfer);
+```
+
+From there ***-(void)finishedEventForRecordID:(id)recordID withResults:(id)arg*** is triggered and the final payload is constructed to send to ***- (void)showSystemAlertFromAlert:(id)alert*** with context type ***KBBreezyOpenAirDropFiles*** at that point consent is fully handled!
+
 Once the transfer is initiated it repeatedly calls ***-(void)updateWithInformation:(NSDictionary*)info*** on the transfer ***SFAirDropTransfer***
 
 there is a key of NSURL's called ***Items*** once that is populated, you know the items are processed successully.

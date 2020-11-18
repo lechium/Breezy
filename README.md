@@ -239,7 +239,7 @@ Before sending the data the payload is [blessed](../master/Breezy.xm#L12) to mak
 
 Ask for event is where the user is actually presented with the dialog, depending on if the Accepted or Denied it will either send action type ***KBBreezyButtonActionAccept*** or ***KBBreezyButtonActionDeny***
 
-This alert will be presented via the same new function in ***PineBoard*** that we added to present our alert with application choices to open files in when necessary ***- (void)showSystemAlertFromAlert:(id)alert*** sending our the payload that is constructed with ***KBBreezyRequestPermission*** context.
+This alert will be presented via the same new function in ***PineBoard*** that we added to present our alert with application choices to open files in when necessary ***- (void)showSystemAlertFromAlert:(id)alert*** sending out the payload that is constructed with ***KBBreezyRequestPermission*** context.
 
 After the action is processed it will fire the notification ***KBBreezyAirdropPresentAlert*** with context type ***KBBreezyRespondToPermission***
 
@@ -266,7 +266,7 @@ After the action is processed it will fire the notification ***KBBreezyAirdropPr
     ((void (*)(id, SEL, id))objc_msgSend)(self, NSSelectorFromString(@"transferUserResponseUpdated:"), transfer);
 ```
 
-From there ***-(void)finishedEventForRecordID:(id)recordID withResults:(id)arg*** is triggered and the final payload is constructed to send to ***- (void)showSystemAlertFromAlert:(id)alert*** with context type ***KBBreezyOpenAirDropFiles*** at that point consent is fully handled!
+From there [-(void)finishedEventForRecordID:(id)recordID withResults:(id)arg](../master/Breezy.xm#L163) is triggered and the final payload is constructed to send to ***- (void)showSystemAlertFromAlert:(id)alert*** with context type ***KBBreezyOpenAirDropFiles*** at that point consent is fully handled!
 
 Once the transfer is initiated it repeatedly calls ***-(void)updateWithInformation:(NSDictionary*)info*** on the transfer ***SFAirDropTransfer***
 

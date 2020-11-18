@@ -298,9 +298,8 @@ Said dictionary looks like this
     });
 ```
 
-When the transfer is finished [-(void)finishedEventForRecordID:(id)recordID withResults:(id)arg](../master/Breezy.xm#L163) is triggered and the final payload is constructed to send to [- (void)showSystemAlertFromAlert:(id)alert](../master/Breezy.xm#L385) with context type ***KBBreezyOpenAirDropFiles*** 
+When the transfer is finished [-(void)finishedEventForRecordID:(id)recordID withResults:(id)arg](../master/Breezy.xm#L163) is triggered and the final payload is constructed and distributed notification ***KBBreezyAirdropPresentAlert*** is called to trigger  [- (void)showSystemAlertFromAlert:(id)alert](../master/Breezy.xm#L385) with context type ***KBBreezyOpenAirDropFiles*** inside ***PineBoard*** one last time
 
-From there we cycle through the items and convert them to NSString's (URL's can't be sent in a NSDistributedNotification) And then post a notification that is listened for inside of hooks into PineBoard (this is currently necessary to get access to the dialog/windowing classes we need to use to show the user an alert with options to choose from)
 
 ## PineBoard 
 

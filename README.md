@@ -266,7 +266,7 @@ After the action is processed it will fire the notification ***KBBreezyAirdropPr
     ((void (*)(id, SEL, id))objc_msgSend)(self, NSSelectorFromString(@"transferUserResponseUpdated:"), transfer);
 ```
 
-From there [-(void)finishedEventForRecordID:(id)recordID withResults:(id)arg](../master/Breezy.xm#L163) is triggered and the final payload is constructed to send to [- (void)showSystemAlertFromAlert:(id)alert](../master/Breezy.xm#L385) with context type ***KBBreezyOpenAirDropFiles*** at that point consent is fully handled!
+If the transfer is accepted it will initiate and the rest of the process is explained below
 
 Once the transfer is initiated it repeatedly calls ***-(void)updateWithInformation:(NSDictionary*)info*** on the transfer ***SFAirDropTransfer***
 
@@ -299,6 +299,8 @@ Said dictionary looks like this
     SenderIcon = <89504e47 0d0a1a0a 0000000d 49484452 000000fa 000000fa 08060000 0088ec5a 3d000000 01735247 4200aece 1ce90000 001c6944 4f540000 00020000 00000000 007d0000 00280000 007d0000 007d0000 0ecbdf9c ec3e0000 0e974944 41547801 ec5d0bac 1d5515bd b4b528c5 f22d890a 1a032526 52b5368a 34942616 29d<…>
     });
 ```
+
+When the transfer is finished [-(void)finishedEventForRecordID:(id)recordID withResults:(id)arg](../master/Breezy.xm#L163) is triggered and the final payload is constructed to send to [- (void)showSystemAlertFromAlert:(id)alert](../master/Breezy.xm#L385) with context type ***KBBreezyOpenAirDropFiles*** 
 
 From there we cycle through the items and convert them to NSString's (URL's can't be sent in a NSDistributedNotification) And then post a notification that is listened for inside of hooks into PineBoard (this is currently necessary to get access to the dialog/windowing classes we need to use to show the user an alert with options to choose from)
 

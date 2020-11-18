@@ -266,7 +266,7 @@ After the action is processed it will fire the notification ***KBBreezyAirdropPr
     ((void (*)(id, SEL, id))objc_msgSend)(self, NSSelectorFromString(@"transferUserResponseUpdated:"), transfer);
 ```
 
-From there [-(void)finishedEventForRecordID:(id)recordID withResults:(id)arg](../master/Breezy.xm#L163) is triggered and the final payload is constructed to send to ***- (void)showSystemAlertFromAlert:(id)alert*** with context type ***KBBreezyOpenAirDropFiles*** at that point consent is fully handled!
+From there [-(void)finishedEventForRecordID:(id)recordID withResults:(id)arg](../master/Breezy.xm#L163) is triggered and the final payload is constructed to send to [- (void)showSystemAlertFromAlert:(id)alert](../master/Breezy.xm#L385) with context type ***KBBreezyOpenAirDropFiles*** at that point consent is fully handled!
 
 Once the transfer is initiated it repeatedly calls ***-(void)updateWithInformation:(NSDictionary*)info*** on the transfer ***SFAirDropTransfer***
 

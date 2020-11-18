@@ -211,8 +211,6 @@ There's an issue with consent to receive files to your AppleTV from other AirDro
    [meta setValue:[NSNumber numberWithBool:TRUE] forKey:@"_canAutoAccept"];
 ```
 
-This used to be short circuited until a recent PR from Ethan Arbuckle. Consent is now handled properly, but currently undocumented. I will get this up to date as soon as possible, for now the documentation here continues on after consent is received. 
-
 ### Handling consent
 
 Consent is only necessary if the user sending the file isn't identical to a user account signed in to your AppleTV.

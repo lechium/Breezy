@@ -2,6 +2,7 @@ ARCHS = arm64
 target ?= appletv:clang:12.4
 export GO_EASY_ON_ME=1
 THEOS_DEVICE_IP=guest-room.local
+#THEOS_DEVICE_IP=bedroom.local
 DEBUG=0
 include $(THEOS)/makefiles/common.mk
 
@@ -9,7 +10,7 @@ TWEAK_NAME = Breezy
 Breezy_FILES = Breezy.xm FindProcess.m CTBlockDescription.m
 #Breezy_FILES = SVProgressHUD/SVIndefiniteAnimatedView.m SVProgressHUD/SVProgressHUD.m SVProgressHUD/SVRadialGradientLayer.m
 Breezy_LIBRARIES = substrate
-Breezy_FRAMEWORKS = Foundation UIKit CoreGraphics CoreServices
+Breezy_FRAMEWORKS = Foundation UIKit CoreGraphics
 #Breezy_LDFLAGS = 
 Breezy_CFLAGS = -fobjc-arc
 Breezy_LDFLAGS = -F. -framework FrontBoardServices -undefined dynamic_lookup

@@ -404,11 +404,15 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 
         //TODO: this could smarter, its possible the files selected dont all work in one app, need to accomodate that
         __block BOOL hasIPA = FALSE; //kinda of a hacky check to make sure IPA's go through ReProvision if its avail.
+        __block BOOL isMC = FALSE; //ditto hacky check for mobileconfig
         [files enumerateObjectsUsingBlock:^(NSDictionary  * adFile, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *fileName = adFile[@"FileName"];
             NSString *fileType = adFile[@"FileType"];
             if ([[[fileType pathExtension] lowercaseString] isEqualToString:@"ipa"] || [[[fileName pathExtension] lowercaseString] isEqualToString:@"ipa"]){
                 hasIPA = TRUE;
+            }
+            if ([[[fileType pathExtension] lowercaseString] isEqualToString:@"mobileconfig"] || [[[fileName pathExtension] lowercaseString] isEqualToString:@"mobileconfig"]){
+                isMC = TRUE;
             }
             //h4x, we are only creating doxy if it doesnt already exist, so that means we are only taking into account the file type of the first file in the list.
             if (!doxy) {
@@ -471,6 +475,14 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
                     applications = @[reproCheck];
                 }
             }
+            if (isMC){
+                NSLog(@"[Breezy] no applications and its a mobileconfig file, force to open in nitoTV");
+                id ntvProx = [LSApplicationProxy applicationProxyForIdentifier:@"com.nito.nitoTV4"];
+                if (ntvProx && [ntvProx localizedName]){
+                    NSLog(@"[Breezy] found nitoTV: %@", ntvProx );
+                    applications = @[ntvProx];
+                }
+            }
         }
         if (applications.count == 1){ //Theres only one application, just open it automatically
             id launchApp = applications[0];
@@ -522,7 +534,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         //done all our processing, time to show the alert!
         presentAlert();
 
-        HBLogDebug(@"file: %@ of type: %@ can open in the following applications: %@",fileName, fileType, applications);
+        //HBLogDebug(@"file: %@ of type: %@ can open in the following applications: %@",fileName, fileType, applications);
     }
 }
 

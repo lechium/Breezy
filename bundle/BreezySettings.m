@@ -49,28 +49,29 @@
     
 }
 
-- (NSArray *)settingGroups {
-    id facade = [[objc_getClass("TVSettingsPreferenceFacade") alloc] initWithDomain:@"com.nito.Breezy" notifyChanges:TRUE];
-       NSMutableArray *_backingArray = [NSMutableArray new];
-       TSKSettingItem *settingsItem = [TSKSettingItem toggleItemWithTitle:@"Toggle AirDrop Server" description:@"Turn on AirDrop to receive files through AirDrop from supported devices" representedObject:facade keyPath:@"airdropServerState" onTitle:nil offTitle:nil];
-       //NSLog(@"created settings item: %@", settingsItem);
-       
-       TSKSettingItem *restartSharingd = [TSKSettingItem actionItemWithTitle:@"Restart Sharingd" description:@"If AirDrop is rejecting your transfers, attempt to restart sharingd daemon." representedObject:facade keyPath:@"" target:self action:@selector(restartSharingd)];
-       TSKSettingGroup *group = [TSKSettingGroup groupWithTitle:nil settingItems:@[settingsItem, restartSharingd]];
-       [_backingArray addObject:group];
-       return _backingArray;
+- (id)loadSettingGroups {
+    
+    NSLog(@"BreezySettings loadSettingGroups");
+    
+    id facade = [[objc_getClass("TSKPreferencesFacade") alloc] initWithDomain:@"com.nito.Breezy" notifyChanges:TRUE];
+    NSMutableArray *_backingArray = [NSMutableArray new];
+    TSKSettingItem *settingsItem = [TSKSettingItem toggleItemWithTitle:@"Toggle AirDrop Server" description:@"Turn on AirDrop to receive files through AirDrop from supported devices" representedObject:facade keyPath:@"airdropServerState" onTitle:nil offTitle:nil];
+    //NSLog(@"created settings item: %@", settingsItem);
+    
+    TSKSettingItem *restartSharingd = [TSKSettingItem actionItemWithTitle:@"Restart Sharingd" description:@"If AirDrop is rejecting your transfers, attempt to restart sharingd daemon." representedObject:facade keyPath:@"" target:self action:@selector(restartSharingd)];
+    TSKSettingGroup *group = [TSKSettingGroup groupWithTitle:nil settingItems:@[settingsItem, restartSharingd]];
+    [_backingArray addObject:group];
+    [self setValue:_backingArray forKey:@"_settingGroups"];
+    return _backingArray;
 }
-
 
 -(id)previewForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    //TSKPreviewViewController *item = [[TSKPreviewViewController alloc] init];
-    TSKPreviewViewController *item =  [super previewForItemAtIndexPath:indexPath];
-    NSString *desc = [item descriptionText];
-    item = [[TSKPreviewViewController alloc] init];
+    TSKSettingGroup *currentGroup = self.settingGroups[indexPath.section];
+    TSKSettingItem *currentItem = currentGroup.settingItems[indexPath.row];
+    NSString *desc = [currentItem localizedDescription];
+    TSKPreviewViewController *item = [[TSKPreviewViewController alloc] init];
     [item setDescriptionText:desc];
-    //TSKSettingGroup *currentGroup = self.settingGroups[indexPath.section];
-    //TSKSettingItem *currentItem = currentGroup.settingItems[indexPath.row];
     NSString *imagePath = [[NSBundle bundleForClass:self.class] pathForResource:@"icon" ofType:@"png"];
     UIImage *icon = [UIImage imageWithContentsOfFile:imagePath];
     if (icon != nil) {

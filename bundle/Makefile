@@ -21,8 +21,7 @@ internal-stage::
 	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences$(ECHO_END)
 	$(ECHO_NOTHING)cp entry.plist $(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences/$(BUNDLE_NAME).plist$(ECHO_END)
 	cp -r $(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences ../layout/Library/PreferenceLoader/
-	cp -r $(THEOS_STAGING_DIR)/Library/PreferenceBundles/* ../layout/Library/PreferenceBundles/
-
+	
 after-install::
 	install.exec "killall -9 TVSettings ; lsdtrip launch com.apple.TVSettings"
 	

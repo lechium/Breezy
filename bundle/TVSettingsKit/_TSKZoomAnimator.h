@@ -20,7 +20,7 @@
 }
 
 @property (assign,nonatomic) long long operation;                                           //@synthesize operation=_operation - In the implementation block
-@property (assign,nonatomic,weak) id<_TSKAnimatorDelegate> animatorDelegate;              //@synthesize animatorDelegate=_animatorDelegate - In the implementation block
+@property (weak,nonatomic) id<_TSKAnimatorDelegate> animatorDelegate;              //@synthesize animatorDelegate=_animatorDelegate - In the implementation block
 @property (readonly) unsigned long long hash; 
 @property (readonly) Class superclass; 
 @property (copy,readonly) NSString * description; 

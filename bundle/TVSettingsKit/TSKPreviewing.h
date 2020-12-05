@@ -10,7 +10,7 @@
 
 
 @protocol TSKPreviewing <NSObject>
-@property (assign,nonatomic,weak) id<TSKPreviewingDelegate> previewingDelegate; 
+@property (weak,nonatomic) id<TSKPreviewingDelegate> previewingDelegate; 
 @required
 //-(id<TSKPreviewingDelegate>)previewingDelegate;
 -(id)defaultIndexPathForPreview;

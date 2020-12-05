@@ -26,6 +26,10 @@ NSString *KBBreezyAirdropCustomDestination = @"KBBreezyAirdropCustomDestination"
 
 extern "C" NSString *UTTypeCopyDescription(NSString *);
 extern "C" CFStringRef UTTypeCreatePreferredIdentifierForTag(CFStringRef inTagClass, CFStringRef inTag, CFStringRef inConformingToUTI);
+extern "C" CFURLRef UTTypeCopyDeclaringBundleURL(NSString *);
+extern "C" CFStringRef UTTypeCopyPreferredTagWithClass(CFStringRef   inUTI,CFStringRef   inTagClass);
+extern const CFStringRef kUTTagClassFilenameExtension;
+extern const CFStringRef kUTTagClassMIMEType;
 
 @interface PBAppDelegate: NSObject
 - (void)showSystemAlertFromAlert:(id)alert;

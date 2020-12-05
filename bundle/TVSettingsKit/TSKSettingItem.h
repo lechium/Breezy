@@ -74,7 +74,7 @@
 @property (nonatomic,copy) id updateBlock;                                                             //@synthesize updateBlock=_updateBlock - In the implementation block
 @property (assign,nonatomic) SEL action;                                                               //@synthesize action=_action - In the implementation block
 @property (assign,nonatomic) SEL playButtonAction;                                                     //@synthesize playButtonAction=_playButtonAction - In the implementation block
-@property (assign,nonatomic,weak) id target;                                                         //@synthesize target=_target - In the implementation block
+@property (weak,nonatomic) id target;                                                         //@synthesize target=_target - In the implementation block
 @property (nonatomic,retain) Class childControllerClass;                                               //@synthesize childControllerClass=_childControllerClass - In the implementation block
 //@property (nonatomic,copy) id childControllerBlock;                                                    //@synthesize childControllerBlock=_childControllerBlock - In the implementation block
 @property (copy, nonatomic) id (^childControllerBlock)(id theObject);

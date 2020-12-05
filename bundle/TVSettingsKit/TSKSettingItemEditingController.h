@@ -11,7 +11,7 @@
 
 @protocol TSKSettingItemEditingController <NSObject>
 @property (nonatomic,retain) TSKSettingItem * editingItem; 
-@property (assign,nonatomic,weak) id<TSKSettingItemEditingControllerDelegate> editingDelegate; 
+@property (weak,nonatomic) id<TSKSettingItemEditingControllerDelegate> editingDelegate; 
 @required
 -(void)setEditingDelegate:(id)arg1;
 -(id<TSKSettingItemEditingControllerDelegate>)editingDelegate;

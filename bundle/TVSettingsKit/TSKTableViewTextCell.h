@@ -25,7 +25,7 @@
 
 }
 
-@property (assign,nonatomic,weak) TSKSettingItem * item;                //@synthesize item=_item - In the implementation block
+@property (weak,nonatomic) TSKSettingItem * item;                //@synthesize item=_item - In the implementation block
 @property (nonatomic,copy) NSString * rightText;                          //@synthesize rightText=_rightText - In the implementation block
 @property (assign,nonatomic) unsigned long long accessories;              //@synthesize accessories=_accessories - In the implementation block
 @property (readonly) unsigned long long hash; 

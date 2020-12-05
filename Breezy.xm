@@ -101,6 +101,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
     NSString *sender = [[transfer metaData] valueForKey:@"_senderComputerName"];
 
     NSArray *transferItems = [[[transfer metaData] valueForKey:@"_items"] allObjects];
+    NSLog(@"[Breezy] transferItems: %@", transferItems);
     NSString *alertText;
     if ([transferItems count] == 1) {
         // One file being transfered. Try to determine what kind of file it is
@@ -413,6 +414,14 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             }
             if ([[[fileType pathExtension] lowercaseString] isEqualToString:@"mobileconfig"] || [[[fileName pathExtension] lowercaseString] isEqualToString:@"mobileconfig"]){
                 isMC = TRUE;
+                NSString * UTI = (__bridge NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, 
+                                                                   (CFStringRef)@"ipa", 
+                                                                   NULL);
+                NSLog(@"[Breezy] mobile config UTI: %@", UTI);
+                CFURLRef ur = UTTypeCopyDeclaringBundleURL(UTI);
+                NSLog(@"[Breezy] url: %@", (__bridge NSURL *)ur);
+                NSString *str = (__bridge NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)UTI,kUTTagClassMIMEType);
+                NSLog(@"[Breezy] MIME type: %@", str);
             }
             //h4x, we are only creating doxy if it doesnt already exist, so that means we are only taking into account the file type of the first file in the list.
             if (!doxy) {

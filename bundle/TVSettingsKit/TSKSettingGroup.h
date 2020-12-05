@@ -23,7 +23,7 @@
 
 }
 
-@property (assign,nonatomic,weak) id<TSKSettingGroupDelegate> delegate;              //@synthesize delegate=_delegate - In the implementation block
+@property (weak,nonatomic) id<TSKSettingGroupDelegate> delegate;              //@synthesize delegate=_delegate - In the implementation block
 @property (nonatomic,copy) NSArray * visibleItems;                                     //@synthesize visibleItems=_visibleItems - In the implementation block
 @property (nonatomic,copy,readonly) NSArray * observableSettingItems; 
 @property (assign,nonatomic) BOOL shouldAutoHide;                                      //@synthesize shouldAutoHide=_shouldAutoHide - In the implementation block

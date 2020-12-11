@@ -8,6 +8,30 @@
 #import "NSTask.h"
 #import <objc/runtime.h>
 
+
+@interface UITableViewCell (privates)
+- (id)configurationState;
+- (void)_applyBackgroundViewConfiguration:(id)config withState:(id)state;
+//@property (nonatomic,copy) UIBackgroundConfiguration * backgroundConfiguration;
+- (id)backgroundConfiguration;
+- (void)setBackgroundConfiguration:(id)bgc;
+-(id)defaultContentConfiguration;
+- (void)setContentConfiguration:(id)bgc;
+@end
+
+@interface _UISystemBackgroundView: UIView
+-(id)initWithConfiguration:(id)config;
+@end
+
+@interface UIBackgroundConfiguration: NSObject
++(id)listGroupedCellConfiguration;
+- (instancetype)updatedConfigurationForState:(id)state;
+@end
+
+@interface UIColor (special)
++(id)tableCellGroupedBackgroundColor;
+@end;
+
 @interface LSApplicationProxy (More)
 +(id)applicationProxyForIdentifier:(id)arg1;
 -(BOOL)isContainerized;
@@ -25,7 +49,7 @@
 
 
 @interface BreezySettings() {
-    
+    BOOL _didFixStupid;
 }
 @property (nonatomic, strong) NSString *importsPath;
 @property (nonatomic, strong) NSString *defaultBundleID;
@@ -41,11 +65,10 @@
 }
 
 
-
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
     
-    [super viewWillAppear:animated];
-    NSLog(@"BreezySettings viewWillAppear");
+    [super viewDidAppear:animated];
+    NSLog(@"BreezySettings viewDidAppear");
     
 }
 
@@ -56,6 +79,7 @@
     id facade = [[objc_getClass("TSKPreferencesFacade") alloc] initWithDomain:@"com.nito.Breezy" notifyChanges:TRUE];
     NSMutableArray *_backingArray = [NSMutableArray new];
     TSKSettingItem *settingsItem = [TSKSettingItem toggleItemWithTitle:@"Toggle AirDrop Server" description:@"Turn on AirDrop to receive files through AirDrop from supported devices" representedObject:facade keyPath:@"airdropServerState" onTitle:nil offTitle:nil];
+    [settingsItem setDefaultValue:@1];
     //NSLog(@"created settings item: %@", settingsItem);
     
     TSKSettingItem *restartSharingd = [TSKSettingItem actionItemWithTitle:@"Restart Sharingd" description:@"If AirDrop is rejecting your transfers, attempt to restart sharingd daemon." representedObject:facade keyPath:@"" target:self action:@selector(restartSharingd)];
@@ -65,23 +89,30 @@
     return _backingArray;
 }
 
--(id)previewForItemAtIndexPath:(NSIndexPath *)indexPath {
++(TSKPreviewViewController*)defaultPreviewViewController {
+    static TSKPreviewViewController *_defaultPreviewViewController=nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _defaultPreviewViewController = [[TSKPreviewViewController alloc] init];
+        NSLog(@"_defaultPreviewViewController => %@", _defaultPreviewViewController);
+        NSString *imagePath = [[NSBundle bundleForClass:self.class] pathForResource:@"icon" ofType:@"png"];
+        UIImage *icon = [UIImage imageWithContentsOfFile:imagePath];
+        if (icon != nil) {
+            TSKVibrantImageView *imageView = [[TSKVibrantImageView alloc] initWithImage:icon];
+            [_defaultPreviewViewController setContentView:imageView];
+        }
+    });
+    return _defaultPreviewViewController;
+}
+
+-(id)previewForItemAtIndexPath:(NSIndexPath*)indexPath {
     
     TSKSettingGroup *currentGroup = self.settingGroups[indexPath.section];
     TSKSettingItem *currentItem = currentGroup.settingItems[indexPath.row];
     NSString *desc = [currentItem localizedDescription];
-    TSKPreviewViewController *item = [[TSKPreviewViewController alloc] init];
+    TSKPreviewViewController *item = [self.class defaultPreviewViewController];
     [item setDescriptionText:desc];
-    NSString *imagePath = [[NSBundle bundleForClass:self.class] pathForResource:@"icon" ofType:@"png"];
-    UIImage *icon = [UIImage imageWithContentsOfFile:imagePath];
-    if (icon != nil) {
-        TSKVibrantImageView *imageView = [[TSKVibrantImageView alloc] initWithImage:icon];
-        [item setContentView:imageView];
-    }
-    
     return item;
-    
 }
-
 
 @end

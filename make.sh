@@ -16,10 +16,6 @@ rm -rf build/Release-appletvos/AirDropHelper.app/_CodeSignature
 cp -r build/Release-appletvos/AirDropHelper.app ../layout/Applications/
 popd
 
-rm .theos/_/Library/PreferenceBundles/BreezySettings
-rm .theos/_/Library/PreferenceBundles/Info.plist
-rm .theos/_/Library/PreferenceBundles/icon.png
-
 SDK_PATH="`xcrun --sdk appletvos --show-sdk-path`"
 
 pushd breezyd

@@ -80,6 +80,9 @@
     NSMutableArray *_backingArray = [NSMutableArray new];
     TSKSettingItem *settingsItem = [TSKSettingItem toggleItemWithTitle:@"Toggle AirDrop Server" description:@"Turn on AirDrop to receive files through AirDrop from supported devices" representedObject:facade keyPath:@"airdropServerState" onTitle:nil offTitle:nil];
     [settingsItem setDefaultValue:@1];
+    if ([facade valueForUndefinedKey:@"airdropServerState"] == nil){
+        [facade setValue:@1 forUndefinedKey:@"airdropServerState"];
+    }
     //NSLog(@"created settings item: %@", settingsItem);
     
     TSKSettingItem *restartSharingd = [TSKSettingItem actionItemWithTitle:@"Restart Sharingd" description:@"If AirDrop is rejecting your transfers, attempt to restart sharingd daemon." representedObject:facade keyPath:@"" target:self action:@selector(restartSharingd)];

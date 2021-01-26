@@ -109,7 +109,7 @@ Thats it!
 
 As long as you add 
 ```
-com.nito.breezy (>=2.5-1)
+com.nito.breezy (>=2.6-78)
 ``` 
 to your dependencies, this will open an AirDrop sharing dialog with whatever file you feed it with the call to 
 
@@ -349,7 +349,7 @@ Preferences are synced using a ***DistributedSynchronizationHandler***, this is 
    TSKSettingItem *settingsItem = [TSKSettingItem toggleItemWithTitle:@"Toggle AirDrop Server" description:@"Turn on AirDrop to receive files through AirDrop from supported devices" representedObject:facade keyPath:@"airdropServerState" onTitle:nil offTitle:nil];
 
 ```
-TVSettingsPreferenceFacade registers a domain and specifies to notify changes, then a TSKSettingsItem 'toggleItem' handles the on off state and sending the notification through. The Daemon explained below handles receives a notification and changes the settings accordingly.
+TVSettingsPreferenceFacade registers a domain and specifies to notify changes, then a TSKSettingsItem 'toggleItem' handles the on off state and sending the notification through. The Daemon explained below receives and handles a notification and changes the settings accordingly.
 
 
 ## Daemon

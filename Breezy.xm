@@ -402,18 +402,21 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
                 [[NSFileManager defaultManager] removeItemAtPath:airdropContainer error:nil];
             }
         };
-
+	//array of items that will be forced to open through nitoTV if no app is 'found'
+	NSArray *_forcedNitoExceptions = @[@"deb"];
         //TODO: this could smarter, its possible the files selected dont all work in one app, need to accomodate that
         __block BOOL hasIPA = FALSE; //kinda of a hacky check to make sure IPA's go through ReProvision if its avail.
-        __block BOOL isMC = FALSE; //ditto hacky check for mobileconfig
+        __block BOOL nitoForce = FALSE; //ditto hacky check for deb
         [files enumerateObjectsUsingBlock:^(NSDictionary  * adFile, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *fileName = adFile[@"FileName"];
             NSString *fileType = adFile[@"FileType"];
             if ([[[fileType pathExtension] lowercaseString] isEqualToString:@"ipa"] || [[[fileName pathExtension] lowercaseString] isEqualToString:@"ipa"]){
                 hasIPA = TRUE;
             }
-            if ([[[fileType pathExtension] lowercaseString] isEqualToString:@"mobileconfig"] || [[[fileName pathExtension] lowercaseString] isEqualToString:@"mobileconfig"]){
-                isMC = TRUE;
+	    if ([_forcedNitoExceptions containsObject:fileType.pathExtension.lowercaseString] || [_forcedNitoExceptions containsObject:fileName.pathExtension.lowercaseString]){
+                nitoForce = TRUE;
+		//below is some experimental code that got left in by accident, keeping for research purposes
+		/*
                 NSString * UTI = (__bridge NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, 
                                                                    (CFStringRef)@"ipa", 
                                                                    NULL);
@@ -422,7 +425,8 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
                 NSLog(@"[Breezy] url: %@", (__bridge NSURL *)ur);
                 NSString *str = (__bridge NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)UTI,kUTTagClassMIMEType);
                 NSLog(@"[Breezy] MIME type: %@", str);
-            }
+		*/
+	    }
             //h4x, we are only creating doxy if it doesnt already exist, so that means we are only taking into account the file type of the first file in the list.
             if (!doxy) {
                 doxy = [LSDocumentProxy documentProxyForName:fileName type:fileType MIMEType:nil];
@@ -484,8 +488,8 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
                     applications = @[reproCheck];
                 }
             }
-            if (isMC){
-                NSLog(@"[Breezy] no applications and its a mobileconfig file, force to open in nitoTV");
+            if (nitoForce){
+                NSLog(@"[Breezy] no applications and its a deb file, force to open in nitoTV");
                 id ntvProx = [LSApplicationProxy applicationProxyForIdentifier:@"com.nito.nitoTV4"];
                 if (ntvProx && [ntvProx localizedName]){
                     NSLog(@"[Breezy] found nitoTV: %@", ntvProx );

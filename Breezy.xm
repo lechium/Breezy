@@ -125,13 +125,14 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
     CGImageRef previewImage = (__bridge CGImageRef)[[transfer metaData] valueForKey:@"_previewImage"];
     if (previewImage) {
 
-        NSDictionary *properties;
         CFMutableDataRef newImageData = CFDataCreateMutable(NULL, 0);
-        CFStringRef type = UTTypeCreatePreferredIdentifierForTag(CFSTR("public.mime-type"), (__bridge CFStringRef) @"image/png", CFSTR("public.image"));
+        CFStringRef type = UTTypeCreatePreferredIdentifierForTag(CFSTR("public.mime-type"), CFSTR("image/png"), CFSTR("public.image"));
         CGImageDestinationRef destination = CGImageDestinationCreateWithData(newImageData, type, 1, NULL);
-        CGImageDestinationAddImage(destination, previewImage, (__bridge CFDictionaryRef) properties);
+        CFRelease(type);
+        CGImageDestinationAddImage(destination, previewImage, nil);
         CGImageDestinationFinalize(destination);
-        previewImageData = (__bridge NSData *)newImageData;
+        CFRelease(destination);
+        previewImageData = (__bridge_transfer NSData *)newImageData;
     }
 
     // Construct the alert request
@@ -367,7 +368,9 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             // Construct UIImage from data
             CGDataProviderRef imgDataProvider = CGDataProviderCreateWithCFData((__bridge CFDataRef)previewImageData);
             CGImageRef imageRef = CGImageCreateWithPNGDataProvider(imgDataProvider, NULL, true, kCGRenderingIntentDefault);
+            CGDataProviderRelease(imgDataProvider);
             UIImage *previewImage = [[UIImage alloc] initWithCGImage:imageRef];
+            CGImageRelease(imageRef);
 
             NSLog(@"pineboard constructed uiimage %@", previewImage);
 

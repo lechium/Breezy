@@ -2,7 +2,7 @@ ARCHS = arm64
 target ?= appletv:clang:12.4
 export GO_EASY_ON_ME=1
 THEOS_DEVICE_IP=bedroom.local
-DEBUG=0
+DEBUG=1
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Breezy

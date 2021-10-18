@@ -6,7 +6,7 @@
 * classdump-dyld is licensed under GPLv3, Copyright © 2013-2016 by Elias Limneos.
 */
 
-#import <UIKit/UITableViewHeaderFooterView.h"
+#import <UIKit/UITableViewHeaderFooterView.h>
 #import "TSKCellUpdating.h"
 
 @class UIActivityIndicatorView, NSString;
@@ -19,7 +19,7 @@
 }
 
 @property (assign,nonatomic) BOOL showSpinner;                      //@synthesize showSpinner=_showSpinner - In the implementation block
-@property (readonly) unsigned long long hash; 
+ 
 @property (readonly) Class superclass; 
 @property (copy,readonly) NSString * description; 
 @property (copy,readonly) NSString * debugDescription; 

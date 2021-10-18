@@ -7,7 +7,7 @@ In the latest update the implementation has been improved and standardized to be
 
 Below you will find some resources on how to edit your Info.plist file to add AirDrop receiver support to your app.
 
-It is also necessary to handle opening file URL's (done the same way it is in iOS) to handle the files being fed to your through launch services.
+It is also necessary to handle opening file URL's (done the same way it is in iOS) to handle the files being fed to you through launch services.
 
 Will use my changes to RetroArch here as the implementation example:
 

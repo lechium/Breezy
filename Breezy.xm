@@ -405,11 +405,15 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 	//array of items that will be forced to open through nitoTV if no app is 'found'
 	NSArray *_forcedNitoExceptions = @[@"deb"];
         //TODO: this could smarter, its possible the files selected dont all work in one app, need to accomodate that
+	__block BOOL hasMC = FALSE; //hacky check for mobileconfig to go through wireguard if applicable
         __block BOOL hasIPA = FALSE; //kinda of a hacky check to make sure IPA's go through ReProvision if its avail.
         __block BOOL nitoForce = FALSE; //ditto hacky check for deb
         [files enumerateObjectsUsingBlock:^(NSDictionary  * adFile, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *fileName = adFile[@"FileName"];
             NSString *fileType = adFile[@"FileType"];
+	    if ([[[fileType pathExtension] lowercaseString] isEqualToString:@"mobileconfig"] || [[[fileName pathExtension] lowercaseString] isEqualToString:@"mobileconfig"]){
+                hasMC = TRUE;
+            }
             if ([[[fileType pathExtension] lowercaseString] isEqualToString:@"ipa"] || [[[fileName pathExtension] lowercaseString] isEqualToString:@"ipa"]){
                 hasIPA = TRUE;
             }
@@ -496,6 +500,14 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
                     applications = @[ntvProx];
                 }
             }
+	    if (hasMC){
+	    	NSLog(@"[Breezy] no applications and its a mobileconfig file, force to open in wireguard");
+                id wgProx = [LSApplicationProxy applicationProxyForIdentifier:@"com.nito.wireguard-ios"];
+                if (wgProx && [wgProx localizedName]){
+                    NSLog(@"[Breezy] found wireguard: %@", wgProx );
+                    applications = @[wgProx];
+                }
+	    }
         }
         if (applications.count == 1){ //Theres only one application, just open it automatically
             id launchApp = applications[0];

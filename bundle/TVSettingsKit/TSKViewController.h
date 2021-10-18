@@ -31,9 +31,9 @@
 @property (nonatomic,readonly) TSKVibrantImageView * imagePreviewView;                                                                                               //@synthesize imagePreviewView=_imagePreviewView - In the implementation block
 @property (nonatomic,copy,readonly) NSMutableDictionary * observationContexts;                                                                                       //@synthesize observationContexts=_observationContexts - In the implementation block
 @property (assign,nonatomic) BOOL shouldProcessUpdates;                                                                                                              //@synthesize shouldProcessUpdates=_shouldProcessUpdates - In the implementation block
-@property (assign,setter=_setInitialFocusedSettingItem:,getter=_initialFocusedSettingItem,nonatomic,weak) TSKSettingItem * initialFocusedSettingItem;              //@synthesize initialFocusedSettingItem=_initialFocusedSettingItem - In the implementation block
+@property (assign,setter=_setInitialFocusedSettingItem:,getter=_initialFocusedSettingItem,nonatomic) TSKSettingItem * initialFocusedSettingItem;              //@synthesize initialFocusedSettingItem=_initialFocusedSettingItem - In the implementation block
 @property (nonatomic,retain) UIViewController * previewViewController;                                                                                               //@synthesize previewViewController=_previewViewController - In the implementation block
-//@property (readonly) unsigned long long hash;
+//
 @property (readonly) Class superclass; 
 @property (copy,readonly) NSString * description; 
 @property (copy,readonly) NSString * debugDescription; 

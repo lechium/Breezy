@@ -6,12 +6,11 @@
 * classdump-dyld is licensed under GPLv3, Copyright © 2013-2016 by Elias Limneos.
 */
 
-#import <UIKit/UIViewControllerAnimatedTransitioning.h>
 
 @protocol UIViewControllerContextTransitioning, _TSKAnimatorDelegate;
 @class NSString;
 
-@interface _TSKZoomAnimator : NSObject <UIViewControllerAnimatedTransitioning> {
+@interface _TSKZoomAnimator : NSObject {
 
 	id<UIViewControllerContextTransitioning> _lastCompletedTransitionContext;
 	long long _operation;
@@ -21,7 +20,7 @@
 
 @property (assign,nonatomic) long long operation;                                           //@synthesize operation=_operation - In the implementation block
 @property (weak,nonatomic) id<_TSKAnimatorDelegate> animatorDelegate;              //@synthesize animatorDelegate=_animatorDelegate - In the implementation block
-@property (readonly) unsigned long long hash; 
+ 
 @property (readonly) Class superclass; 
 @property (copy,readonly) NSString * description; 
 @property (copy,readonly) NSString * debugDescription; 

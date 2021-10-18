@@ -22,12 +22,12 @@
 @interface _UISystemBackgroundView: UIView
 -(id)initWithConfiguration:(id)config;
 @end
-
+/*
 @interface UIBackgroundConfiguration: NSObject
 +(id)listGroupedCellConfiguration;
 - (instancetype)updatedConfigurationForState:(id)state;
 @end
-
+*/
 @interface UIColor (special)
 +(id)tableCellGroupedBackgroundColor;
 @end;

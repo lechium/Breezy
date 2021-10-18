@@ -43,7 +43,7 @@
 @property (assign,nonatomic) long long capitalizationType;                                                    //@synthesize capitalizationType=_capitalizationType - In the implementation block
 @property (assign,nonatomic) long long keyboardType;                                                          //@synthesize keyboardType=_keyboardType - In the implementation block
 @property (assign,nonatomic) BOOL allowsEmptyInput;                                                           //@synthesize allowsEmptyInput=_allowsEmptyInput - In the implementation block
-@property (readonly) unsigned long long hash; 
+ 
 @property (readonly) Class superclass; 
 @property (copy,readonly) NSString * description; 
 @property (copy,readonly) NSString * debugDescription; 

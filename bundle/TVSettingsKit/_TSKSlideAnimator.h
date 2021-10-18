@@ -7,12 +7,11 @@
 */
 
 
-#import <UIKit/UIViewControllerAnimatedTransitioning.h>
 
 @protocol UIViewControllerContextTransitioning, _TSKAnimatorDelegate;
 @class NSString;
 
-@interface _TSKSlideAnimator : NSObject <UIViewControllerAnimatedTransitioning> {
+@interface _TSKSlideAnimator : NSObject {
 
 	id<UIViewControllerContextTransitioning> _lastCompletedTransitionContext;
 	long long _operation;
@@ -22,7 +21,7 @@
 
 @property (assign,nonatomic) long long operation;                                           //@synthesize operation=_operation - In the implementation block
 @property (weak,nonatomic) id<_TSKAnimatorDelegate> animatorDelegate;              //@synthesize animatorDelegate=_animatorDelegate - In the implementation block
-@property (readonly) unsigned long long hash; 
+ 
 @property (readonly) Class superclass; 
 @property (copy,readonly) NSString * description; 
 @property (copy,readonly) NSString * debugDescription; 

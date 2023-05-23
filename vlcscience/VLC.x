@@ -31,7 +31,7 @@
 
     %log;
     NSURL *url = (NSURL *)[launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
-    HBLogDebug(@"MY NAME IS URL: %@", url);
+    NSLog(@"MY NAME IS URL: %@", url);
     if (url != nil){
         [self importFileAtURL:url];
     }
@@ -44,12 +44,12 @@
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *cache = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Upload"];
     if (![man fileExistsAtPath:cache]){
-        HBLogDebug(@"this path wasnt found; %@",cache );
+        NSLog(@"this path wasnt found; %@",cache );
         NSDictionary *folderAttrs = @{NSFileGroupOwnerAccountName: @"staff",NSFileOwnerAccountName: @"mobile"};
         NSError *error = nil;
         [man createDirectoryAtPath:cache withIntermediateDirectories:YES attributes:folderAttrs error:&error];
         if (error){
-            HBLogDebug(@"error: %@", error);
+            NSLog(@"error: %@", error);
         }
     }
     return cache;
@@ -70,16 +70,16 @@
         } else {
             [tabBarController setSelectedIndex: 1];
             NSFileManager *man = [NSFileManager defaultManager];
-            HBLogDebug(@"[VLC] host: %@ path: %@", url.host, url.path);
+            NSLog(@"[VLC] host: %@ path: %@", url.host, url.path);
             NSString *cache = [self uploadDirectory];
             //NSDictionary *attrs = [man attributesOfItemAtPath:cache error:nil];
-            //HBLogDebug(@"[VLC] cache attrs: %@", attrs);
-            HBLogDebug(@"[VLC] cache path: %@", cache);
+            //NSLog(@"[VLC] cache attrs: %@", attrs);
+            NSLog(@"[VLC] cache path: %@", cache);
             NSString *newPath = [cache stringByAppendingPathComponent:url.path.lastPathComponent];
             NSString *originalPath = url.path;
             NSError *error = nil;
             [man copyItemAtPath:originalPath toPath:newPath error:&error];
-            HBLogDebug(@"[VLC] copyItemAtPath error: %@", error);
+            NSLog(@"[VLC] copyItemAtPath error: %@", error);
         }
 
 }

@@ -49,7 +49,7 @@ static int process_buffer_size = 4096;
         [theScanner scanUpToString:@"," intoString:&text] ;
     }
     NSString *clean = [text stringByReplacingOccurrencesOfString:@"pid = " withString:@""];
-    HBLogDebug(@"clean: %@", clean);
+    NSLog(@"clean: %@", clean);
     return [clean intValue];
 }
 

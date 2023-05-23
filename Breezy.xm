@@ -49,7 +49,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
     //description of item looks like this <OS_xpc_connection: <connection: 0x133dc3790> { name = com.apple.sharingd.peer.0x133dc3790, listener = false, pid = 3731, euid = 501, egid = 501, asid = 0 }>
     //find the related pid by trimming it out of the description
     int pid = [FindProcess pidFromItemDescription:[arg1 description]];
-    HBLogDebug(@"PID %i", pid);
+    NSLog(@"PID %i", pid);
     //exempting TVSettings from AirDrop entitlement checks so we can toggle it on and off there easier.
     boolean_t matches = [FindProcess process:pid matches:"TVSettings"];
     if (matches){
@@ -175,11 +175,11 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
                 if ([obj isFileURL]) {
                     [paths addObject:[obj path]];
                 } else {
-                    HBLogDebug(@"obj isnt a file path: %@", obj);
+                    NSLog(@"obj isnt a file path: %@", obj);
                     [URLS addObject:[obj absoluteString]];
                 }
             } else {
-                HBLogDebug(@"doesnt respond to isFileURL: %@", obj);
+                NSLog(@"doesnt respond to isFileURL: %@", obj);
                 [paths addObject:[obj path]];
             }
         }
@@ -197,7 +197,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             sent[KBBreezyAlertTitle] = @"AirDrop";
             sent[KBBreezyAirdropCustomDestination] = [containerLocation path];
 
-            HBLogDebug(@"Breezy: sending user info: %@", sent);
+            NSLog(@"Breezy: sending user info: %@", sent);
             [[NSDistributedNotificationCenter defaultCenter] postNotificationName:KBBreezyAirdropPresentAlert object:KBBreezyOpenAirDropFiles userInfo:blessPayload((NSDictionary *)sent)];
         }
     }
@@ -278,7 +278,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             [apps enumerateObjectsUsingBlock:^(id obj, NSUInteger appIdx, BOOL * _Nonnull stopA) {
                id foundProx = [LSApplicationProxy applicationProxyForIdentifier:obj];
                if (foundProx){
-                    HBLogDebug(@"found application: %@", foundProx);
+                    NSLog(@"found application: %@", foundProx);
                    if (![newApps containsObject:foundProx]){
                        [newApps addObject:foundProx];
                        
@@ -562,7 +562,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         //done all our processing, time to show the alert!
         presentAlert();
 
-        //HBLogDebug(@"file: %@ of type: %@ can open in the following applications: %@",fileName, fileType, applications);
+        //NSLog(@"file: %@ of type: %@ can open in the following applications: %@",fileName, fileType, applications);
     }
 }
 
@@ -613,7 +613,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         NSError *error = nil;
         [man createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:folderAttrs error:&error];
         if (error){
-            HBLogDebug(@"creating %@ had error: %@", cachePath, error);
+            NSLog(@"creating %@ had error: %@", cachePath, error);
         }
     }
     NSString *newPath = [cachePath stringByAppendingPathComponent:[inputFile lastPathComponent]];
@@ -622,12 +622,12 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         [man removeItemAtPath:inputFile error:nil];
         return newPath;
     } else {
-        HBLogDebug(@"attempting to copy %@ to %@", inputFile, newPath);
+        NSLog(@"attempting to copy %@ to %@", inputFile, newPath);
         if ([man copyItemAtPath:inputFile toPath:newPath error:&copyError]) {
             [man removeItemAtPath:inputFile error:nil];
             return newPath;
         } else {
-            HBLogDebug(@"failed to copy %@ to %@ with error: %@", inputFile, newPath, copyError);
+            NSLog(@"failed to copy %@ to %@ with error: %@", inputFile, newPath, copyError);
             return inputFile;
         }
     }
@@ -702,7 +702,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         CGFloat multiplier = 0.5;
         if ([_fbProcMan processesForBundleIdentifier:bundleID].count == 0){
             multiplier = 1;
-            HBLogDebug(@"App isnt running yet, bumping up the multiplier so stuff gets processed successfully");
+            NSLog(@"App isnt running yet, bumping up the multiplier so stuff gets processed successfully");
         }
         CGFloat offset = idx*multiplier;
         
@@ -711,7 +711,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             
             if ([pbProcMan respondsToSelector:@selector(_handleOpenApplicationRequest:bundleID:options:withResult:)]){
                 [pbProcMan _handleOpenApplicationRequest:openAppRequest bundleID:bundleID options:_options withResult:^(NSError *error) {
-                    HBLogDebug(@"open app finished with error: %@", error);
+                    NSLog(@"open app finished with error: %@", error);
                     if (error != nil){
                         [pbProcMan activateApplication:bundleID openURL:_options[FBSOpenApplicationOptionKeyPayloadURL] options:_options suspended:FALSE completion:nil];
                     }
@@ -719,11 +719,11 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
                 
             } else if ([pbProcMan respondsToSelector:@selector(_openAppFromRequest:bundleIdentifier:URL:withResult:)]){ //13.0 -> ?
                 [pbProcMan _openAppFromRequest:openAppRequest bundleIdentifier:bundleID URL:[NSURL fileURLWithPath:item] withResult:^(NSError *error) {
-                    HBLogDebug(@"open app finished with error: %@", error);
+                    NSLog(@"open app finished with error: %@", error);
                 }];
             } else {
                 [pbProcMan _openAppFromRequest:openAppRequest bundleIdentifier:bundleID URL:[NSURL fileURLWithPath:item] completion:^(NSError *error) {
-                    HBLogDebug(@"open app finished with error: %@", error);
+                    NSLog(@"open app finished with error: %@", error);
                 }];
             }
         });
@@ -736,7 +736,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 %ctor {
     
     NSString *processName = [[[[NSProcessInfo processInfo] arguments] lastObject] lastPathComponent];
-    //HBLogDebug(@"Process name: %@", processName);
+    //NSLog(@"Process name: %@", processName);
     if ([processName isEqualToString:@"PineBoard"]){
         %init(PineBoard);
 

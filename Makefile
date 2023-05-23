@@ -11,7 +11,7 @@ Breezy_FILES = Breezy.xm FindProcess.m CTBlockDescription.m Log.m
 Breezy_LIBRARIES = substrate
 Breezy_FRAMEWORKS = Foundation UIKit CoreGraphics
 #Breezy_LDFLAGS = 
-Breezy_CFLAGS = -fobjc-arc
+Breezy_CFLAGS = -fobjc-arc -Iinclude
 Breezy_LDFLAGS = -F. -framework FrontBoardServices -undefined dynamic_lookup
 
 include $(THEOS_MAKE_PATH)/tweak.mk

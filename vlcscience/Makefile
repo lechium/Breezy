@@ -10,6 +10,6 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = vlcscience
 
 vlcscience_FILES = VLC.x
-vlcscience_CFLAGS = -fobjc-arc
+vlcscience_CFLAGS = -fobjc-arc -I../include
 
 include $(THEOS_MAKE_PATH)/tweak.mk

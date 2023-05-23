@@ -12,7 +12,7 @@ BreezySettings_INSTALL_PATH = /Library/PreferenceBundles
 BreezySettings_FRAMEWORKS = UIKit
 BreezySettings_PRIVATE_FRAMEWORKS = TVSettingKit
 BreezySettings_LDFLAGS = -undefined dynamic_lookup -IDownload -I. -F.
-BreezySettings_CFLAGS+= -F. -IDownload -fobjc-arc -I.
+BreezySettings_CFLAGS+= -F. -IDownload -fobjc-arc -I. -I../include
 BreezySettings_CODESIGN_FLAGS=-Sent.plist
 
 include $(THEOS_MAKE_PATH)/bundle.mk

@@ -605,7 +605,9 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
     NSFileManager *man = [NSFileManager defaultManager];
     NSString *onePath = [[proxy dataContainerURL] path];
     if (onePath == nil){
-        onePath = @"/";
+        NSLog(@"[Breezy] onePath is nil!");
+        onePath = @"/var/mobile/";
+
     }
     NSString *cachePath = [[onePath stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[proxy bundleIdentifier]];
     if (![man fileExistsAtPath:cachePath]){
@@ -694,7 +696,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         }
         
         id options = [FBSOpenApplicationOptions optionsWithDictionary:_options];
-        id openAppRequest = [FBSystemServiceOpenApplicationRequest request];
+        id openAppRequest = [FBSystemServiceOpenApplicationRequest new];
         [openAppRequest setTrusted:TRUE];
         [openAppRequest setBundleIdentifier:bundleID];
         [openAppRequest setOptions:options];

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-chown root:wheel /Library/LaunchDaemons/com.nito.breezy.plist
-chown root:wheel /usr/bin/breezyd
-launchctl unload /Library/LaunchDaemons/com.nito.breezy.plist
-launchctl load /Library/LaunchDaemons/com.nito.breezy.plist
+chown root:wheel /fs/jb/Library/LaunchDaemons/com.nito.breezy.plist
+chown root:wheel /fs/jb/usr/bin/breezyd
+launchctl unload /fs/jb/Library/LaunchDaemons/com.nito.breezy.plist
+launchctl load /fs/jb/Library/LaunchDaemons/com.nito.breezy.plist
 launchctl unload /System/Library/LaunchDaemons/com.apple.sharingd.plist
 launchctl load /System/Library/LaunchDaemons/com.apple.sharingd.plist
 echo 'finish:restart'

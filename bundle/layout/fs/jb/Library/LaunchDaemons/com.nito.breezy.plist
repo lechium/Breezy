@@ -6,7 +6,7 @@
 	<string>com.nito.breezyd</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/usr/bin/breezyd</string>
+		<string>/fs/jb/usr/bin/breezyd</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

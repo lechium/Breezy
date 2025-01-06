@@ -1,6 +1,6 @@
 --- !tapi-tbd-v2
 archs:                 [ arm64 ]
-platform:              (null)
+platform:              tvos
 flags:                 [ flat_namespace ]
 install-name:          /System/Library/PrivateFrameworks/TVSettingKit.framework/TVSettingKit
 current-version:       1

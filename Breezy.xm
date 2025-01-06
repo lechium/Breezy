@@ -61,11 +61,21 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 
 %end
 
+%hook SDAirDropHandlerFactory
+
++ (id)handlerForTransfer:(id)arg {
+	id orig = %orig;
+	NSLog(@"Breezy: handlerForTransfer: %@ = %@",arg, orig);
+	return orig;
+}
+
+%end
 
 //all of this code is thoroughly documented in the README if you are having trouble understanding it.
 %hook SDAirDropTransferManager
 
 - (id)init {
+    %log;
     id _self = %orig;
     // Observer for responses from PineBoard - containing what the user selected on the alert
     id notificationCenter = [NSDistributedNotificationCenter defaultCenter];
@@ -88,7 +98,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 }
 
 - (void)askEventForRecordID:(id)recordID withResults:(id)results {
-    
+    %log; 
     %orig;
 
     SFAirDropTransfer *transfer = ((NSDictionary *(*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"transferIdentifierToTransfer"))[recordID];
@@ -164,6 +174,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 
 -(void)finishedEventForRecordID:(id)recordID withResults:(id)arg
 {
+    %log;
     SFAirDropTransfer *transfer = ((NSDictionary *(*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"transferIdentifierToTransfer"))[recordID];
     NSArray <NSURL *> *items = arg[@"Items"];
     if (items.count > 0) {
@@ -605,7 +616,8 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
     NSFileManager *man = [NSFileManager defaultManager];
     NSString *onePath = [[proxy dataContainerURL] path];
     if (onePath == nil){
-        onePath = @"/";
+    	NSLog(@"[Breezy] onePath is nil!");
+        onePath = @"/var/mobile";
     }
     NSString *cachePath = [[onePath stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[proxy bundleIdentifier]];
     if (![man fileExistsAtPath:cachePath]){
@@ -694,7 +706,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         }
         
         id options = [FBSOpenApplicationOptions optionsWithDictionary:_options];
-        id openAppRequest = [FBSystemServiceOpenApplicationRequest request];
+        id openAppRequest = [FBSystemServiceOpenApplicationRequest new];
         [openAppRequest setTrusted:TRUE];
         [openAppRequest setBundleIdentifier:bundleID];
         [openAppRequest setOptions:options];

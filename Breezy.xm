@@ -365,15 +365,9 @@ KBBreezyButtonTitle: @"Decline",
 	if (!isPayloadBlessed(payload, @"com.apple.sharing.RemoteInteractionSession")) {
 		return;
 	}
-	id applicationAlert = nil;
-	Class pbunvca = %c(PBUserNotificationViewControllerAlert);
 	// Construct the alert
 
-	if([pbunvca respondsToSelector:@selector(alertControllerWithTitle:message:preferredStyle:)]){
-		applicationAlert =  [pbunvca alertControllerWithTitle:payload[KBBreezyAlertTitle] message:payload[KBBreezyAlertDetail] preferredStyle:UIAlertControllerStyleAlert];//[[%c(PBUserNotificationViewControllerAlert) alloc] initWithTitle:payload[KBBreezyAlertTitle] text:payload[KBBreezyAlertDetail]];
-	} else {
-		applicationAlert = [[%c(PBUserNotificationViewControllerAlert) alloc] initWithTitle:payload[KBBreezyAlertTitle] text:payload[KBBreezyAlertDetail]];
-	}
+	id applicationAlert = [[%c(PBUserNotificationViewControllerAlert) alloc] initWithTitle:payload[KBBreezyAlertTitle] text:payload[KBBreezyAlertDetail]];
 	__weak typeof(applicationAlert) weakApplicationAlert = applicationAlert;
 
 	// Dismiss handler has special behavior depending on os version

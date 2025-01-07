@@ -125,7 +125,18 @@ extern NSString * const FBSOpenApplicationOptionKeyPayloadOptions; //@"__Payload
 
 @end
 
+@interface UIAlertController (priv)
+-(void)_setAttributedTitle:(id)arg1;
+-(void)setImage:(UIImage *)image;
+@end
 
+@interface UIAlertAction (priv)
+@property (nonatomic,retain) UIImage * image;
+@end
+
+@interface SDAirDropHandler: NSObject
++ (id)transferURLForTransfer:(id)arg1; //tvOS 17/18 only.. i think!
+@end
 
 @interface LSApplicationWorkspace: NSObject
 
@@ -147,6 +158,9 @@ extern NSString * const FBSOpenApplicationOptionKeyPayloadOptions; //@"__Payload
 @interface PBUserNotificationViewControllerAlert: UIViewController
 -(id)initWithTitle:(id)arg1 text:(id)arg2;
 -(void)addButtonWithTitle:(id)arg1 type:(unsigned long long)arg2 handler:(void (^)(void))handler;
+//18+ only (although may apply to 17 as well)
++ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(NSInteger)preferredStyle;
+-(void)setMessage:(NSString *)arg1;
 @property NSString *text;
 @end
 @interface LSDocumentProxy: NSObject

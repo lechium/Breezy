@@ -5,6 +5,7 @@
 #import "breezy.h"
 #import "CTBlockDescription.h"
 #include <CoreFoundation/CoreFoundation.h>
+//#import "Log.h"
 
 @class BindingEvaluator, LSContext, LSBundleData;
 
@@ -38,6 +39,40 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 
     return true;
 }
+
+@interface UIAlertController (shim)
+- (id)initWithTitle:(id)arg1 text:(id)arg2;
+- (void)addButtonWithTitle:(id)arg1 type:(unsigned long long)arg2 handler:(void (^ __nullable)(UIAlertAction *action))handler;
+- (void)setHeaderImage:(UIImage *)image;
+@end
+
+@implementation UIAlertController (shim)
+
+- (void)setHeaderImage:(UIImage *)image {
+    //[self setImage:image];
+    //return;
+    NSDictionary *attrs = @{NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1], NSForegroundColorAttributeName: [UIColor whiteColor]
+    };
+    NSMutableAttributedString *str = [NSMutableAttributedString new];//[[NSMutableAttributedString alloc] initWithString:@"" attributes:attrs];
+    NSTextAttachment *attach = [NSTextAttachment new];
+    attach.image = image;
+    [str appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
+//[str appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n" attributes:attrs]];
+    [str appendAttributedString:[[NSAttributedString alloc] initWithString:self.title attributes:attrs]];
+    [self _setAttributedTitle:str];
+}
+
+- (id)initWithTitle:(id)arg1 text:(id)arg2 {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:arg1 message:arg2 preferredStyle:UIAlertControllerStyleAlert];
+    return ac;
+}
+
+- (void)addButtonWithTitle:(id)arg1 type:(unsigned long long)arg2 handler:(void (^ __nullable)(UIAlertAction *action))handler {
+    UIAlertAction *action = [UIAlertAction actionWithTitle:arg1 style:arg2 handler:handler];
+    [self addAction:action];
+}
+
+@end
 
 //start actual code
 %group Sharingd
@@ -199,7 +234,16 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             
             // The container for the transferred files. In some scenarios, PineBoard will be responsible for
             // cleaning this up.
-            NSURL *containerLocation = ((NSURL * (*)(id, SEL, id))objc_msgSend)(self, NSSelectorFromString(@"transferURLForTransfer:"), transfer);
+            Class adHandlerClass = NSClassFromString(@"SDAirDropHandler");
+	    NSURL *containerLocation = nil;
+	    if ([adHandlerClass respondsToSelector:@selector(transferURLForTransfer:)]){
+		NSLog(@"self doesn't respond to selector! transferURLForTransfer");
+                containerLocation = [NSClassFromString(@"SDAirDropHandler") transferURLForTransfer:transfer];
+		
+	    } else {
+	        containerLocation  = ((NSURL * (*)(id, SEL, id))objc_msgSend)(self, NSSelectorFromString(@"transferURLForTransfer:"), transfer);
+	    }
+            
 
             NSMutableDictionary *sent = [NSMutableDictionary new];
             sent[@"Files"] = arg[@"Files"];
@@ -316,9 +360,15 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
     if (!isPayloadBlessed(payload, @"com.apple.sharing.RemoteInteractionSession")) {
         return;
     }
-
+    id applicationAlert = nil;
+    Class pbunvca = %c(PBUserNotificationViewControllerAlert);
     // Construct the alert
-    id applicationAlert = [[%c(PBUserNotificationViewControllerAlert) alloc] initWithTitle:payload[KBBreezyAlertTitle] text:payload[KBBreezyAlertDetail]];
+        
+    if([pbunvca respondsToSelector:@selector(alertControllerWithTitle:message:preferredStyle:)]){
+	applicationAlert =  [pbunvca alertControllerWithTitle:payload[KBBreezyAlertTitle] message:payload[KBBreezyAlertDetail] preferredStyle:UIAlertControllerStyleAlert];//[[%c(PBUserNotificationViewControllerAlert) alloc] initWithTitle:payload[KBBreezyAlertTitle] text:payload[KBBreezyAlertDetail]];
+    } else {
+	applicationAlert = [[%c(PBUserNotificationViewControllerAlert) alloc] initWithTitle:payload[KBBreezyAlertTitle] text:payload[KBBreezyAlertDetail]];
+    }
     __weak typeof(applicationAlert) weakApplicationAlert = applicationAlert;
 
     // Dismiss handler has special behavior depending on os version
@@ -389,8 +439,8 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             // [applicationAlert setHeaderImage:previewImage];
             ((void (*)(id, SEL, id))objc_msgSend)(applicationAlert, NSSelectorFromString(@"setHeaderImage:"), previewImage);
 
-            id headerImage = ((id (*)(id, SEL))objc_msgSend)(applicationAlert, NSSelectorFromString(@"headerImage"));
-            NSLog(@"pineboard alert's header image: %@", headerImage);
+            //id headerImage = ((id (*)(id, SEL))objc_msgSend)(applicationAlert, NSSelectorFromString(@"headerImage"));
+            //NSLog(@"pineboard alert's header image: %@", headerImage);
         }
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -460,8 +510,12 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
         if (names.length > 400){
             appList = [NSString stringWithFormat:@"%@...", [names substringToIndex:400]];
         }
-        [applicationAlert setText:[NSString stringWithFormat:@"Open \"%@\" with...", appList]];
-
+        if ([applicationAlert respondsToSelector:@selector(setText:)]) {
+		[applicationAlert setText:[NSString stringWithFormat:@"Open \"%@\" with...", appList]];
+        } else {
+		NSLog(@"[Breezy] FIXME: update for UIAlertController to 'setText' message in some way, attempting 'setMessage'");
+		[applicationAlert setMessage:[NSString stringWithFormat:@"Open \"%@\" with...", appList]]; 
+	}
         NSArray *applications = [ws applicationsAvailableForOpeningDocument:doxy];
         //NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
         //applications = [applications filteredArrayUsingPredicate: pred];
@@ -559,7 +613,13 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
             cancelButtonTitle = @"OK";
             NSLog(@"no applications found to open these file(s)");
             NSString *newMessage = [NSString stringWithFormat:@"Failed to find any applications to open \"%@\" with", names];
-            [applicationAlert setText:newMessage];
+	    if ([applicationAlert respondsToSelector:@selector(setText:)]) {
+            	[applicationAlert setText:newMessage];
+            } else {
+                 
+	         NSLog(@"[Breezy] FIXME: update for UIAlertController to 'setText' message in some way, attempting 'setMessage'");
+		[applicationAlert setMessage:newMessage]; 
+	    }
 
             cleanupFiles();
         }

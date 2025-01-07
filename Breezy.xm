@@ -51,7 +51,7 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 
 - (void)setText:(NSString *)text {
 	[self setMessage:text];
-}`
+}
 
 - (void)setHeaderImage:(UIImage *)image {
 	//[self setImage:image];
@@ -515,12 +515,7 @@ KBBreezyAirdropTransferRecordID: payload[KBBreezyAirdropTransferRecordID],
 		if (names.length > 400){
 			appList = [NSString stringWithFormat:@"%@...", [names substringToIndex:400]];
 		}
-		if ([applicationAlert respondsToSelector:@selector(setText:)]) {
-			[applicationAlert setText:[NSString stringWithFormat:@"Open \"%@\" with...", appList]];
-		} else {
-			NSLog(@"[Breezy] FIXME: update for UIAlertController to 'setText' message in some way, attempting 'setMessage'");
-			[applicationAlert setMessage:[NSString stringWithFormat:@"Open \"%@\" with...", appList]]; 
-		}
+		[applicationAlert setText:[NSString stringWithFormat:@"Open \"%@\" with...", appList]];
 		NSArray *applications = [ws applicationsAvailableForOpeningDocument:doxy];
 		//NSPredicate *pred = [NSPredicate predicateWithFormat:@"bundleIdentifier != 'com.nito.nitoTV4'"];
 		//applications = [applications filteredArrayUsingPredicate: pred];
@@ -618,14 +613,7 @@ KBBreezyAirdropTransferRecordID: payload[KBBreezyAirdropTransferRecordID],
 			cancelButtonTitle = @"OK";
 			NSLog(@"no applications found to open these file(s)");
 			NSString *newMessage = [NSString stringWithFormat:@"Failed to find any applications to open \"%@\" with", names];
-			if ([applicationAlert respondsToSelector:@selector(setText:)]) {
-				[applicationAlert setText:newMessage];
-			} else {
-
-				NSLog(@"[Breezy] FIXME: update for UIAlertController to 'setText' message in some way, attempting 'setMessage'");
-				[applicationAlert setMessage:newMessage]; 
-			}
-
+			[applicationAlert setText:newMessage];
 			cleanupFiles();
 		}
 

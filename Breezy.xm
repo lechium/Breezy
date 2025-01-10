@@ -40,6 +40,50 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 	return true;
 }
 
+@interface ImageAttachment : NSTextAttachment
+
+@property (nonatomic, assign) CGFloat verticalOffset;
+
+- (instancetype)initWithImage:(UIImage *)image verticalOffset:(CGFloat)offset;
++ (ImageAttachment *)textAttachmentWithImage:(UIImage *)image verticalOffset:(CGFloat)offset;
+@end
+
+@implementation ImageAttachment
+
++ (ImageAttachment *)textAttachmentWithImage:(UIImage *)image verticalOffset:(CGFloat)offset {
+    ImageAttachment *attachment = [[ImageAttachment alloc] initWithImage:image verticalOffset:offset];
+    return attachment;
+}
+
+- (instancetype)initWithImage:(UIImage *)image verticalOffset:(CGFloat)offset {
+    self = [super init];
+    if (self) {
+        self.image = image;
+        self.verticalOffset = offset;
+        NSLog(@"offset: %f", offset);
+    }
+    return self;
+}
+
+- (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex {
+    //NSLog(@"[Breezy] container: %@ lineFragment %@, position: %@, characterINdex: %lu", textContainer, NSStringFromCGRect(lineFrag), NSStringFromCGPoint(position), charIndex);
+    //CGRect orig = [super attachmentBoundsForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
+    //NSLog(@"[Breezy] orig: %@", NSStringFromCGRect(orig));
+    //return orig;
+    CGSize imageSize = self.image.size;
+    CGFloat height = imageSize.height / 2;//lineFrag.size.height;
+    CGFloat scale = 1.0;
+    
+    if (height < imageSize.height) {
+        scale = height / imageSize.height;
+    }
+    CGRect newRect = CGRectMake(0, _verticalOffset, imageSize.width * scale, imageSize.height * scale);
+    //NSLog(@"[Breezy] newRect: %@", NSStringFromCGRect(newRect));
+    return newRect;
+}
+
+@end
+
 @interface UIAlertController (shim)
 - (id)initWithTitle:(id)arg1 text:(id)arg2;
 - (void)addButtonWithTitle:(id)arg1 type:(unsigned long long)arg2 handler:(void (^ __nullable)(UIAlertAction *action))handler;
@@ -54,21 +98,18 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 }
 
 - (void)setHeaderImage:(UIImage *)image {
-	//[self setImage:image];
-	//return;
-	NSDictionary *attrs = @{NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1], NSForegroundColorAttributeName: [UIColor whiteColor]
+	UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+	NSDictionary *attrs = @{NSFontAttributeName: font, NSForegroundColorAttributeName: [UIColor whiteColor]
 	};
-	NSMutableAttributedString *str = [NSMutableAttributedString new];//[[NSMutableAttributedString alloc] initWithString:@"" attributes:attrs];
-	NSTextAttachment *attach = [NSTextAttachment new];
-	attach.image = image;
-	[str appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
-	//[str appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n" attributes:attrs]];
-	[str appendAttributedString:[[NSAttributedString alloc] initWithString:self.title attributes:attrs]];
+	NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n\n%@",self.title] attributes:attrs];
+	ImageAttachment *attach = [ImageAttachment textAttachmentWithImage:image verticalOffset:font.descender];
+	[str insertAttributedString:[NSAttributedString attributedStringWithAttachment:attach] atIndex:1];
 	[self _setAttributedTitle:str];
+	NSLog(@"[Breezy] attributedTitle: %@", [self _attributedTitle]);
 }
 
 - (id)initWithTitle:(id)arg1 text:(id)arg2 {
-	UIAlertController *ac = [UIAlertController alertControllerWithTitle:arg1 message:arg2 preferredStyle:UIAlertControllerStyleAlert];
+	UIAlertController *ac = [UIAlertController alertControllerWithTitle:arg1 message:arg2 preferredStyle:UIAlertControllerStyleActionSheet];
 	return ac;
 }
 
@@ -158,7 +199,11 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 		NSString *type = [transferItems[0] valueForKey:@"_type"];
 		NSString *fileDescription = UTTypeCopyDescription(type);
 		if (fileDescription) {
-			alertText = [NSString stringWithFormat:@"\"%@\" would like to share a %@ file.", sender, fileDescription];
+			NSString *appendedDesc = [NSString stringWithFormat:@"%@ file.", fileDescription];
+			if ([fileDescription containsString:@"file"]){
+				appendedDesc = [NSString stringWithFormat:@"%@.", fileDescription];
+			}
+			alertText = [NSString stringWithFormat:@"\"%@\" would like to share a %@", sender, appendedDesc];
 		}
 		else {
 			// Unknown file type
@@ -437,7 +482,6 @@ KBBreezyAirdropTransferRecordID: payload[KBBreezyAirdropTransferRecordID],
 			// Add it to the alert
 			// [applicationAlert setHeaderImage:previewImage];
 			((void (*)(id, SEL, id))objc_msgSend)(applicationAlert, NSSelectorFromString(@"setHeaderImage:"), previewImage);
-
 			//id headerImage = ((id (*)(id, SEL))objc_msgSend)(applicationAlert, NSSelectorFromString(@"headerImage"));
 			//NSLog(@"pineboard alert's header image: %@", headerImage);
 		}

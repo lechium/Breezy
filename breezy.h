@@ -127,7 +127,10 @@ extern NSString * const FBSOpenApplicationOptionKeyPayloadOptions; //@"__Payload
 
 @interface UIAlertController (priv)
 -(void)_setAttributedTitle:(id)arg1;
+-(void)_setAttributedMessage:(id)arg1;
 -(void)setImage:(UIImage *)image;
+-(id)_attributedTitle;
+-(id)_attributedMessage;
 @end
 
 @interface UIAlertAction (priv)

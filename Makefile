@@ -3,7 +3,7 @@ target ?= appletv:clang:latest:12.4
 export THEOS=/Users/$(shell whoami)/Projects/theos
 export GO_EASY_ON_ME=1
 THEOS_DEVICE_IP=living-room.local
-DEBUG=1
+DEBUG=0
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Breezy

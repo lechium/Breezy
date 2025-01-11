@@ -40,6 +40,12 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 	return true;
 }
 
+/** 
+
+in 17+ PBUserNotificationViewControllerAlert superclass inherits from UIAlertController instead of TVSUITextAlertController and we need to compensate for API differences
+one of those differences is there is no 'headerImage' view to present an AlertController with an image up top when asking for consent. thanks to this old ass gist: https://gist.github.com/phatmann/582bed5aa0f06432873b that i slightly tweaked we can use an NSAttributedString with an image in it utilzing the NSTextAttachment subclass to duplicate that behavior.
+
+*/
 @interface ImageAttachment : NSTextAttachment
 
 @property (nonatomic, assign) CGFloat verticalOffset;
@@ -84,6 +90,8 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 
 @end
 
+//afformentioned shims into UIAlertController to make it API compatible with the change for inheriting from UIAlertController instead of TVSUITextAlertController makes for cleaner code when alerts are utilized.
+
 @interface UIAlertController (shim)
 - (id)initWithTitle:(id)arg1 text:(id)arg2;
 - (void)addButtonWithTitle:(id)arg1 type:(unsigned long long)arg2 handler:(void (^ __nullable)(UIAlertAction *action))handler;
@@ -101,9 +109,10 @@ static BOOL isPayloadBlessed(NSDictionary *payload, NSString *expectedEntitlemen
 	UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
 	NSDictionary *attrs = @{NSFontAttributeName: font, NSForegroundColorAttributeName: [UIColor whiteColor]
 	};
+	//some sleight of hand occurs here, without adding \n the image gets cut off and the alert view doesn't resize to accomodate it. we add two of them because we replace one of them with the ImageAttachment created below.
 	NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n\n%@",self.title] attributes:attrs];
 	ImageAttachment *attach = [ImageAttachment textAttachmentWithImage:image verticalOffset:font.descender];
-	[str insertAttributedString:[NSAttributedString attributedStringWithAttachment:attach] atIndex:1];
+	[str insertAttributedString:[NSAttributedString attributedStringWithAttachment:attach] atIndex:1]; //replaces the second \n in str, and keeps one intact so there is a line break between the image and title.
 	[self _setAttributedTitle:str];
 	NSLog(@"[Breezy] attributedTitle: %@", [self _attributedTitle]);
 }
